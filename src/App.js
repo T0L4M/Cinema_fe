@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import HomepageLayout from "./layouts/HomepageLayout";
+import { privateRouter, publicRouter } from "./configs/routerConfig";
+import AdminLayout from "./layouts/AdminLayout";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	// const { auth } = useContext(DataContext);
+	return (
+		<div>
+			<Routes>
+				{publicRouter.map((item, index) => {
+					return (
+						<Route
+							key={index}
+							path={item.path}
+							element={<HomepageLayout>{item.element}</HomepageLayout>}
+						/>
+					);
+				})}
+				{privateRouter.map((item, index) => {
+					// if (item.roles.includes(auth?.role)) {
+					return (
+						<Route
+							key={index}
+							path={item.path}
+							element={<AdminLayout>{item.element}</AdminLayout>}
+						/>
+					);
+					// } else {
+					// 	return (
+					// 		<Route
+					// 			key={index}
+					// 			path="*"
+					// 			element={<Navigate to="./" />}
+					// 		/>
+					// 	);
+					// }
+				})}
+			</Routes>
+		</div>
+	);
 }
 
 export default App;
