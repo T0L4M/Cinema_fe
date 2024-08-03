@@ -1,39 +1,51 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { DataContext } from "../../../contexts/DataContext";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { format } from "date-fns";
 
 const schema = yup
 	.object()
 	.shape({
-		name: yup
+		title: yup
+			.string()
+			.min(2, "Greater than 2 characters")
+			.max(100, "Less than 100 characters")
+			.required(),
+		director: yup
 			.string()
 			.min(2, "Greater than 2 characters")
 			.max(50, "Less than 50 characters")
 			.required(),
-		Id_Category: yup.number().required(),
-		capacity: yup
+		casts: yup
 			.string()
-			.matches(/(minute|hour)$/i, 'Must end with "/minute" or "/hour"')
+			.min(2, "Greater than 2 characters")
+			.max(100, "Less than 100 characters")
 			.required(),
-		weight: yup
-			.number()
-			.required()
-			.min(50, "Greater than 50")
-			.max(100000, "Less than 100 000"),
-		status: yup.string().required(),
-		machine_dimension: yup
+		genre: yup
 			.string()
-			.matches(
-				/^(\d{2,3}(?:\.\d+)?)cm x (\d{2,3}(?:\.\d+)?)cm x (\d{2,3}(?:\.\d+)?)cm$/,
-				"Format must be: XXcm x XXcm x XXcm (XX: 2-3 digits)"
+			.min(2, "Greater than 2 characters")
+			.max(100, "Less than 100 characters")
+			.required(),
+		release_date: yup
+			.date()
+			.required()
+			.typeError("Invalid Date Format")
+			.min(
+				new Date(new Date().getTime() - 6 * 30 * 24 * 60 * 60 * 1000),
+				"Release date cannot be more than 6 months in the past"
 			)
-			.nullable(),
-		size_bottle: yup.number().min(0, "Greater than 0").nullable(),
-		size_capsule: yup.number().min(0, "Greater than 0").nullable(),
-		size_tablet: yup.number().min(0, "Greater than 0").nullable(),
-		thumbnail: yup.mixed().test("thumbnail", "You need to provide a file", (value) => {
+			.max(
+				new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000),
+				"Release date cannot be more than 1 year in the future"
+			),
+		description: yup.string().nullable(),
+		trailer: yup.string().nullable(),
+		status: yup.string().oneOf(["Showing", "Not Showing", "Coming"]).required(),
+		poster: yup.mixed().test("poster", "You need to provide a file", (value) => {
 			if (value.length > 0) {
 				return true;
 			}
@@ -43,34 +55,77 @@ const schema = yup
 	.required();
 
 function MovieForm(props) {
+	const navigate = useNavigate();
 	const { showAlert } = useContext(DataContext);
+	const [formattedReleaseDate, setFormattedReleaseDate] = useState("");
+	const [existingPoster, setExistingPoster] = useState(null);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
+		setValue,
 	} = useForm({
 		resolver: yupResolver(schema),
 		mode: "onChange",
 	});
 
+	const { id } = useParams();
+	useEffect(() => {
+		const fetchData = async () => {
+			if (id) {
+				try {
+					const response = await axios.get(
+						`http://localhost:8080/movies/detail/${id}`
+					);
+					const movie = response.data.data;
+					setValue("title", movie.title);
+					setValue("director", movie.director);
+					setValue("casts", movie.casts);
+					setValue("genre", movie.genre);
+					setValue("release_date", movie.release_date); // Assuming backend returns date in appropriate format
+					setValue("description", movie.description);
+					setValue("trailer", movie.trailer);
+					setValue("status", movie.status);
+					setExistingPoster(movie.poster);
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		};
+		fetchData();
+	}, [id]);
+
+	function handleDateChange(e) {
+		const selectedDate = new Date(e.target.value);
+		const formattedDate = format(selectedDate, "yyyy-MM-dd");
+		setFormattedReleaseDate(formattedDate);
+	}
+
 	function onSubmit(data) {
 		const formData = new FormData();
-		formData.append("Name", data.name);
-		formData.append("Status", data.status);
-		formData.append("Id_Category", data.Id_Category);
-		formData.append("Capacity", data.capacity);
-		formData.append("Weight", data.weight);
-		formData.append("Machine_Dimension", data.machine_dimension);
-		formData.append("Description", editorData);
-		formData.append("Size_Capsule", data.size_capsule);
-		formData.append("Size_Tablet", data.size_tablet);
-		formData.append("Size_Bottle", data.size_bottle);
-		formData.append("file", data.thumbnail[0]);
-		formData.append("Id_User", auth?.id);
-		axios.post("http://localhost:5087/api/Product", formData)
+		formData.append("title", data.title);
+		formData.append("director", data.director);
+		formData.append("casts", data.casts);
+		formData.append("genre", data.genre);
+		formData.append("description", data.description);
+		formData.append("status", data.status);
+		formData.append("release_date", formattedReleaseDate);
+		formData.append("image", data.poster[0] == null ? "" : data.poster[0]);
+
+		if (existingPoster != null) {
+			axios.put(`http://localhost:8080/movies/edit/${id}`, formData)
+				.then((res) => {
+					if (res.status == 200) {
+						showAlert("success", "UPDATE MOVIE SUCCESSFULLY!");
+						navigate(-1);
+					}
+				})
+				.catch((err) => console.log(err));
+		}
+		axios.post("http://localhost:8080/movies", formData)
 			.then((res) => {
-				if (res.status == 201) {
-					showAlert("success", "CREATE PRODUCT SUCCESSFULLY!");
+				if (res.status == 200) {
+					showAlert("success", "CREATE MOVIE SUCCESSFULLY!");
 					navigate(-1);
 				}
 			})
@@ -124,35 +179,60 @@ function MovieForm(props) {
 						<span className="text-danger">{errors.director?.message}</span>
 					</div>
 
-					{/* PAY ATTENTION */}
-					{/* <div className="mb-3 col-md-4">
-              <span>Status<span className='text-danger'>*</span></span>
-             <div className="form-check">
-                          <input type="radio" className="form-check-input" id="dangchieu" name="movie_status" value="showing" {{ old('movie_status') == "showing"?'checked':'' }}>
-                          <label className="form-check-label" for="dangchieu">Now Showing</label>
-                        </div>
-                  
-                  
-          <div className="form-check">
-                
-                                <input type="radio" className="form-check-input" id="sapchieu" name="movie_status" value="coming" {{ old('movie_status') == "coming"?'checked':'' }}>
-                                <label className="form-check-label" for="sapchieu">Coming Soon</label>
-                
-          </div>
-          @error('movie_status')
-          <span className="text-danger">{{ $message }}</span>
-      @enderror
-             
-            </div> */}
+					<div className="mb-3 col-md-4">
+						<span>
+							Status<span className="text-danger">*</span>
+						</span>
+						<div className="form-check">
+							<input
+								type="radio"
+								className="form-check-input"
+								id="dangchieu"
+								{...register("status")}
+								value="Showing"
+							/>
+							<label className="form-check-label" htmlFor="dangchieu">
+								Now Showing
+							</label>
+						</div>
+						<div className="form-check">
+							<input
+								type="radio"
+								className="form-check-input"
+								id="sapchieu"
+								{...register("status")}
+								value="Coming"
+							/>
+							<label className="form-check-label" htmlFor="sapchieu">
+								Coming Soon
+							</label>
+						</div>
+						<div className="form-check">
+							<input
+								type="radio"
+								className="form-check-input"
+								id="hetchieu"
+								{...register("status")}
+								value="Not Showing"
+							/>
+							<label className="form-check-label" htmlFor="hetchieu">
+								Not Showing
+							</label>
+						</div>
+						<span className="text-danger">{errors.status?.message}</span>
+					</div>
 
 					<div className="mb-3 col-md-4">
-						<label htmlFor="release_date">Release Date</label>
+						<label htmlFor="release_date">
+							Release Date<span className="text-danger">*</span>
+						</label>
 						<input
 							type="date"
 							className="form-control"
 							id="release_date"
 							placeholder="Enter Release Date"
 							{...register("release_date")}
+							onChange={(e) => handleDateChange(e)}
 						/>
 						<span className="text-danger">
 							{errors.release_date?.message}
@@ -173,6 +253,7 @@ function MovieForm(props) {
 					/>
 					<span className="text-danger">{errors.casts?.message}</span>
 				</div>
+
 				<div className="mb-3">
 					<label htmlFor="trailer">Trailer</label>
 					<input
@@ -184,6 +265,18 @@ function MovieForm(props) {
 					/>
 					<span className="text-danger">{errors.trailer?.message}</span>
 				</div>
+
+				{existingPoster != null && (
+					<div className="mb-3">
+						<label htmlFor="oldPoster">Present Poster</label>
+						<img
+							src={`http://localhost:8080/uploads/movies/${existingPoster}`}
+							alt="oldPoster"
+							className="img-thumbnail"
+							width="100"
+						/>
+					</div>
+				)}
 				<div className="mb-3">
 					<label htmlFor="poster">
 						Poster<span className="text-danger">*</span>

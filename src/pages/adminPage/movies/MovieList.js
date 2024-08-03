@@ -83,7 +83,7 @@ function MovieList(props) {
 					{data.length > 0 &&
 						currentItems.map((item, index) => {
 							return (
-								<tr>
+								<tr key={index}>
 									<td>{item.id}</td>
 									<td>{item.title}</td>
 									<td>{item.genre}</td>
@@ -104,7 +104,11 @@ function MovieList(props) {
 									<td>{item.release_date}</td>
 									<td>
 										<img
-											src={item.poster}
+											src={`http://localhost:8080/uploads/movies/${item.poster}`}
+											onError={(e) => {
+												e.target.src =
+													"path/to/default-image.jpg";
+											}} // Set default image on error
 											alt="img"
 											className="img-thumbnail"
 											width="100"
@@ -124,7 +128,7 @@ function MovieList(props) {
 										{item.description?.length > 200 &&
 											"..."}
 									</td>
-									<td>{item.movie_status}</td>
+									<td>{item.status}</td>
 									<td>
 										<button
 											type="button"
@@ -136,7 +140,7 @@ function MovieList(props) {
 										</button>
 										<Link
 											className="btn btn-success mb-1 w-100"
-											to={"/movie.edit"}
+											to={`./new/${item.id}`}
 										>
 											<b>Edit</b>
 										</Link>
