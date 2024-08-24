@@ -74,13 +74,13 @@ function AdminLayout({ children }) {
 									<i className="fa-solid fa-couch me-2"></i>
 									Auditoriums
 								</Link>
-								<Link className="collapse-item" to={"/admin.suats"}>
+								<Link className="collapse-item" to={"/admin/hour"}>
 									<i className="fa-solid fa-ticket me-2"></i>
 									Hours
 								</Link>
 								<Link
 									className="collapse-item"
-									to={"/admin.showtimes"}
+									to={"/admin/showtime"}
 								>
 									<i className="fa-solid fa-clapperboard me-2"></i>
 									Showtimes
@@ -90,7 +90,7 @@ function AdminLayout({ children }) {
 								</Link>
 								<Link
 									className="collapse-item"
-									to={"/admin.products"}
+									to={"/admin/product"}
 								>
 									<i className="fa-solid fa-utensils me-2"></i>
 									Products

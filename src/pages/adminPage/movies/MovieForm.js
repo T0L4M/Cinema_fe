@@ -189,7 +189,7 @@ function MovieForm(props) {
 								className="form-check-input"
 								id="dangchieu"
 								{...register("status")}
-								value="Showing"
+								value="showing"
 							/>
 							<label className="form-check-label" htmlFor="dangchieu">
 								Now Showing
@@ -201,7 +201,7 @@ function MovieForm(props) {
 								className="form-check-input"
 								id="sapchieu"
 								{...register("status")}
-								value="Coming"
+								value="coming"
 							/>
 							<label className="form-check-label" htmlFor="sapchieu">
 								Coming Soon
@@ -213,7 +213,7 @@ function MovieForm(props) {
 								className="form-check-input"
 								id="hetchieu"
 								{...register("status")}
-								value="Not Showing"
+								value="not showing"
 							/>
 							<label className="form-check-label" htmlFor="hetchieu">
 								Not Showing

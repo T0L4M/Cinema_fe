@@ -100,6 +100,14 @@ function AuditoriaList(props) {
 												Edit
 											</button>
 										</Link>
+										<Link
+											to={`/admin/auditoria/detail/${item.id}`}
+											// state={{ auditoriaData: item }}
+										>
+											<button className="btn btn-outline-success">
+												Detail
+											</button>
+										</Link>
 									</td>
 								</tr>
 							);

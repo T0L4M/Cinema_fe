@@ -188,7 +188,7 @@ const HomepageLayout = ({ children }) => {
 								<li className="nav-item">
 									<Link
 										className="nav-link fs-6"
-										to={"/showtime.list"}
+										to={"/showtimes"}
 									>
 										SHOWTIME
 									</Link>
@@ -439,7 +439,7 @@ const HomepageLayout = ({ children }) => {
 			{/*END FOOTER */}
 
 			{/*BACK TO TOP */}
-			<button
+			<Link
 				id="myBtn"
 				title="Go to top"
 				onClick={() => {
@@ -447,7 +447,7 @@ const HomepageLayout = ({ children }) => {
 					window.scrollTo({ top: 0, behavior: "smooth" });
 				}}
 				className={`fa-solid fa-circle-up ${isActive ? "active" : ""}`}
-			></button>
+			></Link>
 		</div>
 	);
 };
