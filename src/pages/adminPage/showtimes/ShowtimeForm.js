@@ -34,7 +34,7 @@ function ShowtimeForm(props) {
 	const { id } = useParams();
 	const location = useLocation();
 	const [showtimeData, setShowtimeData] = useState(location.state?.showtimeData || {});
-	const [formattedShowtimeDate, setFormattedShowtimeDate] = useState("");
+	// const [formattedShowtimeDate, setFormattedShowtimeDate] = useState("");
 	const { showAlert } = useContext(DataContext);
 
 	const [movies, setMovies] = useState([]);
@@ -58,7 +58,7 @@ function ShowtimeForm(props) {
 			? `http://localhost:8080/showtimes/edit/${id}`
 			: "http://localhost:8080/showtimes";
 		const method = id ? "PUT" : "POST";
-		data.showtime_date = formattedShowtimeDate;
+
 		await axios({
 			method,
 			url,
@@ -84,17 +84,18 @@ function ShowtimeForm(props) {
 				const response = await axios.get(
 					`http://localhost:8080/showtimes/detail/${id}`
 				);
+
 				setShowtimeData(response.data.data);
 			};
 			fetchData();
 		}
 	}, [id]);
 
-	function handleDateChange(e) {
-		const selectedDate = new Date(e.target.value);
-		const formattedDate = format(selectedDate, "yyyy-MM-dd");
-		setFormattedShowtimeDate(formattedDate);
-	}
+	// function handleDateChange(e) {
+	// 	const selectedDate = new Date(e.target.value);
+	// 	const formattedDate = format(selectedDate, "yyyy-MM-dd");
+	// 	setFormattedShowtimeDate(formattedDate);
+	// }
 
 	const fetchMovie = async () => {
 		try {
@@ -224,7 +225,7 @@ function ShowtimeForm(props) {
 						id="showtime_date"
 						placeholder="Enter Release Date"
 						{...register("showtime_date")}
-						onChange={(e) => handleDateChange(e)}
+						// onChange={(e) => handleDateChange(e)}
 					/>
 					<span className="text-danger">{errors.showtime_date?.message}</span>
 				</div>
@@ -239,7 +240,7 @@ function ShowtimeForm(props) {
 							id="statusOn"
 							{...register("status")}
 							value={true}
-							checked={showtimeData?.status === true} // Check if status is true
+							aria-checked={showtimeData?.status === true}
 						/>
 						<label className="form-check-label" htmlFor="statusOn">
 							ON
@@ -252,7 +253,7 @@ function ShowtimeForm(props) {
 							id="statusOff"
 							{...register("status")}
 							value={false}
-							checked={showtimeData?.status === false} // Check if status is false
+							aria-checked={showtimeData?.status === false}
 						/>
 						<label className="form-check-label" htmlFor="statusOff">
 							OFF

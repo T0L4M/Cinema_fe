@@ -2,21 +2,27 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const HomepageLayout = ({ children }) => {
-	const [isActive, setIsActive] = useState(false);
-	function toggleBacktotop() {
-		setIsActive(window.scrollY > 100);
-	}
+	const [showButton, setShowButton] = useState(false);
 
 	useEffect(() => {
-		const onScroll = () => toggleBacktotop();
-		window.addEventListener("scroll", onScroll);
+		const handleScroll = () => {
+			if (window.scrollY > 200) {
+				setShowButton(true);
+			} else {
+				setShowButton(false);
+			}
+		};
 
+		window.addEventListener("scroll", handleScroll);
 		return () => {
-			window.removeEventListener("scroll", onScroll);
+			window.removeEventListener("scroll", handleScroll);
 			import("../css/style.css");
 			import("../css/global.css");
 		};
 	}, []);
+	const handleButtonClick = () => {
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	};
 	return (
 		<div className="container-fluid">
 			<section
@@ -113,7 +119,7 @@ const HomepageLayout = ({ children }) => {
 					<div className="container">
 						<Link
 							className="navbar-brand text-white fw-bold text-decoration-none"
-							to={"/home"}
+							to={"/"}
 						>
 							<img
 								src="/"
@@ -144,7 +150,7 @@ const HomepageLayout = ({ children }) => {
 									<Link
 										className="nav-link"
 										saria-current="page"
-										to={"/home"}
+										to={"/"}
 									>
 										<i className="fa-solid fa-house"></i>
 									</Link>
@@ -168,7 +174,7 @@ const HomepageLayout = ({ children }) => {
 										<li>
 											<Link
 												className="dropdown-item"
-												to={"/movie.showing"}
+												to={"/movies/showing"}
 											>
 												<i className="fa-solid fa-video me-2"></i>
 												NOW SHOWING
@@ -177,7 +183,7 @@ const HomepageLayout = ({ children }) => {
 										<li>
 											<Link
 												className="dropdown-item border-0"
-												to={"/movie.coming"}
+												to={"/movies/coming"}
 											>
 												<i className="fa-solid fa-clapperboard me-2"></i>
 												COMING SOON
@@ -439,7 +445,7 @@ const HomepageLayout = ({ children }) => {
 			{/*END FOOTER */}
 
 			{/*BACK TO TOP */}
-			<Link
+			{/* <Link
 				id="myBtn"
 				title="Go to top"
 				onClick={() => {
@@ -447,7 +453,14 @@ const HomepageLayout = ({ children }) => {
 					window.scrollTo({ top: 0, behavior: "smooth" });
 				}}
 				className={`fa-solid fa-circle-up ${isActive ? "active" : ""}`}
-			></Link>
+			></Link> */}
+			<button
+				onClick={handleButtonClick}
+				style={{ display: showButton ? "block" : "none" }}
+				id="myBtn"
+			>
+				<i title="Go to top" class="fa-solid fa-circle-up"></i>
+			</button>
 		</div>
 	);
 };

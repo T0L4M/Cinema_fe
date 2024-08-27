@@ -119,6 +119,7 @@ function ShowtimePage(props) {
 																	}
 																	className="btn btn-light ms-3"
 																	to={`booking.checkout1/${filteredShowtime.id}`}
+																	data-aos="fade-right"
 																>
 																	{format(
 																		new Date(

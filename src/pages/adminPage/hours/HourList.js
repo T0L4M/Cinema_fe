@@ -5,6 +5,7 @@ import axios from "axios";
 import { Alert } from "react-bootstrap";
 import { ColorRing } from "react-loader-spinner";
 import ReactPaginate from "react-paginate";
+import AOS from "aos";
 
 function HourList(props) {
 	//Nhan Hour nhé
@@ -45,17 +46,19 @@ function HourList(props) {
 		setItemOffset(newOffset);
 	};
 	//END PAGINATE
-
+	useEffect(() => {
+		AOS.init();
+	}, []);
 	return (
 		<div className="mt-3">
-			<h2>Auditorium Table</h2>
+			<h2>Hour Table</h2>
 			{alert.type != "" && (
 				<Alert variant={alert.type} dismissible transition>
 					{alert.message}
 				</Alert>
 			)}
 			<Link className="btn btn-primary mb-3" to={"./new"}>
-				<b>Insert New Auditorium</b>
+				<b>Insert New Hour</b>
 			</Link>
 
 			{/* LOADER SPINNER */}
@@ -72,7 +75,11 @@ function HourList(props) {
 			)}
 			{/* END LOADER SPINNER */}
 
-			<table className="table table-striped table-dark">
+			<table
+				className="table table-striped table-dark"
+				data-aos="fade-up"
+				data-aos-duration="1200"
+			>
 				<thead>
 					<tr>
 						<th>ID</th>

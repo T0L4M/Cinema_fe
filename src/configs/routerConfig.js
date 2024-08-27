@@ -12,6 +12,7 @@ import HomePage from "../pages/homePage/HomePage";
 import ShowtimePage from "../pages/homePage/showtimes/ShowtimePage";
 import ProductList from "../pages/adminPage/products/ProductList";
 import ProductForm from "../pages/adminPage/products/ProductForm";
+import MoviePage from "../pages/homePage/movies/MoviePage";
 
 const publicRouter = [
 	{
@@ -21,6 +22,10 @@ const publicRouter = [
 	{
 		path: "/showtimes",
 		element: <ShowtimePage />,
+	},
+	{
+		path: "/movies/:status?",
+		element: <MoviePage />,
 	},
 ];
 
