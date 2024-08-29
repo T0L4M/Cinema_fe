@@ -13,6 +13,13 @@ import ShowtimePage from "../pages/homePage/showtimes/ShowtimePage";
 import ProductList from "../pages/adminPage/products/ProductList";
 import ProductForm from "../pages/adminPage/products/ProductForm";
 import MoviePage from "../pages/homePage/movies/MoviePage";
+import RegisterPage from "../pages/homePage/users/RegisterPage";
+import UserLoginPage from "../pages/homePage/users/UserLoginPage";
+import ContactUs from "../pages/homePage/ContactUs";
+import AboutUs from "../pages/homePage/AboutUs";
+import CheckOut1 from "../pages/homePage/bookings/CheckOut1";
+import CheckOTPPage from "../pages/homePage/users/fogotpassword/CheckOTPPage";
+import ForgotPasswordPage from "../pages/homePage/users/fogotpassword/ForgotPasswordPage";
 
 const publicRouter = [
 	{
@@ -27,74 +34,105 @@ const publicRouter = [
 		path: "/movies/:status?",
 		element: <MoviePage />,
 	},
+	{
+		path: "/register",
+		element: <RegisterPage />,
+	},
+	{
+		path: "/login",
+		element: <UserLoginPage />,
+	},
+	{
+		path: "/contact",
+		element: <ContactUs />,
+	},
+	{
+		path: "/information",
+		element: <AboutUs />,
+	},
+	{
+		path: "/checkotp",
+		element: <CheckOTPPage />,
+	},
+	{
+		path: "/forgotpassword",
+		element: <ForgotPasswordPage />,
+	},
 ];
 
 const privateRouter = [
 	{
 		path: "/dashboard",
 		element: <DashboardPage />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	//Auditoria
 	{
 		path: "/admin/auditoria",
 		element: <AuditoriaList />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	{
 		path: "/admin/auditoria/new/:id?",
 		element: <AuditoriaForm />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	{
 		path: "/admin/auditoria/detail/:id?",
 		element: <AuditoriaDetail />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	//Hour
 	{
 		path: "/admin/hour",
 		element: <HourList />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	{
 		path: "/admin/hour/new/:id?",
 		element: <HourForm />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 
 	//Movie
 	{
 		path: "/admin/movie",
 		element: <MovieList />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	{
 		path: "/admin/movie/new/:id?",
 		element: <MovieForm />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	//Showtime
 	{
 		path: "/admin/showtime",
 		element: <ShowtimeList />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	{
 		path: "/admin/showtime/new/:id?",
 		element: <ShowtimeForm />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	//Product
 	{
 		path: "/admin/product",
 		element: <ProductList />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
 	},
 	{
 		path: "/admin/product/new/:id?",
 		element: <ProductForm />,
-		roles: ["Admin"],
+		roles: ["ADMIN"],
+	},
+
+	//Booking
+	{
+		path: "/booking/:idShowtime?",
+		element: <CheckOut1 />,
+		roles: ["USER", "ADMIN"],
 	},
 ];
 

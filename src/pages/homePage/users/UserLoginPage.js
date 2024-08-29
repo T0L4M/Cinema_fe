@@ -1,55 +1,145 @@
-import React from 'react';
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+
+import Alert from "react-bootstrap/Alert";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { DataContext } from "../../../contexts/DataContext";
+
+const schema = yup
+	.object()
+	.shape({
+		userName: yup.string().required(),
+		password: yup.string().required(),
+	})
+	.required();
 
 function UserLoginPage(props) {
-    return (
-        <div class="container">
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: yupResolver(schema),
+	});
+	const { login, showAlert, alert } = useContext(DataContext);
+	async function onSubmit(data) {
+		showAlert("hide");
+		await axios
+			.post("http://localhost:8080/accounts/login", data)
+			.then((res) => {
+				if (res.status == 200) {
+					// console.log("DATA: ", jwtDecode(res.data.message));
 
-        <div class="row justify-content-center">
-  
-            <div class="col-xl-10 col-lg-12 col-md-9">
-  
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block"><img src="" alt="img"/></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="mb-4">SIGN IN</h1>
-                                    </div>
-  
-                                    <form class="user" action="" method="post">
-                                        <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" name="email"
-                                                placeholder="Email"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password" name="password"/>
-                                        </div>
-                                      
-                                        <input type="submit" value="Sign in" class="btn btn-primary btn-user btn-block"/>
-                                    </form>
-                                    <hr/>
-                                    <div class="text-center">
-                                        <a class="small" href="">Forgot Password?</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a class="small" href="">Create an Account!</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-  
-            </div>
-  
-        </div>
-  
-    </div>
-    );
+					login(res.data.message);
+				}
+			})
+			.catch((error) => {
+				if (error.response.status == 400) {
+					showAlert("danger", "Wrong Username OR Password");
+				} else {
+					console.log("Something went wrong", error);
+					showAlert(
+						"danger",
+						"An unexpected error occurred. Please try again later."
+					);
+				}
+			});
+	}
+	return (
+		<div className="container">
+			{alert.type != "" && (
+				<Alert variant={alert.type} dismissible transition>
+					{alert.message}
+				</Alert>
+			)}
+			<div className="row justify-content-center">
+				<div className="col-xl-10 col-lg-12 col-md-9">
+					<div className="card o-hidden border-0 shadow-lg my-5">
+						<div className="card-body p-0">
+							<div className="row">
+								<div className="col-lg-6 d-none d-lg-block">
+									<img src="" alt="img" />
+								</div>
+								<div className="col-lg-6">
+									<div className="p-5">
+										<div className="text-center">
+											<h1 className="mb-4">SIGN IN</h1>
+										</div>
+
+										<form
+											className="user"
+											onSubmit={handleSubmit(onSubmit)}
+										>
+											<div className="form-group">
+												<input
+													type="text"
+													className="form-control form-control-user"
+													id="exampleInputEmail"
+													placeholder="Enter Username"
+													{...register(
+														"userName"
+													)}
+												/>
+												<span className="text-danger">
+													{
+														errors.userName
+															?.message
+													}
+												</span>
+											</div>
+											<div className="form-group">
+												<input
+													type="password"
+													className="form-control form-control-user"
+													id="exampleInputPassword"
+													placeholder="Enter Password"
+													{...register(
+														"password"
+													)}
+												/>
+												<span className="text-danger">
+													{
+														errors.password
+															?.message
+													}
+												</span>
+											</div>
+
+											<input
+												type="submit"
+												value="Sign in"
+												className="btn btn-primary btn-user btn-block"
+											/>
+										</form>
+										<hr />
+										<div className="text-center">
+											<Link
+												className="small"
+												to={"/forgotpassword"}
+											>
+												Forgot Password?
+											</Link>
+										</div>
+										<div className="text-center">
+											<Link
+												className="small"
+												to={"/register"}
+											>
+												Create an Account!
+											</Link>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 export default UserLoginPage;

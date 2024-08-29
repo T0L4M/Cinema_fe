@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { compareAsc, format, isBefore, parseISO } from "date-fns";
+import { format, isBefore, parseISO } from "date-fns";
 
 function ShowtimePage(props) {
 	const [showtimes, setShowtimes] = useState([]);
@@ -14,24 +14,13 @@ function ShowtimePage(props) {
 
 		fetchShowtimes();
 	}, []);
-	// const filteredShowtimes = showtimes.filter((showtime) => {
-	// 	// Filter showtimes based on date and time
-	// 	const showtimeDate = parseISO(showtime.showtime_date); // Use parseISO for robust parsing
-	// 	const currentTime = new Date();
-	// 	return (
-	// 		showtimeDate >= currentTime.getDate() && // Check for today or future dates
-	// 		showtime.hour.time_from >= format(currentTime, "HH:mm:ss") // Compare times only if date is today
-	// 	);
-	// });
 
-	// console.log(filteredShowtimes);
-
-	const groupedShowtimes = showtimes.reduce((acc, cur) => {
-		const date = new Date(cur.showtime_date).toLocaleDateString();
-		acc[date] = acc[date] || [];
-		acc[date].push(cur);
-		return acc;
-	}, {});
+	// const groupedShowtimes = showtimes.reduce((acc, cur) => {
+	// 	const date = new Date(cur.showtime_date).toLocaleDateString();
+	// 	acc[date] = acc[date] || [];
+	// 	acc[date].push(cur);
+	// 	return acc;
+	// }, {});
 
 	const groupedByMovie = showtimes.reduce((acc, cur) => {
 		const movieId = cur.movie.id; // Assuming 'movie' property holds movie information
@@ -44,14 +33,6 @@ function ShowtimePage(props) {
 		<div class="container">
 			<div class="row">
 				{Object.entries(groupedByMovie).map(([movieId, movieShowtimes]) => {
-					// Check if there are any upcoming showtimes for this movie
-					// const hasUpcomingShowtimes = movieShowtimes.some(
-					// 	(showtime) =>
-					// 		isBefore(parseISO(showtime.showtime_date), new Date()) ===
-					// 		false
-					// );
-
-					// if (hasUpcomingShowtimes) {
 					return (
 						<div key={movieId} className="col-md-6 col-sm-12 row mb-3">
 							<div className="col-md-3 col-6">
@@ -118,8 +99,8 @@ function ShowtimePage(props) {
 																		filteredShowtime.id
 																	}
 																	className="btn btn-light ms-3"
-																	to={`booking.checkout1/${filteredShowtime.id}`}
-																	data-aos="fade-right"
+																	to={`/booking/${filteredShowtime.id}`}
+																	// data-aos="fade-right"
 																>
 																	{format(
 																		new Date(

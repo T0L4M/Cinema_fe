@@ -5,87 +5,71 @@ import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { DataContext } from "../../../contexts/DataContext";
-import { startOfDay } from "date-fns";
+import { format, startOfDay } from "date-fns";
 
 const phoneF = /^\+?[0-9]\d{1,10}$/;
 
 // Yup schema
-const schema = yup.object({
-	gender: yup.boolean(),
-	dob: yup
-		.date()
-		.typeError("Invalid Date Format")
-		.max(startOfDay(new Date()), "Register date cannot be earlier than today")
-		.required("Register Date cannot be blank!"),
-	userName: yup.string().required('UserName is required'),
-	phone: yup
-		.string()
-		.required("Phone cannot be blank!")
-		.matches(phoneF, 'Phone number is not valid'),
-	email: yup.string().required("Email cannot be blank!"),
-	address: yup.string().required("Address cannot be blank!"),
-	role: yup.string().oneOf(["USER", "ADMIN"]).required(),
-	password: yup
-		.string()
-		.min(8, 'Password must be at least 8 characters')
-		.required('Password is required'),
-	// passwordCheck: yup
-	//   .string()
-	//   .oneOf([yup.ref('password'), null], 'Passwords must match')
-	//   .required('Confirm Password is required'),
-}).required();
+const schema = yup
+	.object({
+		gender: yup.boolean(),
+		dob: yup
+			.date()
+			.typeError("Invalid Date Format")
+			.max(startOfDay(new Date()), "Register date cannot be earlier than today")
+			.required("Register Date cannot be blank!"),
+		userName: yup.string().required("UserName is required"),
+		phone: yup
+			.string()
+			.required("Phone cannot be blank!")
+			.matches(phoneF, "Phone number is not valid"),
+		email: yup.string().email().required("Email cannot be blank!"),
+		address: yup.string().required("Address cannot be blank!"),
+		role: yup.string().oneOf(["USER", "ADMIN"]).required(),
+		password: yup
+			.string()
+			.min(8, "Password must be at least 8 characters")
+			.required("Password is required"),
+		// passwordCheck: yup
+		//   .string()
+		//   .oneOf([yup.ref('password'), null], 'Passwords must match')
+		//   .required('Confirm Password is required'),
+	})
+	.required();
 
 function RegisterPage(props) {
-	const { id } = useParams();
-	const location = useLocation();
-	const [registerData, setRegisterData] = useState(location.state?.registerData || {});
 	const { showAlert } = useContext(DataContext);
+	const [formattedShowtimeDate, setFormattedShowtimeDate] = useState("");
 	const {
 		register,
 		handleSubmit,
-		setValue,
 		formState: { errors },
 	} = useForm({
 		resolver: yupResolver(schema),
 		mode: "onChange",
-		defaultValues: registerData,
 	});
 	const navigate = useNavigate();
 
 	// Submit handler
 	async function onSubmit(data) {
-		console.log("Form Data Submitted:", data); // Debugging
-		const url = id
-			? `http://localhost:8080/accounts/edit/${id}`
-			: "http://localhost:8080/accounts/register";
-		const method = id ? "PUT" : "POST";
+		data.dob = formattedShowtimeDate;
+
 		try {
-			const res = await axios({ method, url, data });
+			const res = await axios.post("http://localhost:8080/accounts/register", data);
 			if (res.status === 200) {
-				showAlert(
-					"success",
-					id ? "UPDATE REGISTER SUCCESSFULLY!" : "INSERT REGISTER SUCCESSFULLY!"
-				);
+				showAlert("success", "REGISTER SUCCESSFULLY!");
 				navigate(-1);
 			}
 		} catch (error) {
-			console.error("Error API ", method, ": ", error);
+			console.error("Error API ", error);
 		}
 	}
 
-	useEffect(() => {
-		if (id) {
-			const fetchData = async () => {
-				try {
-					const response = await axios.get(`http://localhost:8080/accounts/detail/${id}`);
-					setRegisterData(response.data.data);
-				} catch (error) {
-					console.error("Error fetching data:", error);
-				}
-			};
-			fetchData();
-		}
-	}, [id]);
+	function handleDateChange(e) {
+		const selectedDate = new Date(e.target.value);
+		const formattedDate = format(selectedDate, "yyyy-MM-dd");
+		setFormattedShowtimeDate(formattedDate);
+	}
 
 	return (
 		<div className="container">
@@ -101,6 +85,11 @@ function RegisterPage(props) {
 									<h1 className="mb-4">CREATE AN ACCOUNT</h1>
 								</div>
 								<form onSubmit={handleSubmit(onSubmit)}>
+									<input
+										type="hidden"
+										value="USER"
+										{...register("role")}
+									></input>
 									<div className="form-group">
 										<label htmlFor="gender">Gender: </label>
 										<label className="gender">
@@ -109,7 +98,9 @@ function RegisterPage(props) {
 												value={true}
 												{...register("gender")}
 											/>
-											<span className="gender-name">Male</span>
+											<span className="gender-name">
+												Male
+											</span>
 											<span className="gender-shape"></span>
 										</label>
 										<label className="gender">
@@ -118,10 +109,14 @@ function RegisterPage(props) {
 												value={false}
 												{...register("gender")}
 											/>
-											<span className="gender-name">Female</span>
+											<span className="gender-name">
+												Female
+											</span>
 											<span className="gender-shape"></span>
 										</label>
-										<span className="text-danger">{errors.gender?.message}</span>
+										<span className="text-danger">
+											{errors.gender?.message}
+										</span>
 									</div>
 									<div className="form-group row">
 										<div className="col-sm-6 mb-3 mb-sm-0">
@@ -131,7 +126,9 @@ function RegisterPage(props) {
 												placeholder="Login Username"
 												{...register("userName")}
 											/>
-											<span className="text-danger">{errors.userName?.message}</span>
+											<span className="text-danger">
+												{errors.userName?.message}
+											</span>
 										</div>
 										<div className="col-sm-6">
 											<input
@@ -140,7 +137,9 @@ function RegisterPage(props) {
 												placeholder="Phone"
 												{...register("phone")}
 											/>
-											<span className="text-danger">{errors.phone?.message}</span>
+											<span className="text-danger">
+												{errors.phone?.message}
+											</span>
 										</div>
 									</div>
 									<div className="form-group">
@@ -150,7 +149,9 @@ function RegisterPage(props) {
 											placeholder="Email"
 											{...register("email")}
 										/>
-										<span className="text-danger">{errors.email?.message}</span>
+										<span className="text-danger">
+											{errors.email?.message}
+										</span>
 									</div>
 									<div className="form-group row">
 										<div className="col-sm-6 mb-3 mb-sm-0">
@@ -158,8 +159,13 @@ function RegisterPage(props) {
 												type="date"
 												className="form-control form-control-user"
 												{...register("dob")}
+												onChange={(e) =>
+													handleDateChange(e)
+												}
 											/>
-											<span className="text-danger">{errors.dob?.message}</span>
+											<span className="text-danger">
+												{errors.dob?.message}
+											</span>
 										</div>
 									</div>
 									<div className="form-group">
@@ -169,7 +175,9 @@ function RegisterPage(props) {
 											placeholder="Address"
 											{...register("address")}
 										/>
-										<span className="text-danger">{errors.address?.message}</span>
+										<span className="text-danger">
+											{errors.address?.message}
+										</span>
 									</div>
 									<div className="form-group row">
 										<div className="col-sm-6 mb-3 mb-sm-0">
@@ -179,19 +187,30 @@ function RegisterPage(props) {
 												placeholder="Password"
 												{...register("password")}
 											/>
-											<span className="text-danger">{errors.password?.message}</span>
+											<span className="text-danger">
+												{errors.password?.message}
+											</span>
 										</div>
 									</div>
-									<button type="submit" className="btn btn-primary btn-user btn-block">
+									<button className="btn btn-primary btn-user btn-block">
 										Sign up
 									</button>
 								</form>
-								<div className="text-center
-">
-									<Link className="small" to={""}>Forgot Password?</Link>
+								<div
+									className="text-center
+"
+								>
+									<Link
+										className="small"
+										to={"/forgotpassword"}
+									>
+										Forgot Password?
+									</Link>
 								</div>
 								<div className="text-center">
-									<Link className="small" to={""}>Already have an account? Sign in!</Link>
+									<Link className="small" to={"/login"}>
+										Already have an account? Sign in!
+									</Link>
 								</div>
 							</div>
 						</div>

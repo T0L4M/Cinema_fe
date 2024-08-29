@@ -1,8 +1,106 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { DataContext } from "../contexts/DataContext";
+import { Container, Navbar, NavDropdown, Nav, Offcanvas } from "react-bootstrap";
 
 const HomepageLayout = ({ children }) => {
 	const [showButton, setShowButton] = useState(false);
+	const { auth } = useContext(DataContext);
+	const [user, setUser] = useState(auth || null);
+
+	const switchLink = () => {
+		switch (user?.role) {
+			// <NavDropdown
+			// 						id="navbarDropdown"
+			// 						title="MOVIES"
+			// 						//   menuVariant="dark"
+			// 						className="nav-item dropdown"
+			// 					>
+			// 						<NavDropdown.Item style={{ padding: "0" }}>
+			// 							<Link
+			// 								className="dropdown-item"
+			// 								to={"/movies/showing"}
+			// 							>
+			// 								<i className="fa-solid fa-video me-2"></i>
+			// 								NOW SHOWING
+			// 							</Link>
+			// 						</NavDropdown.Item>
+			// 						<NavDropdown.Divider />
+			// 						<NavDropdown.Item style={{ padding: "0" }}>
+			// 							<Link
+			// 								className="dropdown-item"
+			// 								to={"/movies/coming"}
+			// 							>
+			// 								<i className="fa-solid fa-clapperboard me-2"></i>
+			// 								COMING SOON
+			// 							</Link>
+			// 						</NavDropdown.Item>
+			// 					</NavDropdown>
+
+			case "ADMIN":
+				return (
+					<Navbar.Text style={{ padding: "0" }}>
+						<span className="d-inline-block">ADMIN:</span>
+						<Link className="nav-link d-inline-block" to={"/dashboard"}>
+							TO DASHBOARD
+						</Link>
+					</Navbar.Text>
+				);
+			case "USER":
+				return (
+					<li className="nav-item dropdown">
+						<a
+							href="#"
+							className="nav-link dropdown-toggle"
+							data-bs-toggle="dropdown"
+							id="navbarDropdown2"
+							role="button"
+							aria-expanded="false"
+						>
+							<span>{user.userName}</span>
+						</a>
+						{/* Dropdown Info */}
+						<ul
+							className="dropdown-menu drop_1"
+							aria-labelledby="navbarDropdown2"
+						>
+							<li>
+								<Link className="dropdown-item" to="">
+									<i className="fas fa-user"></i>
+									PROFILE
+								</Link>
+							</li>
+							<li>
+								<Link className="dropdown-item" to="">
+									<i className="fa-solid fa-clock-rotate-left"></i>
+									TRANSACTION HISTORY
+								</Link>
+							</li>
+							<li>
+								<Link
+									className="dropdown-item"
+									to=""
+									data-toggle="modal"
+									data-target="#logoutModal"
+									onClick="return confirm('Log out from the website')"
+								>
+									<i className="fas fa-sign-out-alt"></i>
+									LOG OUT
+								</Link>
+							</li>
+						</ul>
+					</li>
+				);
+			default:
+				return (
+					<li className="nav-item">
+						<Link className="nav-link fs-6" to="/login">
+							SIGN IN/ SIGN UP
+						</Link>
+					</li>
+				);
+		}
+	};
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -16,10 +114,11 @@ const HomepageLayout = ({ children }) => {
 		window.addEventListener("scroll", handleScroll);
 		return () => {
 			window.removeEventListener("scroll", handleScroll);
+			switchLink();
 			import("../css/style.css");
 			import("../css/global.css");
 		};
-	}, []);
+	}, [user]);
 	const handleButtonClick = () => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
@@ -39,10 +138,10 @@ const HomepageLayout = ({ children }) => {
 								<h3 className="mb-0">
 									<Link
 										className="text-white text-decoration-none"
-										to={"/home"}
+										to={"/"}
 									>
 										<img
-											src="/"
+											src="/assets/image/fin_cinema.png"
 											className="img-thumbnail"
 											width="100"
 											alt=""
@@ -62,7 +161,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoRss"
 											title="Rss"
 										>
-											<i className="fa fa-instagram"></i>
+											<i className="fa-brands fa-instagram"></i>
 										</Link>
 									</li>
 									<li>
@@ -71,7 +170,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoFacebook"
 											title="Facebook"
 										>
-											<i className="fa fa-facebook"></i>
+											<i className="fa-brands fa-facebook"></i>
 										</Link>
 									</li>
 									<li>
@@ -80,7 +179,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoTwitter"
 											title="Twitter"
 										>
-											<i className="fa fa-twitter"></i>
+											<i class="fa-brands fa-twitter"></i>
 										</Link>
 									</li>
 									<li>
@@ -89,7 +188,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoGoogle"
 											title="Google +"
 										>
-											<i className="fa fa-youtube"></i>
+											<i class="fa-brands fa-google"></i>
 										</Link>
 									</li>
 									<li>
@@ -98,7 +197,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoLinkedin"
 											title="Linkedin"
 										>
-											<i className="fa fa-linkedin"></i>
+											<i class="fa-brands fa-linkedin"></i>
 										</Link>
 									</li>
 								</ul>
@@ -111,67 +210,64 @@ const HomepageLayout = ({ children }) => {
 
 			{/*START NAVBAR */}
 			<section id="header">
-				<nav
-					className="navbar navbar-expand-md "
+				<Navbar
+					expand="lg"
 					style={{ backgroundImage: "linear-gradient( #1B6B93 , #4FC0D0)" }}
-					id="navbar_sticky"
+					sticky="top"
 				>
-					<div className="container">
-						<Link
-							className="navbar-brand text-white fw-bold text-decoration-none"
-							to={"/"}
+					<Container>
+						<Navbar.Brand>
+							<Link
+								className="navbar-brand text-white fw-bold text-decoration-none"
+								to={"/"}
+							>
+								<img
+									src="/"
+									className="img-thumbnail me-2"
+									width="100"
+									alt=""
+								/>
+								CINEMA
+							</Link>
+						</Navbar.Brand>
+						<Navbar.Toggle aria-controls="basic-navbar-nav" />
+						<Navbar.Offcanvas
+							id="basic-navbar-nav"
+							aria-labelledby="basic-navbar-nav"
+							placement="end"
 						>
-							<img
-								src="/"
-								className="img-thumbnail me-2"
-								width="100"
-								alt=""
-							/>
-							CINEMA
-						</Link>
-						<button
-							className="navbar-toggler"
-							type="button"
-							data-bs-toggle="collapse"
-							data-bs-target="#navbarSupportedContent"
-							aria-controls="navbarSupportedContent"
-							aria-expanded="false"
-							aria-label="Toggle navigation"
-						>
-							<span className="navbar-toggler-icon"></span>
-						</button>
-						<div
-							className="collapse navbar-collapse text-dark"
-							style={{ fontFamily: "Mitr" }}
-							id="navbarSupportedContent"
-						>
-							<ul className="navbar-nav mb-0">
-								<li className="nav-item">
-									<Link
-										className="nav-link"
-										saria-current="page"
-										to={"/"}
-									>
-										<i className="fa-solid fa-house"></i>
-									</Link>
-								</li>
+							<Offcanvas.Header closeButton>
+								<Offcanvas.Title id="basic-navbar-nav">
+									<img
+										src="/"
+										className="img-thumbnail me-2"
+										width="100"
+										alt=""
+									/>
+									CINEMA
+								</Offcanvas.Title>
+							</Offcanvas.Header>
+							<Offcanvas.Body>
+								<Nav className=" flex-grow-1 pe-3">
+									<Navbar.Text style={{ padding: "0" }} k>
+										<Link
+											className="nav-link"
+											saria-current="page"
+											to={"/"}
+										>
+											<i className="fa-solid fa-house"></i>
+										</Link>
+									</Navbar.Text>
 
-								<li className="nav-item dropdown">
-									<Link
-										className="nav-link dropdown-toggle fs-6"
-										to={"#"}
+									<NavDropdown
 										id="navbarDropdown"
-										role="button"
-										data-bs-toggle="dropdown"
-										aria-expanded="false"
+										title="MOVIES"
+										//   menuVariant="dark"
+										className="nav-item dropdown"
 									>
-										MOVIES
-									</Link>
-									<ul
-										className="dropdown-menu drop_1"
-										aria-labelledby="navbarDropdown"
-									>
-										<li>
+										<NavDropdown.Item
+											style={{ padding: "0" }}
+										>
 											<Link
 												className="dropdown-item"
 												to={"/movies/showing"}
@@ -179,136 +275,51 @@ const HomepageLayout = ({ children }) => {
 												<i className="fa-solid fa-video me-2"></i>
 												NOW SHOWING
 											</Link>
-										</li>
-										<li>
+										</NavDropdown.Item>
+										<NavDropdown.Divider />
+										<NavDropdown.Item
+											style={{ padding: "0" }}
+										>
 											<Link
-												className="dropdown-item border-0"
+												className="dropdown-item"
 												to={"/movies/coming"}
 											>
 												<i className="fa-solid fa-clapperboard me-2"></i>
 												COMING SOON
 											</Link>
-										</li>
-									</ul>
-								</li>
-								<li className="nav-item">
-									<Link
-										className="nav-link fs-6"
-										to={"/showtimes"}
-									>
-										SHOWTIME
-									</Link>
-								</li>
-								<li className="nav-item">
-									<Link className="nav-link fs-6" to={"/abus"}>
-										ABOUT US
-									</Link>
-								</li>
-								<li className="nav-item">
-									<Link
-										className="nav-link fs-6"
-										to={"/contact_us"}
-									>
-										CONTACT US
-									</Link>
-								</li>
-								{/* @if (session("userInfo"))
-                          @switch(session('userInfo')['role'])
-                          @case(1)
-                              <li className="nav-item">
-                                  <span className="d-inline-block">ADMIN:</span>
-                                  <a className="nav-link d-inline-block" href="{{ route('admin.dashboard') }}">TO DASHBOARD</a>
-                              </li>
-                          @break
-            
-                          @case(0)
-                          <li className="nav-item dropdown">
-                            <a 
-                            href="#" 
-                            className="nav-link dropdown-toggle"
-                                                            data-bs-toggle="dropdown"
-                            id="navbarDropdown2"
-                            role="button"
-                            aria-expanded="false"
-                                                            >
-                                                                  <span>{{ session("userInfo")["name"] }}</span>
-                                                            </a>
-                                                            <!-- Dropdown - User Information -->
-                                                            <ul
-                                                                  className="dropdown-menu drop_1"
-                              aria-labelledby="navbarDropdown2"
-                                                            >
-                                                                  <li>
-                                                                    <a className="dropdown-item" href="{{ route("user.detail",session("userInfo")["user_id"]) }}">
-                                                                          <i
-                                                                                className="fas fa-user"
-                                                                          ></i>
-                                                                          PROFILE
-                                                                    </a>
-                                                                  </li>
-                              <li>
-                                <a className="dropdown-item" href="{{ route("user.histories",session("userInfo")["user_id"]) }}">
-                                  <i className="fa-solid fa-clock-rotate-left"></i>
-                                  TRANSACTION HISTORY
-                                </a>
-                              </li>
-                                                                  <li>
-                                                                    <a
-                                                                          className="dropdown-item"
-                                                                          href="{{ route("user.logout") }}"
-                                                                          data-toggle="modal"
-                                                                          data-target="#logoutModal"
-                                  onclick="return confirm('Log out from the website')"
-                                                                    >
-                                                                          <i
-                                                                                className="fas fa-sign-out-alt "
-                                                                          ></i>
-                                                                          LOG OUT
-                                                                    </a>
-                                                                  </li>
-                                                            </ul>
-                                                      </li>
-                          @break
-            
-                          @case(2)
-                              <li className="nav-item">
-                                  <span className="d-inline-block fs-4">Welcome:</span>
-                                  <a className="nav-link d-inline-block" href="{{ route('movies.nhanvien') }}">
-                                      {{ session('userInfo')['name'] }}</a>
-                              </li>
-                          @break
-            
-                          @default
-                            
-                      @endswitch
-                            
-                          @else
-                              <li className="nav-item">
-                            <a className="nav-link fs-6" href="{{ route("login") }}"
-                                                                        >SIGN IN/ SIGN UP</a
-                                                                  >
-                          </li>
-                          @endif 
-                           */}
-							</ul>
-						</div>
-					</div>
-				</nav>
+										</NavDropdown.Item>
+									</NavDropdown>
+									<Navbar.Text style={{ padding: "0" }} k>
+										<Link
+											className="nav-link fs-6"
+											to={"/showtimes"}
+										>
+											SHOWTIME
+										</Link>
+									</Navbar.Text>
+									<Navbar.Text style={{ padding: "0" }} k>
+										<Link
+											className="nav-link fs-6"
+											to={"/information"}
+										>
+											ABOUT US
+										</Link>
+									</Navbar.Text>
+									<Navbar.Text style={{ padding: "0" }} k>
+										<Link
+											className="nav-link fs-6"
+											to={"/contact"}
+										>
+											CONTACT US
+										</Link>
+									</Navbar.Text>
+									{switchLink()}
+								</Nav>
+							</Offcanvas.Body>
+						</Navbar.Offcanvas>
+					</Container>
+				</Navbar>
 			</section>
-			{/* END NAVBAR*/}
-
-			{/* @if (session("success"))
-                <div className="alert alert-success alert-dismissible fade show mb-0">
-                  <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
-                  <strong>Success!</strong> {{ session("success") }}.
-                </div>
-                @endif
-                @if (session("error"))
-                  <div className="alert alert-danger alert-dismissible fade show mb-0">
-                      <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
-                      <strong>Error!</strong> {{session('error')}}.
-                    </div>
-                  @endif */}
 
 			{/*START CONTENTING*/}
 			<main
@@ -345,7 +356,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoRss"
 											title="Rss"
 										>
-											<i className="fa fa-instagram"></i>
+											<i className="fa-brands fa-instagram"></i>
 										</Link>
 									</li>
 									<li>
@@ -354,7 +365,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoFacebook"
 											title="Facebook"
 										>
-											<i className="fa fa-facebook"></i>
+											<i className="fa-brands fa-facebook"></i>
 										</Link>
 									</li>
 									<li>
@@ -363,7 +374,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoTwitter"
 											title="Twitter"
 										>
-											<i className="fa fa-twitter"></i>
+											<i class="fa-brands fa-twitter"></i>
 										</Link>
 									</li>
 									<li>
@@ -372,7 +383,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoGoogle"
 											title="Google +"
 										>
-											<i className="fa fa-youtube"></i>
+											<i class="fa-brands fa-google"></i>
 										</Link>
 									</li>
 									<li>
@@ -381,7 +392,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoLinkedin"
 											title="Linkedin"
 										>
-											<i className="fa fa-linkedin"></i>
+											<i class="fa-brands fa-linkedin"></i>
 										</Link>
 									</li>
 								</ul>
@@ -390,16 +401,16 @@ const HomepageLayout = ({ children }) => {
 
 						<div className="col-lg-4 col-md-4 col-sm-12">
 							<h4 className="title-footer mb-4">Quick Links</h4>
-							<Link className="btn btn-link" to={"/movie.showing"}>
+							<Link className="btn btn-link" to={"/movie/showing"}>
 								Now showing
 							</Link>
-							<Link className="btn btn-link" to={"/movie.coming"}>
+							<Link className="btn btn-link" to={"/movie/coming"}>
 								Coming soon
 							</Link>
-							<Link className="btn btn-link" to={"/abus"}>
+							<Link className="btn btn-link" to={"/aboutUs"}>
 								About us
 							</Link>
-							<Link className="btn btn-link" to={"/contact_us"}>
+							<Link className="btn btn-link" to={"/contactUs"}>
 								Contact us
 							</Link>
 						</div>

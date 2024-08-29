@@ -1,11 +1,13 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import HomepageLayout from "./layouts/HomepageLayout";
 import { privateRouter, publicRouter } from "./configs/routerConfig";
 import AdminLayout from "./layouts/AdminLayout";
+import { DataContext } from "./contexts/DataContext";
+import { useContext } from "react";
 
 function App() {
-	// const { auth } = useContext(DataContext);
+	const { auth, showAlert } = useContext(DataContext);
 	return (
 		<div>
 			<Routes>
@@ -19,23 +21,42 @@ function App() {
 					);
 				})}
 				{privateRouter.map((item, index) => {
-					// if (item.roles.includes(auth?.role)) {
-					return (
-						<Route
-							key={index}
-							path={item.path}
-							element={<AdminLayout>{item.element}</AdminLayout>}
-						/>
-					);
-					// } else {
-					// 	return (
-					// 		<Route
-					// 			key={index}
-					// 			path="*"
-					// 			element={<Navigate to="./" />}
-					// 		/>
-					// 	);
-					// }
+					if (item.roles.includes(auth?.role)) {
+						if (auth?.role == "ADMIN") {
+							return (
+								<Route
+									key={index}
+									path={item.path}
+									element={
+										<AdminLayout>
+											{item.element}
+										</AdminLayout>
+									}
+								/>
+							);
+						} else if (auth?.role == "USER") {
+							return (
+								<Route
+									key={index}
+									path={item.path}
+									element={
+										<HomepageLayout>
+											{item.element}
+										</HomepageLayout>
+									}
+								/>
+							);
+						}
+					} else {
+						// showAlert("warning", "Please Log In to continue!");
+						return (
+							<Route
+								key={index}
+								path="*"
+								element={<Navigate to="./login" />}
+							/>
+						);
+					}
 				})}
 			</Routes>
 		</div>
