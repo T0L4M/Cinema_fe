@@ -20,6 +20,8 @@ import AboutUs from "../pages/homePage/AboutUs";
 import CheckOut1 from "../pages/homePage/bookings/CheckOut1";
 import CheckOTPPage from "../pages/homePage/users/fogotpassword/CheckOTPPage";
 import ForgotPasswordPage from "../pages/homePage/users/fogotpassword/ForgotPasswordPage";
+import CheckOut2 from "../pages/homePage/bookings/CheckOut2";
+import VNPayResponseHandler from "../pages/homePage/bookings/payments/VNPayResponseHandler";
 
 const publicRouter = [
 	{
@@ -132,6 +134,16 @@ const privateRouter = [
 	{
 		path: "/booking/:idShowtime?",
 		element: <CheckOut1 />,
+		roles: ["USER", "ADMIN"],
+	},
+	{
+		path: "/checkout",
+		element: <CheckOut2 />,
+		roles: ["USER", "ADMIN"],
+	},
+	{
+		path: "/vnpayResponse",
+		element: <VNPayResponseHandler />,
 		roles: ["USER", "ADMIN"],
 	},
 ];

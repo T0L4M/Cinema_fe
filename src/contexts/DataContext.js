@@ -8,10 +8,16 @@ function DataProvider({ children }) {
 	const navigate = useNavigate();
 	const [alert, setAlert] = useState({ type: "", message: "", show: false });
 	//USER
-	let user = JSON.parse(localStorage.getItem("user")) || {};
+	let user = JSON.parse(sessionStorage.getItem("user")) || {};
 	const [auth, setAuth] = useState(user);
+	//BOOKING
+	let book = JSON.parse(sessionStorage.getItem("booking")) || null;
+	const [bookAuth, setBookAuth] = useState(book);
+	//ORDER
+	let order = JSON.parse(sessionStorage.getItem("order")) || null;
+	const [orderAuth, setOrderAuth] = useState(order);
 	//ALERTING
-	const showAlert = (type, message, duration = 3000) => {
+	const showAlert = (type, message, duration = 1000) => {
 		setAlert({ type, message, show: true });
 		setTimeout(() => setAlert({ ...alert, show: false }), duration);
 	};
@@ -21,7 +27,7 @@ function DataProvider({ children }) {
 	//LOGIN
 	const login = async (u) => {
 		const parseUser = jwtDecode(u);
-		localStorage.setItem("user", JSON.stringify(parseUser.UserInfo));
+		sessionStorage.setItem("user", JSON.stringify(parseUser.UserInfo));
 		setAuth(parseUser.UserInfo);
 		if (parseUser.UserInfo.role == "ADMIN") {
 			showAlert("success", "Login Successfully!");
@@ -34,9 +40,35 @@ function DataProvider({ children }) {
 
 	//LOG OUT
 	const logout = () => {
-		localStorage.removeItem("user");
+		sessionStorage.removeItem("user");
+		setAuth({});
 		showAlert("success", "Logged out successfully!");
 		navigate("/");
+	};
+
+	//Save Booking
+	const bookingSaving = (c) => {
+		sessionStorage.setItem("booking", c);
+		setBookAuth(c);
+	};
+	//Delete Booking
+	const bookingDelete = () => {
+		sessionStorage.removeItem("booking");
+		setBookAuth(null);
+		// showAlert("success", "Logged out successfully!");
+		navigate("/showtimes");
+	};
+	//Save Order
+	const orderSaving = (o) => {
+		sessionStorage.setItem("order", o);
+		setOrderAuth(o);
+	};
+	//Delete Order
+	const orderDelete = () => {
+		sessionStorage.removeItem("order");
+		setOrderAuth(null);
+		// showAlert("success", "Logged out successfully!");
+		// navigate("/showtimes");
 	};
 
 	let valueProvide = {
@@ -47,6 +79,12 @@ function DataProvider({ children }) {
 		setAuth,
 		login,
 		logout,
+		bookingSaving,
+		bookAuth,
+		bookingDelete,
+		orderSaving,
+		orderAuth,
+		orderDelete,
 	};
 	return <DataContext.Provider value={valueProvide}>{children}</DataContext.Provider>;
 }

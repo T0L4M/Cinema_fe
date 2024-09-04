@@ -1,42 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { DataContext } from "../contexts/DataContext";
 import { Container, Navbar, NavDropdown, Nav, Offcanvas } from "react-bootstrap";
 
 const HomepageLayout = ({ children }) => {
 	const [showButton, setShowButton] = useState(false);
-	const { auth } = useContext(DataContext);
-	const [user, setUser] = useState(auth || null);
+	const { auth, logout } = useContext(DataContext);
+	const [user, setUser] = useState(null);
 
-	const switchLink = () => {
-		switch (user?.role) {
-			// <NavDropdown
-			// 						id="navbarDropdown"
-			// 						title="MOVIES"
-			// 						//   menuVariant="dark"
-			// 						className="nav-item dropdown"
-			// 					>
-			// 						<NavDropdown.Item style={{ padding: "0" }}>
-			// 							<Link
-			// 								className="dropdown-item"
-			// 								to={"/movies/showing"}
-			// 							>
-			// 								<i className="fa-solid fa-video me-2"></i>
-			// 								NOW SHOWING
-			// 							</Link>
-			// 						</NavDropdown.Item>
-			// 						<NavDropdown.Divider />
-			// 						<NavDropdown.Item style={{ padding: "0" }}>
-			// 							<Link
-			// 								className="dropdown-item"
-			// 								to={"/movies/coming"}
-			// 							>
-			// 								<i className="fa-solid fa-clapperboard me-2"></i>
-			// 								COMING SOON
-			// 							</Link>
-			// 						</NavDropdown.Item>
-			// 					</NavDropdown>
-
+	const switchLink = useCallback(() => {
+		switch (auth?.role) {
 			case "ADMIN":
 				return (
 					<Navbar.Text style={{ padding: "0" }}>
@@ -48,59 +21,55 @@ const HomepageLayout = ({ children }) => {
 				);
 			case "USER":
 				return (
-					<li className="nav-item dropdown">
-						<a
-							href="#"
-							className="nav-link dropdown-toggle"
-							data-bs-toggle="dropdown"
-							id="navbarDropdown2"
-							role="button"
-							aria-expanded="false"
-						>
-							<span>{user.userName}</span>
-						</a>
-						{/* Dropdown Info */}
-						<ul
-							className="dropdown-menu drop_1"
-							aria-labelledby="navbarDropdown2"
-						>
-							<li>
-								<Link className="dropdown-item" to="">
-									<i className="fas fa-user"></i>
-									PROFILE
-								</Link>
-							</li>
-							<li>
-								<Link className="dropdown-item" to="">
-									<i className="fa-solid fa-clock-rotate-left"></i>
-									TRANSACTION HISTORY
-								</Link>
-							</li>
-							<li>
-								<Link
-									className="dropdown-item"
-									to=""
-									data-toggle="modal"
-									data-target="#logoutModal"
-									onClick="return confirm('Log out from the website')"
-								>
-									<i className="fas fa-sign-out-alt"></i>
-									LOG OUT
-								</Link>
-							</li>
-						</ul>
-					</li>
+					<NavDropdown
+						id="navbarDropdown"
+						title={auth?.userName}
+						// menuVariant="dark"
+						className="nav-item dropdown"
+					>
+						<NavDropdown.Item style={{ padding: "0" }}>
+							<Link className="dropdown-item" to={"/personal"}>
+								<i className="fas fa-user me-2"></i>
+								PROFILE
+							</Link>
+						</NavDropdown.Item>
+						<NavDropdown.Divider />
+						<NavDropdown.Item style={{ padding: "0" }}>
+							<Link className="dropdown-item" to={"/personal/history"}>
+								<i className="fa-solid fa-clock-rotate-left me-2"></i>
+								TRANSACTION
+							</Link>
+						</NavDropdown.Item>
+						<NavDropdown.Divider />
+						<NavDropdown.Item style={{ padding: "0" }}>
+							<span
+								className="ms-3"
+								onClick={() => {
+									if (
+										window.confirm(
+											"Are you sure you want to log out?"
+										)
+									) {
+										logout();
+									}
+								}}
+							>
+								<i className="fas fa-sign-out me-2"></i>
+								LOG OUT
+							</span>
+						</NavDropdown.Item>
+					</NavDropdown>
 				);
 			default:
 				return (
-					<li className="nav-item">
-						<Link className="nav-link fs-6" to="/login">
+					<Navbar.Text style={{ padding: "0" }}>
+						<Link className="nav-link fs-6" to={"/login"}>
 							SIGN IN/ SIGN UP
 						</Link>
-					</li>
+					</Navbar.Text>
 				);
 		}
-	};
+	}, [auth]);
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -113,12 +82,12 @@ const HomepageLayout = ({ children }) => {
 
 		window.addEventListener("scroll", handleScroll);
 		return () => {
-			window.removeEventListener("scroll", handleScroll);
-			switchLink();
 			import("../css/style.css");
 			import("../css/global.css");
+			window.removeEventListener("scroll", handleScroll);
+			// switchLink();
 		};
-	}, [user]);
+	}, []);
 	const handleButtonClick = () => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
@@ -332,9 +301,8 @@ const HomepageLayout = ({ children }) => {
 
 			{/*START FOOTER */}
 			<div
-				className="container-fluid  footer py-5 wow fadeIn"
+				className="container-fluid  footer py-5 fadeIn"
 				style={{ backgroundImage: "linear-gradient(#FF9EAA,#73BBC9 )" }}
-				data-wow-delay="0.1s"
 			>
 				<div className="container py-5">
 					<div className="row ">

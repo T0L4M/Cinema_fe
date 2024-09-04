@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { Button, Modal } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+import { Alert, Button, Modal } from "react-bootstrap";
 import { DataContext } from "../../../contexts/DataContext";
 
 const CheckOut1 = () => {
@@ -9,7 +9,7 @@ const CheckOut1 = () => {
 	const [show, setShow] = useState(false);
 	const handleShow = () => setShow(!show);
 	//For Fetching Data
-	const { auth } = useContext(DataContext);
+	const { auth, bookingSaving, alert, showAlert } = useContext(DataContext);
 	const [seatMap, setSeatMap] = useState("");
 	const [showtime, setShowtime] = useState({});
 	const [movie, setMovie] = useState({});
@@ -19,11 +19,11 @@ const CheckOut1 = () => {
 	//For Booking
 	const [booking, setBooking] = useState({
 		seatBookingList: [],
-		productQuantities: {},
 		productList: [],
 		customerId: auth.id,
 		showtimeId: idShowtime,
 	});
+	const navigate = useNavigate();
 
 	// Fetch product data
 	const fetchProduct = async () => {
@@ -69,9 +69,8 @@ const CheckOut1 = () => {
 
 	const handleChangeInput = (field, value) => {
 		if (field === "seatBookingList") {
-			const updatedList = Array.isArray(booking.seatBookingList)
-				? booking.seatBookingList.slice()
-				: []; // Make a copy to avoid mutation
+			// Handle checkbox selection/deselection
+			const updatedList = [...booking.seatBookingList];
 			if (updatedList.includes(value)) {
 				// Deselect the seat
 				const index = updatedList.indexOf(value);
@@ -79,78 +78,39 @@ const CheckOut1 = () => {
 			} else {
 				// Select the seat
 				updatedList.push(value);
+				setBooking({
+					...booking,
+					[field]: updatedList,
+				});
 			}
-			setBooking({
-				...booking,
-				[field]: updatedList,
-			});
 		}
-		// Similar logic for productList using concat and filter methods
 		if (field === "productList") {
-			// Ensure productList is an array
-			const updatedProductList = Array.isArray(booking.productList)
-				? booking.productList.slice()
-				: [];
-
-			// ... (Implement logic using concat and filter for product selection)
+			// Handle checkbox selection/deselection
+			const updatedProductList = [...booking.productList];
 			if (updatedProductList.includes(value)) {
-				// Deselect the product
+				// Deselect the seat
 				const index = updatedProductList.indexOf(value);
 				updatedProductList.splice(index, 1);
 			} else {
-				// Select the product
+				// Select the seat
 				updatedProductList.push(value);
+				setBooking({
+					...booking,
+					[field]: updatedProductList,
+				});
 			}
-
-			setBooking({
-				...booking,
-				[field]: updatedProductList,
-			});
 		}
-		// Handle other field updates (unchanged)
-		setBooking({
-			...booking,
-			[field]: value,
-		});
 	};
 
 	async function handleSubmit(e) {
 		e.preventDefault();
 		console.log("DATA:", booking);
-
-		// if (currentItem.name && currentItem.price && currentItem.description) {
-		// 	try {
-		// 		if (itemEdit) {
-		// 			const response = await axios.put(
-		// 				`${apiUrl}/${itemEdit.id}`,
-		// 				currentItem
-		// 			);
-		// 			if (response.data.status == 200) {
-		// 				const responseItem = response.data.data;
-		// 				onSetData((pre) => {
-		// 					let itemArrayUpdate = pre.map((item) =>
-		// 						item.id == itemEdit.id ? responseItem : item
-		// 					);
-		// 					return itemArrayUpdate;
-		// 				});
-		// 				setCurrentItem(initProduct);
-		// 				onSetShow(false);
-		// 				onSetItem(null);
-		// 			}
-		// 		} else {
-		// 			const response = await axios.post(apiUrl, currentItem);
-		// 			if (response.data.status == 201) {
-		// 				onSetData([...data, response.data.data]);
-		// 				setCurrentItem(initProduct);
-		// 				onSetShow(false);
-		// 			}
-		// 		}
-		// 	} catch (error) {
-		// 		console.log("Error API POST: ", error);
-		// 	}
-		// } else {
-		// 	console.log("Vui long nhap day du");
-		// }
+		if (booking.seatBookingList.length > 0) {
+			let book = JSON.stringify(booking);
+			bookingSaving(book);
+			navigate("/checkout");
+		}
+		showAlert("warning", "Please Choose Your Desired Seats");
 	}
 
 	useEffect(() => {
@@ -161,6 +121,11 @@ const CheckOut1 = () => {
 
 	return (
 		<div className="container">
+			{alert.type != "" && (
+				<Alert variant={alert.type} dismissible transition>
+					{alert.message}
+				</Alert>
+			)}
 			<div className="map rounded-4">
 				<div className="screen"></div>
 				<form onSubmit={handleSubmit}>
@@ -288,6 +253,11 @@ const CheckOut1 = () => {
 						/>
 					</div>
 					<Modal show={show} onHide={handleShow} animation size="xl" scrollable>
+						{/* <Modal.Header closeButton>
+							<Modal.Title className="text-center">
+								<p className="fw-bold fs-1 text-dark ">MENU</p>
+							</Modal.Title>
+						</Modal.Header> */}
 						<Modal.Body>
 							<p className="fw-bold ms-3 fs-2 text-dark text-center">
 								MENU
@@ -308,7 +278,6 @@ const CheckOut1 = () => {
 											>
 												<input
 													type="checkbox"
-													name="productList[]"
 													id={item.id}
 													value={item.id}
 													className="product-input"
@@ -357,7 +326,6 @@ const CheckOut1 = () => {
 											>
 												<input
 													type="checkbox"
-													name="productList"
 													id={item.id}
 													value={item.id}
 													className="product-input"
@@ -395,9 +363,6 @@ const CheckOut1 = () => {
 						<Modal.Footer>
 							<Button variant="secondary" onClick={handleShow}>
 								Close
-							</Button>
-							<Button variant="info" type="submit">
-								Confirm
 							</Button>
 							{/* <input
 								type="submit"

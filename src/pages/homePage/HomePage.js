@@ -1,11 +1,13 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Tab, Tabs } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Alert, Carousel, Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { DataContext } from "../../contexts/DataContext";
 
 function HomePage(props) {
 	const [data, setData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const { auth, alert } = useContext(DataContext);
 	const fetchData = async () => {
 		try {
 			const response = await axios.get("http://localhost:8080/movies");
@@ -21,192 +23,150 @@ function HomePage(props) {
 	}, []);
 	return (
 		<div>
-			<section id="center" className="center_home">
-				<div
-					id="carouselExampleCaptions"
-					className="carousel slide carousel-fade"
-					data-bs-ride="carousel"
+			{alert.type != "" && (
+				<Alert
+					variant={alert.type}
+					dismissible
+					transition
+					style={{ width: "fit-content", float: "right" }}
 				>
-					<div className="carousel-indicators">
-						<button
-							type="button"
-							data-bs-target="#carouselExampleCaptions"
-							data-bs-slide-to="0"
-							className="active"
-							aria-label="Slide 1"
-						></button>
-						<button
-							type="button"
-							data-bs-target="#carouselExampleCaptions"
-							data-bs-slide-to="1"
-							aria-label="Slide 2"
-						></button>
-						<button
-							type="button"
-							data-bs-target="#carouselExampleCaptions"
-							data-bs-slide-to="2"
-							aria-label="Slide 3"
-						></button>
-					</div>
-					<div className="carousel-inner">
-						<div className="carousel-item active">
-							<img
-								src="/assets/image/Transformers.jpg"
-								className="d-block w-100"
-								alt="Transformers"
-							/>
-							<div className="carousel-caption">
-								<div className="animated zoomIn d-none d-md-block">
-									<h1 className="font_60">Transformers</h1>
-									<p className="mt-3">
-										The home world of Maximal, an advanced
-										race of Transformers with beast modes,
-										is attacked by the planet-eating dark
-										god Unicron. The Terrorcon faction,
-										messengers of Unicron led by Scourge,
-										seek to obtain for their master the
-										greatest piece of technology of the
-										Maximal race, the Key of Spacetime,
-										which can open portals through space and
-										time to planets. other crystals.
-									</p>
-									<p className="mb-2">
-										<span className="col_red me-1 fw-bold">
-											Premiere:
-										</span>
-										09/09/2024
-									</p>
-									<p className="mb-2">
-										<span className="col_red me-1 fw-bold">
-											Genres:
-										</span>
-										Action, Science Fiction
-									</p>
-									<h6 className="mt-4">
-										<a
-											className="btn btn-danger"
-											href="http://127.0.0.1:8000/movie/trailer/5"
-										>
-											<i className="fa fa-play-circle align-middle me-1"></i>{" "}
-											Watch Trailer
-										</a>
-									</h6>
-								</div>
+					{alert.message}
+				</Alert>
+			)}
+			<section id="center" className="center_home">
+				<Carousel touch wrap fade>
+					<Carousel.Item>
+						<img
+							src="/assets/image/Transformers.jpg"
+							className="d-block w-100"
+							alt="Transformers"
+						/>
+
+						<Carousel.Caption>
+							<div className="animated zoomIn d-none d-md-block">
+								<h1 className="font_60">Transformers</h1>
+								<p className="mt-3">
+									The home world of Maximal, an advanced race of
+									Transformers with beast modes, is attacked by
+									the planet-eating dark god Unicron. The
+									Terrorcon faction, messengers of Unicron led
+									by Scourge, seek to obtain for their master
+									the greatest piece of technology of the
+									Maximal race, the Key of Spacetime, which can
+									open portals through space and time to
+									planets. other crystals.
+								</p>
+								<p className="mb-2">
+									<span className="col_red me-1 fw-bold">
+										Premiere:
+									</span>
+									09/09/2024
+								</p>
+								<p className="mb-2">
+									<span className="col_red me-1 fw-bold">
+										Genres:
+									</span>
+									Action, Science Fiction
+								</p>
+								<h6 className="mt-4">
+									<a
+										className="btn btn-danger"
+										href="http://127.0.0.1:8000/movie/trailer/5"
+									>
+										<i className="fa fa-play-circle align-middle me-1"></i>
+										Watch Trailer
+									</a>
+								</h6>
 							</div>
-						</div>
-						<div className="carousel-item">
-							<img
-								src="/assets/image/black-adam.jpg"
-								className="d-block w-100"
-								alt="Black Adam"
-							/>
-							<div className="carousel-caption">
-								<div className="animated zoomIn d-none d-md-block">
-									<h1 className="font_60">Black Adam</h1>
-									<p className="mt-3">
-										The film is in the action and crime
-										genre, starring Dwayne Johnson. The film
-										is highly appreciated for its epic
-										scenes, promising to become a
-										blockbuster of European and American
-										cinema.
-									</p>
-									<p className="mb-2">
-										<span className="col_red me-1 fw-bold">
-											Premiere:
-										</span>
-										21/10/2022
-									</p>
-									<p className="mb-2">
-										<span className="col_red me-1 fw-bold">
-											Genres:
-										</span>
-										Action, Fiction
-									</p>
-									<h6 className="mt-4">
-										<button
-											type="button"
-											className="btn btn-danger"
-											disabled
-										>
-											<i className="fa fa-play-circle align-middle me-1"></i>{" "}
-											Watch Trailer
-										</button>
-									</h6>
-								</div>
+						</Carousel.Caption>
+					</Carousel.Item>
+					<Carousel.Item>
+						<img
+							src="/assets/image/black-adam.jpg"
+							className="d-block w-100"
+							alt="Black Adam"
+						/>
+
+						<Carousel.Caption>
+							<div className="animated zoomIn d-none d-md-block">
+								<h1 className="font_60">Black Adam</h1>
+								<p className="mt-3">
+									The film is in the action and crime genre,
+									starring Dwayne Johnson. The film is highly
+									appreciated for its epic scenes, promising to
+									become a blockbuster of European and American
+									cinema.
+								</p>
+								<p className="mb-2">
+									<span className="col_red me-1 fw-bold">
+										Premiere:
+									</span>
+									21/10/2022
+								</p>
+								<p className="mb-2">
+									<span className="col_red me-1 fw-bold">
+										Genres:
+									</span>
+									Action, Fiction
+								</p>
+								<h6 className="mt-4">
+									<button
+										type="button"
+										className="btn btn-danger"
+										disabled
+									>
+										<i className="fa fa-play-circle align-middle me-1"></i>
+										Watch Trailer
+									</button>
+								</h6>
 							</div>
-						</div>
-						<div className="carousel-item">
-							<img
-								src="/assets/image/coco.jpg"
-								className="d-block w-100"
-								alt="Coco"
-							/>
-							<div className="carousel-caption">
-								<div className="animated zoomIn d-none d-md-block">
-									<h1 className="font_60">Coco</h1>
-									<p className="mt-3">
-										The film is about the Mexican holiday
-										Día de Muertos. The screenplay was
-										written by Adrian Molina and Matthew
-										Aldrich. Pixar began developing the film
-										in 2016. Unkrich and his team also
-										visited Mexico for inspiration. The
-										skeletons in the movie were redesigned
-										to look more attractive. Composer
-										Michael Giacchino is in charge of
-										composing the music.
-									</p>
-									<p className="mb-2">
-										<span className="col_red me-1 fw-bold">
-											Premiere:
-										</span>
-										20/10/2017
-									</p>
-									<p className="mb-2">
-										<span className="col_red me-1 fw-bold">
-											Genres:
-										</span>
-										Cartoon, Music
-									</p>
-									<h6 className="mt-4 mb-0">
-										<a
-											className="btn btn-danger"
-											href="http://127.0.0.1:8000/movie/trailer/11"
-										>
-											<i className="fa fa-play-circle align-middle me-1"></i>{" "}
-											Watch Trailer
-										</a>
-									</h6>
-								</div>
+						</Carousel.Caption>
+					</Carousel.Item>
+					<Carousel.Item>
+						<img
+							src="/assets/image/coco.jpg"
+							className="d-block w-100"
+							alt="Coco"
+						/>
+
+						<Carousel.Caption>
+							<div className="animated zoomIn d-none d-md-block">
+								<h1 className="font_60">Coco</h1>
+								<p className="mt-3">
+									The film is about the Mexican holiday Día de
+									Muertos. The screenplay was written by Adrian
+									Molina and Matthew Aldrich. Pixar began
+									developing the film in 2016. Unkrich and his
+									team also visited Mexico for inspiration. The
+									skeletons in the movie were redesigned to look
+									more attractive. Composer Michael Giacchino is
+									in charge of composing the music.
+								</p>
+								<p className="mb-2">
+									<span className="col_red me-1 fw-bold">
+										Premiere:
+									</span>
+									20/10/2017
+								</p>
+								<p className="mb-2">
+									<span className="col_red me-1 fw-bold">
+										Genres:
+									</span>
+									Cartoon, Music
+								</p>
+								<h6 className="mt-4 mb-0">
+									<a
+										className="btn btn-danger"
+										href="http://127.0.0.1:8000/movie/trailer/11"
+									>
+										<i className="fa fa-play-circle align-middle me-1"></i>
+										Watch Trailer
+									</a>
+								</h6>
 							</div>
-						</div>
-					</div>
-					<button
-						className="carousel-control-prev"
-						type="button"
-						data-bs-target="#carouselExampleCaptions"
-						data-bs-slide="prev"
-					>
-						<span
-							className="carousel-control-prev-icon"
-							aria-hidden="true"
-						></span>
-						<span className="visually-hidden">Previous</span>
-					</button>
-					<button
-						className="carousel-control-next"
-						type="button"
-						data-bs-target="#carouselExampleCaptions"
-						data-bs-slide="next"
-					>
-						<span
-							className="carousel-control-next-icon"
-							aria-hidden="true"
-						></span>
-						<span className="visually-hidden">Next</span>
-					</button>
-				</div>
+						</Carousel.Caption>
+					</Carousel.Item>
+				</Carousel>
 			</section>
 
 			{/* Start Trending */}

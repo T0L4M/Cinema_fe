@@ -687,10 +687,10 @@ form.user .btn-user {
             9px 9px #4d84c8, 10px 10px #4d84c8, 11px 11px #4d84c8;
 }
 
-input::-webkit-outer-spin-button,
+/* input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
       -webkit-appearance: none;
-}
+} */
 
 .drink-tag {
       color: whitesmoke;
@@ -721,4 +721,47 @@ input[type="checkbox"] {
 
 .product-input:checked~.product-label {
       background: #cdc6c3;
+}
+
+.reset-input-number {
+      /* Reset general styles */
+      width: 100px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 14px;
+      text-align: right;
+
+      /* Reset arrow button styles */
+      ::-webkit-outer-spin-button,
+      ::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            width: 25px;
+            height: 25px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+
+            /* Add arrow icons using CSS pseudo-elements */
+            &::after {
+                  content: "\25B2";
+                  /* Up arrow Unicode character */
+                  display: block;
+                  text-align: center;
+                  font-size: 12px;
+                  color: #333;
+            }
+
+            &::before {
+                  content: "\25BC";
+                  /* Down arrow Unicode character */
+                  display: block;
+                  text-align: center;
+                  font-size: 12px;
+                  color: #333;
+            }
+      }
+
 }
