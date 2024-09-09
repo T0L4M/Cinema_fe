@@ -6,6 +6,8 @@ import { DataContext } from "../../../contexts/DataContext";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const schema = yup
 	.object()
@@ -67,6 +69,7 @@ function ProductForm(props) {
 			}
 		};
 		fetchData();
+		AOS.init();
 	}, [id]);
 
 	function handleDateChange(e) {
@@ -104,7 +107,7 @@ function ProductForm(props) {
 	}
 
 	return (
-		<div className="container mt-3">
+		<div className="container mt-3" data-aos="fade">
 			<h2>Product Insert Form</h2>
 
 			<form onSubmit={handleSubmit(onSubmit)} enctype="multipart/form-data">
@@ -227,7 +230,7 @@ function ProductForm(props) {
 						<span className="text-danger">{errors.type?.message}</span>
 					</div>
 				</div>
-				<button type="submit" className="btn btn-primary">
+				<button type="submit" className="btn btn-primary" data-aos="zoom-in-right">
 					Submit
 				</button>
 			</form>

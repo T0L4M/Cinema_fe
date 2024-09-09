@@ -110,7 +110,7 @@ const HomepageLayout = ({ children }) => {
 										to={"/"}
 									>
 										<img
-											src="/assets/image/fin_cinema.png"
+											src="/assets/image/fin_cinema.jpg"
 											className="img-thumbnail"
 											width="100"
 											alt=""

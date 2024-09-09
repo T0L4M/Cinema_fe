@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { Accordion } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Accordion, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { DataContext } from "../contexts/DataContext";
 
 function AdminLayout({ children }) {
+	const { auth, alert, showAlert, logout } = useContext(DataContext);
 	const [isActive, setIsActive] = useState(false);
 	function toggleBacktotop() {
 		setIsActive(window.scrollY > 100);
@@ -26,11 +28,13 @@ function AdminLayout({ children }) {
 			>
 				{/*Sidebar - Brand */}
 				<div className="sidebar-brand-text mx-3 my-3">
-					<Link
-						className="text-white text-decoration-none"
-						to={"/admin.dashboard"}
-					>
-						<img src="/" className="img-thumbnail" width="100" alt="" />
+					<Link className="text-white text-decoration-none" to={"/dashboard"}>
+						<img
+							src="/assets/image/fin_cinema.jpg"
+							className="img-thumbnail"
+							width="100"
+							alt=""
+						/>
 						<span className="fs-5">CINEMA</span>
 					</Link>
 				</div>
@@ -40,7 +44,7 @@ function AdminLayout({ children }) {
 
 				{/*Nav Item - Dashboard */}
 				<li className="nav-item active">
-					<Link className="nav-link" to={"/home"}>
+					<Link className="nav-link" to={"/"}>
 						<i className="fas fa-fw fa-tachometer-alt"></i>
 						<span>To Homepage</span>
 					</Link>
@@ -152,54 +156,35 @@ function AdminLayout({ children }) {
 			<div id="content-wrapper" className="d-flex flex-column">
 				{/*Main Content */}
 				<div id="content">
-					{/* <nav
-                                        className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-flex" style="justify-content: space-between"
-                                  >
-                                       Sidebar Toggle (Topbar)
-                                        <button
-                                              id="sidebarToggleTop"
-                                              className="btn btn-link d-md-none rounded-circle mr-3"
-                                        >
-                                              <i className="fa fa-bars"></i>
-                                        </button>
-    
-                                           Nav Item - User Information
-                                              <li className="nav-item dropdown no-arrow ms-auto" style="">
-                                                    <Link
-                                                          className="nav-link dropdown-toggle"
-                                                          to="#"
-                                                          id="userDropdown"
-                                                          role="button"
-                                                          data-toggle="dropdown"
-                                                          aria-haspopup="true"
-                                                          aria-expanded="false"
-                                                    >
-                                                          <span
-                                                                className="mr-2 d-none d-lg-inline text-gray-600 small"
-                                                                >{{ session("userInfo")["name"] }}</span
-                                                          >
-                                                          <i className="fa-solid fa-ellipsis-vertical"></i>
-                                                    </Link>
-                                                  Dropdown - User Information
-                                                    <div
-                                                          className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                                          aria-labelledby="userDropdown"
-                                                    >
-                                                          <Link
-                                                                className="dropdown-item"
-                                                                to="#"
-                                                                data-toggle="modal"
-                                                                data-target="#logoutModal"
-                                                          >
-                                                                <i
-                                                                      className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
-                                                                ></i>
-                                                                Logout
-                                                          </Link>
-                                                    </div>
-                                              </li>
-                                        </ul>
-                                  </nav> */}
+					<Navbar expand="lg" className="bg-light">
+						<Container fluid className="justify-content-end">
+							{/* <Nav> */}
+							<NavDropdown
+								title={auth?.userName}
+								id="basic-nav-dropdown"
+								style={{ fontWeight: "bold" }}
+							>
+								<NavDropdown.Item style={{ padding: "0" }}>
+									<span
+										className="ms-3"
+										onClick={() => {
+											if (
+												window.confirm(
+													"Are you sure you want to log out?"
+												)
+											) {
+												logout();
+											}
+										}}
+									>
+										<i className="fas fa-sign-out me-2"></i>
+										LOG OUT
+									</span>
+								</NavDropdown.Item>
+							</NavDropdown>
+							{/* </Nav> */}
+						</Container>
+					</Navbar>
 					{/*End of Topbar */}
 
 					<div className="container" style={{ overflow: "auto" }}>

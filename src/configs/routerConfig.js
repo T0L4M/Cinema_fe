@@ -22,6 +22,7 @@ import CheckOTPPage from "../pages/homePage/users/fogotpassword/CheckOTPPage";
 import ForgotPasswordPage from "../pages/homePage/users/fogotpassword/ForgotPasswordPage";
 import CheckOut2 from "../pages/homePage/bookings/CheckOut2";
 import VNPayResponseHandler from "../pages/homePage/bookings/payments/VNPayResponseHandler";
+import MovieDetail from "../pages/homePage/movies/MovieDetail";
 
 const publicRouter = [
 	{
@@ -32,9 +33,14 @@ const publicRouter = [
 		path: "/showtimes",
 		element: <ShowtimePage />,
 	},
+	//MOVIES
 	{
 		path: "/movies/:status?",
 		element: <MoviePage />,
+	},
+	{
+		path: "/movies/detail/:id",
+		element: <MovieDetail />,
 	},
 	{
 		path: "/register",

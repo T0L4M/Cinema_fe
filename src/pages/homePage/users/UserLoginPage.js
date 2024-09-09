@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import AOS from "aos";
 import Alert from "react-bootstrap/Alert";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { DataContext } from "../../../contexts/DataContext";
+import "aos/dist/aos.css";
 
 const schema = yup
 	.object()
@@ -48,8 +49,14 @@ function UserLoginPage(props) {
 				}
 			});
 	}
+
+	useEffect(() => {
+		AOS.init({
+			duration: 1200,
+		});
+	}, []);
 	return (
-		<div className="container">
+		<div className="container" data-aos="slide-right">
 			{alert.type != "" && (
 				<Alert variant={alert.type} dismissible transition>
 					{alert.message}
@@ -61,7 +68,10 @@ function UserLoginPage(props) {
 						<div className="card-body p-0">
 							<div className="row">
 								<div className="col-lg-6 d-none d-lg-block">
-									<img src="" alt="img" />
+									<img
+										src="/assets/image/hinhanh/minions-funny-3.jpg"
+										alt="img"
+									/>
 								</div>
 								<div className="col-lg-6">
 									<div className="p-5">

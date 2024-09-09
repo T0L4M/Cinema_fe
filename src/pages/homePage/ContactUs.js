@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function ContactUs(props) {
+	useEffect(() => {
+		AOS.init({
+			duration: 1200,
+		});
+	}, []);
 	return (
 		<div className="pt-4 pb-4">
 			<div className="container-xl">
-				<div className="row contact_1 bg_dark pt-5 pb-5 rounded-4">
+				<div
+					className="row contact_1 bg_dark pt-5 pb-5 rounded-4"
+					data-aos="fade-down"
+				>
 					<div className="col-md-3">
 						<div className="contact_1i row">
 							<div className="col-md-2 col-2">

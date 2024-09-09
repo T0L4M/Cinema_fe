@@ -11,10 +11,10 @@ function DataProvider({ children }) {
 	let user = JSON.parse(sessionStorage.getItem("user")) || {};
 	const [auth, setAuth] = useState(user);
 	//BOOKING
-	let book = JSON.parse(sessionStorage.getItem("booking")) || null;
+	let book = JSON.parse(sessionStorage.getItem("booking")) || {};
 	const [bookAuth, setBookAuth] = useState(book);
 	//ORDER
-	let order = JSON.parse(sessionStorage.getItem("order")) || null;
+	let order = JSON.parse(sessionStorage.getItem("order")) || {};
 	const [orderAuth, setOrderAuth] = useState(order);
 	//ALERTING
 	const showAlert = (type, message, duration = 1000) => {
@@ -34,7 +34,7 @@ function DataProvider({ children }) {
 			navigate("/dashboard");
 		} else if (parseUser.UserInfo.role == "USER") {
 			showAlert("success", "Login Successfully!");
-			navigate(-1);
+			navigate("/");
 		}
 	};
 
@@ -48,8 +48,9 @@ function DataProvider({ children }) {
 
 	//Save Booking
 	const bookingSaving = (c) => {
-		sessionStorage.setItem("booking", c);
+		sessionStorage.setItem("booking", JSON.stringify(c));
 		setBookAuth(c);
+		navigate("/checkout");
 	};
 	//Delete Booking
 	const bookingDelete = () => {
@@ -60,7 +61,7 @@ function DataProvider({ children }) {
 	};
 	//Save Order
 	const orderSaving = (o) => {
-		sessionStorage.setItem("order", o);
+		sessionStorage.setItem("order", JSON.stringify(o));
 		setOrderAuth(o);
 	};
 	//Delete Order

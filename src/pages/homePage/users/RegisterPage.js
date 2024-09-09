@@ -6,6 +6,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { DataContext } from "../../../contexts/DataContext";
 import { format, startOfDay } from "date-fns";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const phoneF = /^\+?[0-9]\d{1,10}$/;
 
@@ -71,20 +73,29 @@ function RegisterPage(props) {
 		setFormattedShowtimeDate(formattedDate);
 	}
 
+	useEffect(() => {
+		AOS.init({
+			duration: 1200,
+		});
+	}, []);
+
 	return (
-		<div className="container">
+		<div className="container" data-aos="slide-right">
 			<div className="card o-hidden border-0">
 				<div className="card-body p-0">
 					<div className="row">
 						<div className="col-md-5 d-none d-md-block">
-							<img src="" alt="img" />
+							<img src="/assets/image/register_pic.jpg" alt="img" />
 						</div>
 						<div className="col-md-7 col-12">
 							<div className="p-5">
 								<div className="text-center">
 									<h1 className="mb-4">CREATE AN ACCOUNT</h1>
 								</div>
-								<form onSubmit={handleSubmit(onSubmit)}>
+								<form
+									onSubmit={handleSubmit(onSubmit)}
+									className="user"
+								>
 									<input
 										type="hidden"
 										value="USER"

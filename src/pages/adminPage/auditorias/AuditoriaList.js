@@ -5,6 +5,8 @@ import axios from "axios";
 import { Alert } from "react-bootstrap";
 import { ColorRing } from "react-loader-spinner";
 import ReactPaginate from "react-paginate";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function AuditoriaList(props) {
 	//Nhan Auditoria_tb
@@ -24,6 +26,7 @@ function AuditoriaList(props) {
 	};
 
 	useEffect(() => {
+		AOS.init();
 		fetchData();
 	}, []);
 
@@ -67,12 +70,12 @@ function AuditoriaList(props) {
 					ariaLabel="blocks-loading"
 					wrapperStyle={{ display: "block", margin: "auto" }}
 					wrapperClass="blocks-wrapper"
-					colors={["#F5F5F5", "#313236", "#7CD6EA", "#172765", "#F5F5F5"]}
+					colors={["#213363", "#1B6B93", "#4FC0D0", "#FF9EAA"]}
 				/>
 			)}
 			{/* END LOADER SPINNER */}
 
-			<table className="table table-striped table-dark">
+			<table className="table table-striped table-dark" data-aos="fade">
 				<thead>
 					<tr>
 						<th>ID</th>

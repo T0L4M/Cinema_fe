@@ -380,7 +380,7 @@ a.socialIcon:hover,
 
 .form-select {
   border-color: #27292d;
-  border-radius: 0;
+  border-radius: 50;
   color: #999 !important;
 }
 

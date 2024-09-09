@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DataContext } from "../../../../contexts/DataContext";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 //YUP
 const schema = yup
@@ -49,14 +51,24 @@ function ForgotPasswordPage(props) {
 			.catch((error) => console.log("Error API ", method, ": ", error));
 	}
 
+	useEffect(() => {
+		AOS.init({
+			duration: 1200,
+		});
+	}, []);
+
 	return (
-		<div className="container">
+		<div className="container" data-aos="slide-right">
 			<div className="row justify-content-center">
 				<div className="card o-hidden border-0">
 					<div className="card-body p-0">
 						<div className="row">
 							<div className="col-md-6 d-none d-lg-block">
-								<img src="" alt="img" width="75%" />
+								<img
+									src="/assets/image/hinhanh/animon2.jpg"
+									alt="img"
+									width="75%"
+								/>
 							</div>
 							<div className="col-md-6 col-sm-12">
 								<div className="p-5">
@@ -71,7 +83,10 @@ function ForgotPasswordPage(props) {
 											your password!
 										</p>
 									</div>
-									<form onSubmit={handleSubmit(onSubmit)}>
+									<form
+										onSubmit={handleSubmit(onSubmit)}
+										className="user"
+									>
 										<div className="form-group">
 											<input
 												type="text"

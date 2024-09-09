@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { DataContext } from "../../../contexts/DataContext";
 import { ColorRing } from "react-loader-spinner";
 import axios from "axios";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function MovieList(props) {
 	const [data, setData] = useState([]);
@@ -22,6 +24,7 @@ function MovieList(props) {
 
 	useEffect(() => {
 		fetchData();
+		AOS.init();
 	}, []);
 
 	//PAGINATE
@@ -61,10 +64,10 @@ function MovieList(props) {
 					ariaLabel="blocks-loading"
 					wrapperStyle={{ display: "block", margin: "auto" }}
 					wrapperClass="blocks-wrapper"
-					colors={["#F5F5F5", "#313236", "#7CD6EA", "#172765", "#F5F5F5"]}
+					colors={["#213363", "#1B6B93", "#4FC0D0", "#FF9EAA"]}
 				/>
 			)}
-			<table className="table table-striped table-dark">
+			<table className="table table-striped table-dark" data-aos="fade">
 				<thead>
 					<tr>
 						<th>ID</th>

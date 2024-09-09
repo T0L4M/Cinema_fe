@@ -3,6 +3,8 @@ import { ColorRing } from "react-loader-spinner";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { DataContext } from "../../../contexts/DataContext";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function MoviePage(props) {
 	const [data, setData] = useState([]);
@@ -27,6 +29,9 @@ function MoviePage(props) {
 
 	useEffect(() => {
 		fetchData();
+		AOS.init({
+			duration: 1200,
+		});
 	}, [status]);
 	console.log("data:", data);
 
@@ -54,9 +59,10 @@ function MoviePage(props) {
 								<div
 									class="row m-2"
 									style={{ backgroundColor: "#CAA73A" }}
+									data-aos="zoom-out"
 								>
 									<div class="col-md-6">
-										<Link to={""}>
+										<Link to={`/movies/detail/${item.id}`}>
 											<img
 												src={`http://localhost:8080/uploads/movies/${item.poster}`}
 												onError={(e) => {

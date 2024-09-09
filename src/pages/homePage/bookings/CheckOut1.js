@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { Alert, Button, Modal } from "react-bootstrap";
 import { DataContext } from "../../../contexts/DataContext";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const CheckOut1 = () => {
 	//Product Modal
@@ -21,7 +23,7 @@ const CheckOut1 = () => {
 		seatBookingList: [],
 		productList: [],
 		customerId: auth.id,
-		showtimeId: idShowtime,
+		showtimeId: parseInt(idShowtime),
 	});
 	const navigate = useNavigate();
 
@@ -71,52 +73,59 @@ const CheckOut1 = () => {
 		if (field === "seatBookingList") {
 			// Handle checkbox selection/deselection
 			const updatedList = [...booking.seatBookingList];
-			if (updatedList.includes(value)) {
+			const index = updatedList.indexOf(value);
+
+			if (index !== -1) {
 				// Deselect the seat
-				const index = updatedList.indexOf(value);
 				updatedList.splice(index, 1);
 			} else {
 				// Select the seat
 				updatedList.push(value);
-				setBooking({
-					...booking,
-					[field]: updatedList,
-				});
 			}
+
+			setBooking({
+				...booking,
+				[field]: updatedList,
+			});
 		}
+
 		if (field === "productList") {
 			// Handle checkbox selection/deselection
 			const updatedProductList = [...booking.productList];
-			if (updatedProductList.includes(value)) {
-				// Deselect the seat
-				const index = updatedProductList.indexOf(value);
+			const index = updatedProductList.indexOf(value);
+
+			if (index !== -1) {
+				// Deselect the product
 				updatedProductList.splice(index, 1);
 			} else {
-				// Select the seat
+				// Select the product
 				updatedProductList.push(value);
-				setBooking({
-					...booking,
-					[field]: updatedProductList,
-				});
 			}
+
+			setBooking({
+				...booking,
+				[field]: updatedProductList,
+			});
 		}
 	};
 
 	async function handleSubmit(e) {
 		e.preventDefault();
 		console.log("DATA:", booking);
-		if (booking.seatBookingList.length > 0) {
-			let book = JSON.stringify(booking);
-			bookingSaving(book);
-			navigate("/checkout");
+		if (booking.seatBookingList.length === 0) {
+			showAlert("warning", "Please Choose Your Desired Seats");
+			return;
 		}
-		showAlert("warning", "Please Choose Your Desired Seats");
+		bookingSaving(booking);
 	}
 
 	useEffect(() => {
 		fetchProduct();
 		fetchData();
 		fetchBookedSeat();
+		AOS.init({
+			duration: 1200,
+		});
 	}, [idShowtime]);
 
 	return (
@@ -126,7 +135,7 @@ const CheckOut1 = () => {
 					{alert.message}
 				</Alert>
 			)}
-			<div className="map rounded-4">
+			<div className="map rounded-4" data-aos="fade-up">
 				<div className="screen"></div>
 				<form onSubmit={handleSubmit}>
 					<div className="row">

@@ -5,9 +5,12 @@ import axios from "axios";
 import { Badge, Button, Collapse } from "react-bootstrap";
 import { ColorRing } from "react-loader-spinner";
 import VNPay from "./payments/VNPay";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function CheckOut2(props) {
-	const { bookAuth, bookingDelete, showAlert, auth, orderSaving } = useContext(DataContext);
+	const { bookAuth, bookingDelete, showAlert, auth, orderSaving, orderDelete, orderAuth } =
+		useContext(DataContext);
 	const [showtime, setShowtime] = useState(null);
 	const [products, setProducts] = useState([]);
 	const [data, setData] = useState(
@@ -57,11 +60,14 @@ function CheckOut2(props) {
 	];
 	const [open, setOpen] = useState(false);
 	const [isCountingDown, setIsCountingDown] = useState(false);
+	const [confirm, setConfirm] = useState(false);
+
 	const [seconds, setSeconds] = useState(300);
 	const navigate = useNavigate();
 
 	const handleData = async () => {
 		if (bookAuth != null) {
+			await new Promise((resolve) => setTimeout(resolve, 500));
 			await axios
 				.get(`http://localhost:8080/showtimes/detail/${bookAuth.showtimeId}`)
 				.then((res) => {
@@ -129,6 +135,7 @@ function CheckOut2(props) {
 		e.preventDefault();
 		const response = await axios.post("http://localhost:8080/orders/allCreate", data);
 		if (response.status == 200) {
+			setConfirm(true);
 			setOpen(!open);
 			setIsCountingDown(true);
 			if (data.productList.length > 0) {
@@ -138,6 +145,34 @@ function CheckOut2(props) {
 			console.log("FAIL!!!!");
 		}
 	}
+
+	async function deleteShowtimeIdAndCustomerId() {
+		const response = await axios.delete(
+			`http://localhost:8080/bookings/deleteShowtimeIdAndCustomerId/${showtime.id}/${auth.id}`
+		);
+	}
+	async function deleteOrderDetail() {
+		const response = await axios.delete(
+			`http://localhost:8080/orders/deleteByDetail/${orderAuth?.id}`
+		);
+	}
+	//Delete booking and order when cancel
+	const cancelHandeler = () => {
+		if (!confirm) {
+			if (window.confirm("Back to the showtime page?")) {
+				bookingDelete();
+				return;
+			}
+		}
+		if (Object.keys(orderAuth).length > 0) {
+			deleteOrderDetail();
+		}
+		if (window.confirm("Back to the showtime page?")) {
+			deleteShowtimeIdAndCustomerId();
+			bookingDelete();
+			orderDelete();
+		}
+	};
 
 	const minutes = Math.floor(seconds / 60);
 	const remainingSeconds = seconds % 60;
@@ -166,19 +201,21 @@ function CheckOut2(props) {
 	}, [quantity]);
 
 	useEffect(() => {
-		if (bookAuth == null) {
+		AOS.init({
+			duration: 1200,
+		});
+		if (Object.keys(bookAuth).length === 0) {
 			showAlert("danger", "Something went wrong!");
 			navigate("/");
 		}
-
+		handleData();
 		const converted = convertSeats(bookAuth?.seatBookingList);
 		setConvertedSeats(converted.length > 0 ? converted.split(" ") : []);
-		handleData();
-	}, []);
+	}, [bookAuth]);
 
 	return (
 		<div class="container">
-			<header>
+			<header data-aos="fade-right">
 				<p>
 					Thank you for choosing <strong>FIN CINEMA</strong>! <br />
 					Please check your booking information
@@ -193,13 +230,13 @@ function CheckOut2(props) {
 					ariaLabel="blocks-loading"
 					wrapperStyle={{ display: "block", margin: "auto" }}
 					wrapperClass="blocks-wrapper"
-					colors={["#F5F5F5", "#313236", "#7CD6EA", "#172765", "#F5F5F5"]}
+					colors={["#213363", "#1B6B93", "#4FC0D0", "#FF9EAA"]}
 				/>
 			)}
 			{/* END LOADER SPINNER */}
 			{showtime != null && (
 				<div class="row">
-					<div className="col-md-8">
+					<div className="col-md-8" data-aos="fade-right">
 						<form onSubmit={handleSubmit}>
 							<div className="row mb-3">
 								<div className="col-6">
@@ -325,6 +362,9 @@ function CheckOut2(props) {
 																					item.id
 																				)
 																			}
+																			disabled={
+																				open
+																			}
 																		/>
 																	</td>
 																	<td>
@@ -364,15 +404,7 @@ function CheckOut2(props) {
 							<button
 								type="button"
 								class="btn btn-danger"
-								onClick={() => {
-									if (
-										window.confirm(
-											"Back to the showtime page?"
-										)
-									) {
-										bookingDelete();
-									}
-								}}
+								onClick={cancelHandeler}
 							>
 								CANCEL
 							</button>
@@ -407,7 +439,7 @@ function CheckOut2(props) {
 							</div>
 						</Collapse>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4" data-aos="fade-left">
 						<img
 							src={`http://localhost:8080/uploads/movies/${showtime?.movie.poster}`}
 							alt="img"

@@ -6,6 +6,8 @@ import { DataContext } from "../../../contexts/DataContext";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const schema = yup
 	.object()
@@ -93,6 +95,7 @@ function MovieForm(props) {
 			}
 		};
 		fetchData();
+		AOS.init();
 	}, [id]);
 
 	function handleDateChange(e) {
@@ -107,6 +110,7 @@ function MovieForm(props) {
 		formData.append("director", data.director);
 		formData.append("casts", data.casts);
 		formData.append("genre", data.genre);
+		formData.append("trailer", data.trailer);
 		formData.append("description", data.description);
 		formData.append("status", data.status);
 		formData.append("release_date", formattedReleaseDate);
@@ -133,7 +137,7 @@ function MovieForm(props) {
 	}
 
 	return (
-		<div className="container mt-3">
+		<div className="container mt-3" data-aos="fade">
 			<h2>Movie Insert Form</h2>
 
 			<form onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
@@ -189,7 +193,7 @@ function MovieForm(props) {
 								className="form-check-input"
 								id="dangchieu"
 								{...register("status")}
-								value="showing"
+								value="Showing"
 							/>
 							<label className="form-check-label" htmlFor="dangchieu">
 								Now Showing
@@ -201,7 +205,7 @@ function MovieForm(props) {
 								className="form-check-input"
 								id="sapchieu"
 								{...register("status")}
-								value="coming"
+								value="Coming"
 							/>
 							<label className="form-check-label" htmlFor="sapchieu">
 								Coming Soon
@@ -213,7 +217,7 @@ function MovieForm(props) {
 								className="form-check-input"
 								id="hetchieu"
 								{...register("status")}
-								value="not showing"
+								value="Not Showing"
 							/>
 							<label className="form-check-label" htmlFor="hetchieu">
 								Not Showing

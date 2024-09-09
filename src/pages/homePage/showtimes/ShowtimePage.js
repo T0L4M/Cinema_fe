@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { format, isBefore, parseISO } from "date-fns";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function ShowtimePage(props) {
 	const [showtimes, setShowtimes] = useState([]);
@@ -11,7 +13,9 @@ function ShowtimePage(props) {
 			const response = await axios.get("http://localhost:8080/showtimes/show");
 			setShowtimes(response.data.data);
 		}
-
+		AOS.init({
+			duration: 1200,
+		});
 		fetchShowtimes();
 	}, []);
 
@@ -100,7 +104,7 @@ function ShowtimePage(props) {
 																	}
 																	className="btn btn-light ms-3"
 																	to={`/booking/${filteredShowtime.id}`}
-																	// data-aos="fade-right"
+																	data-aos="fade-right"
 																>
 																	{format(
 																		new Date(

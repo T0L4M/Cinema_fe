@@ -6,6 +6,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { DataContext } from "../../../contexts/DataContext";
 import { format, startOfDay } from "date-fns";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 //YUP
 const schema = yup
@@ -89,6 +91,7 @@ function ShowtimeForm(props) {
 			};
 			fetchData();
 		}
+		AOS.init();
 	}, [id]);
 
 	// function handleDateChange(e) {
@@ -131,7 +134,7 @@ function ShowtimeForm(props) {
 	}, []);
 
 	return (
-		<div className="container mt-3">
+		<div className="container mt-3" data-aos="fade">
 			<h2>Showtime Insert Form</h2>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="mb-3 mt-3">
@@ -261,7 +264,7 @@ function ShowtimeForm(props) {
 					</div>
 					<span className="text-danger">{errors.status?.message}</span>
 				</div>
-				<button type="submit" className="btn btn-primary">
+				<button type="submit" className="btn btn-primary" data-aos="zoom-in-right">
 					Submit
 				</button>
 			</form>

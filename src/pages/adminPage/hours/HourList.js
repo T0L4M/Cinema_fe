@@ -70,16 +70,12 @@ function HourList(props) {
 					ariaLabel="blocks-loading"
 					wrapperStyle={{ display: "block", margin: "auto" }}
 					wrapperClass="blocks-wrapper"
-					colors={["#F5F5F5", "#313236", "#7CD6EA", "#172765", "#F5F5F5"]}
+					colors={["#213363", "#1B6B93", "#4FC0D0", "#FF9EAA"]}
 				/>
 			)}
 			{/* END LOADER SPINNER */}
 
-			<table
-				className="table table-striped table-dark"
-				data-aos="fade-up"
-				data-aos-duration="1200"
-			>
+			<table className="table table-striped table-dark" data-aos="fade">
 				<thead>
 					<tr>
 						<th>ID</th>

@@ -1,19 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function AboutUs(props) {
+	useEffect(() => {
+		AOS.init({
+			duration: 1200,
+		});
+	}, []);
 	return (
 		<>
 			<div className="about_pgm">
 				<div className="container-xl">
 					<div className="row about_pg1">
 						<div className="col-md-12">
-							<h2>
+							<h2 data-aos="fade-down">
 								<span className="col_red">We Are FIN Cinema</span>
 								<br />
 								Providing Cinema System Services
 							</h2>
-							<div>
+							<div data-aos="flip-down">
 								<p className="mt-3 w-50">
 									Providing you with the most actionable Movie
 									Production Services. Planis creates and
@@ -59,7 +66,7 @@ function AboutUs(props) {
 				</div>
 				<div className="row my-5">
 					{/* Team Member 1 */}
-					<div className="col-sm-6 team-7 col-lg-3 col-12">
+					<div className="col-sm-6 team-7 col-lg-3 col-12" data-aos="zoom-in">
 						<div id="avartar" className="position-absolute">
 							<img
 								className="img-thumbnail"
@@ -98,7 +105,7 @@ function AboutUs(props) {
 						</div>
 					</div>
 					{/* Team Member 2 */}
-					<div className="col-sm-6 team-7 col-lg-3 col-12">
+					<div className="col-sm-6 team-7 col-lg-3 col-12" data-aos="zoom-in">
 						<div id="avartar" className="position-absolute">
 							<img
 								className="img-thumbnail"
@@ -137,7 +144,7 @@ function AboutUs(props) {
 						</div>
 					</div>
 					{/* Team Member 3 */}
-					<div className="col-sm-6 team-7 col-lg-3 col-12">
+					<div className="col-sm-6 team-7 col-lg-3 col-12" data-aos="zoom-in">
 						<div id="avartar" className="position-absolute">
 							<img
 								className="img-thumbnail"
@@ -176,7 +183,7 @@ function AboutUs(props) {
 						</div>
 					</div>
 					{/* Team Member 4 */}
-					<div className="col-sm-6 team-7 col-lg-3 col-12">
+					<div className="col-sm-6 team-7 col-lg-3 col-12" data-aos="zoom-in">
 						<div id="avartar" className="position-absolute">
 							<img
 								className="img-thumbnail"
