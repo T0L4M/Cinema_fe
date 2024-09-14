@@ -23,6 +23,8 @@ import ForgotPasswordPage from "../pages/homePage/users/fogotpassword/ForgotPass
 import CheckOut2 from "../pages/homePage/bookings/CheckOut2";
 import VNPayResponseHandler from "../pages/homePage/bookings/payments/VNPayResponseHandler";
 import MovieDetail from "../pages/homePage/movies/MovieDetail";
+import PaymentList from "../pages/adminPage/payments/PaymentList";
+import PaymentDetail from "../pages/adminPage/payments/PaymentDetail";
 
 const publicRouter = [
 	{
@@ -133,6 +135,17 @@ const privateRouter = [
 	{
 		path: "/admin/product/new/:id?",
 		element: <ProductForm />,
+		roles: ["ADMIN"],
+	},
+	//Payment
+	{
+		path: "/admin/payment",
+		element: <PaymentList />,
+		roles: ["ADMIN"],
+	},
+	{
+		path: "/admin/payment/detail/:id?",
+		element: <PaymentDetail />,
 		roles: ["ADMIN"],
 	},
 

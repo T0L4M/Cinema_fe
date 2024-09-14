@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AOS from "aos";
 import Alert from "react-bootstrap/Alert";
 import axios from "axios";
@@ -25,7 +25,8 @@ function UserLoginPage(props) {
 	} = useForm({
 		resolver: yupResolver(schema),
 	});
-	const { login, showAlert, alert } = useContext(DataContext);
+	const { auth, login, showAlert, alert } = useContext(DataContext);
+	const navigate = useNavigate();
 	async function onSubmit(data) {
 		showAlert("hide");
 		await axios
@@ -54,6 +55,10 @@ function UserLoginPage(props) {
 		AOS.init({
 			duration: 1200,
 		});
+		if (Object.keys(auth).length > 0) {
+			showAlert("warning", "Login Alredy!");
+			navigate("/");
+		}
 	}, []);
 	return (
 		<div className="container" data-aos="slide-right">

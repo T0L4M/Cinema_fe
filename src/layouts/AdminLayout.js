@@ -110,7 +110,7 @@ function AdminLayout({ children }) {
 								<h6 className="collapse-header">Payments:</h6>
 								<Link
 									className="collapse-item"
-									to={"/admin.payments"}
+									to={"/admin/payment"}
 								>
 									<i className="fa-solid fa-cash-register me-2"></i>
 									Payments
