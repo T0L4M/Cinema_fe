@@ -3,32 +3,41 @@ import React, { useContext, useEffect, useState } from "react";
 import { Alert, Carousel, Tab, Tabs } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../contexts/DataContext";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import OwlCarousel from "react-owl-carousel";
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel/dist/assets/owl.theme.default.css";
 
 function HomePage(props) {
 	const [data, setData] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const { auth, alert } = useContext(DataContext);
+	const { auth, alert, hideAlert } = useContext(DataContext);
 	const fetchData = async () => {
 		try {
 			const response = await axios.get("http://localhost:8080/movies");
 			setData(response.data.data);
-			setIsLoading(false);
 		} catch (error) {
 			console.log("Error FETCHING DATA: ", error);
 		}
 	};
 
 	useEffect(() => {
+		AOS.init({
+			duration: 1200,
+		});
 		fetchData();
 	}, []);
+
 	return (
 		<div>
 			{alert.type != "" && (
 				<Alert
 					variant={alert.type}
+					onClose={hideAlert}
 					dismissible
 					transition
-					style={{ width: "fit-content", float: "right" }}
+					className="position-fixed bottom-0 end-0"
+					style={{ width: "fit-content", zIndex: 9999 }}
 				>
 					{alert.message}
 				</Alert>
@@ -171,211 +180,161 @@ function HomePage(props) {
 
 			{/* Start Trending */}
 			<section id="popular" className="pt-4 pb-5">
-				<div className="container">
-					<div className="row popular_1 mt-4">
-						<ul className="nav nav-tabs border-0 mb-0">
-							<li className="nav-item">
-								<Link
-									to="#dangchieu"
-									data-bs-toggle="tab"
-									aria-expanded="false"
-									className="nav-link active"
-								>
-									<span className="d-md-block">
-										NOW SHOWING
-									</span>
-								</Link>
-							</li>
-							<li className="nav-item">
-								<a
-									href="#sapchieu"
-									data-bs-toggle="tab"
-									aria-expanded="false"
-									className="nav-link"
-								>
-									<span className="d-md-block">
-										COMING SOON
-									</span>
-								</a>
-							</li>
-						</ul>
-					</div>
-					<div className="popular_2 row mt-4">
-						<div className="tab-content">
-							<div className="tab-pane active" id="dangchieu">
-								<div
-									className="owl-carousel owl-theme"
-									// data-aos="fade-left"
-								>
-									{data
-										.filter(
-											(item) =>
-												item.status === "showing"
-										)
-										.map((item) => (
-											<div
-												className="item"
-												key={item.id}
-											>
-												<div className="popular_2i1lm position-relative clearfix">
-													<div className="popular_2i1lm1 clearfix">
-														<div className="grid">
-															<figure className="effect-jazz mb-0">
-																<a
-																	href={`/movie/detail/${item.id}`}
-																>
-																	<img
-																		src={`http://localhost:8080/uploads/movies/${item.poster}`}
-																		className="w-100"
-																		alt={
-																			item.title
-																		}
-																	/>
-																</a>
-															</figure>
-														</div>
+				<div className="container  popular_1">
+					<Tabs
+						defaultActiveKey="showing"
+						id="uncontrolled-tab-example"
+						className="mb-3"
+					>
+						<Tab eventKey="showing" title="Showing">
+							<OwlCarousel
+								className="owl-theme"
+								margin={10}
+								items="5"
+								autoplay
+							>
+								{data
+									.filter((item) => item.status === "Showing")
+									.map((item) => (
+										<div
+											className="item"
+											key={item.id}
+											data-aos="fade-left"
+										>
+											<div className="popular_2i1lm position-relative clearfix">
+												<div className="popular_2i1lm1 clearfix">
+													<div className="grid">
+														<figure className="effect-jazz mb-0">
+															<Link
+																to={`/movies/detail/${item.id}`}
+															>
+																<img
+																	src={`http://localhost:8080/uploads/movies/${item.poster}`}
+																	className="w-100"
+																	alt={
+																		item.title
+																	}
+																/>
+															</Link>
+														</figure>
 													</div>
-													<div className="popular_2i1lm2 position-absolute top-0 w-100 text-center clearfix">
-														<ul>
-															<li className="d-inline-block">
-																<a
-																	href={`/movie/trailer/${item.id}`}
-																>
-																	<i
-																		className="fa-brands fa-youtube"
-																		style={{
-																			color: "#ff0000",
-																		}}
-																	></i>
-																</a>
-															</li>
-															<li className="d-inline-block">
-																<a
-																	href={`/movie/detail/${item.id}`}
-																>
-																	<i className="fa fa-search col_red"></i>
-																</a>
-															</li>
-														</ul>
-													</div>
-													<div className="overlay position-absolute"></div>
 												</div>
-												<div className="popular_2i1lmr position-relative text-center">
-													<h6 className="font_14 text-uppercase mb-2">
-														<a
-															href={`/movie/detail/${item.id}`}
-														>
-															{
-																item.title
-															}
-														</a>
-													</h6>
-													{/* <h6 className="mb-0">
-													<span className="col_red font_700">
-														{item.rating}
-													</span>
-													/10 |{" "}
-													<span>
-														{item.runtime}{" "}
-														min
-													</span>
-												</h6> */}
-													<h6 className="font_12 mb-0">
-														{item.genre}
-													</h6>
+												<div className="popular_2i1lm2 position-absolute top-0 w-100 text-center clearfix">
+													<ul>
+														<li className="d-inline-block">
+															<Link
+																href={`/movie/trailer/${item.id}`}
+															>
+																<i
+																	className="fa-brands fa-youtube"
+																	style={{
+																		color: "#ff0000",
+																	}}
+																></i>
+															</Link>
+														</li>
+														<li className="d-inline-block">
+															<a
+																href={`/movie/detail/${item.id}`}
+															>
+																<i className="fa fa-search col_red"></i>
+															</a>
+														</li>
+													</ul>
 												</div>
+												<div className="overlay position-absolute"></div>
 											</div>
-										))}
-								</div>
-							</div>
-
-							<div className="tab-pane" id="sapchieu">
-								<div
-									className="owl-carousel owl-theme"
-									// data-aos="fade-left"
-								>
-									{data
-										.filter(
-											(item) => item.status === "coming"
-										)
-										.map((item) => (
-											<div
-												className="item"
-												key={item.movie_id}
-											>
-												<div className="popular_2i1lm position-relative clearfix">
-													<div className="popular_2i1lm1 clearfix">
-														<div className="grid">
-															<figure className="effect-jazz mb-0">
-																<a
-																	href={`/movie/detail/${item.movie_id}`}
-																>
-																	<img
-																		src={`http://localhost:8080/uploads/movies/${item.poster}`}
-																		className="w-100"
-																		alt={
-																			item.title
-																		}
-																	/>
-																</a>
-															</figure>
-														</div>
-													</div>
-													<div className="popular_2i1lm2 position-absolute top-0 w-100 text-center clearfix">
-														<ul>
-															<li className="d-inline-block">
-																<a
-																	href={`/movie/trailer/${item.movie_id}`}
-																>
-																	<i
-																		className="fa-brands fa-youtube"
-																		style={{
-																			color: "#ff0000",
-																		}}
-																	></i>
-																</a>
-															</li>
-															<li className="d-inline-block">
-																<a
-																	href={`/movie/detail/${item.movie_id}`}
-																>
-																	<i className="fa fa-search col_red"></i>
-																</a>
-															</li>
-														</ul>
-													</div>
-													<div className="overlay position-absolute"></div>
-												</div>
-												<div className="popular_2i1lmr position-relative text-center">
-													<h6 className="font_14 text-uppercase mb-2">
-														<a
-															href={`/movie/detail/${item.movie_id}`}
-														>
-															{
-																item.title
-															}
-														</a>
-													</h6>
-													{/* <h6 className="mb-0">
-													<span className="col_red font_700">
-														{item.rating}
-													</span>
-													/10 |{" "}
-													<span>
-														{item.runtime}{" "}
-														min
-													</span>
-												</h6> */}
-													<h6 className="font_12 mb-0">
-														{item.genre}
-													</h6>
-												</div>
+											<div className="popular_2i1lmr position-relative text-center">
+												<h6 className="font_14 text-uppercase mb-2">
+													<a
+														href={`/movie/detail/${item.id}`}
+													>
+														{item.title}
+													</a>
+												</h6>
+												<h6 className="font_12 mb-0">
+													{item.genre}
+												</h6>
 											</div>
-										))}
-								</div>
-							</div>
-						</div>
-					</div>
+										</div>
+									))}
+							</OwlCarousel>
+						</Tab>
+						<Tab eventKey="coming" title="Coming Soon">
+							<OwlCarousel
+								className="owl-theme"
+								margin={10}
+								items="5"
+								autoplay
+							>
+								{data
+									.filter((item) => item.status === "Coming")
+									.map((item) => (
+										<div
+											className="item"
+											key={item.id}
+											data-aos="fade-left"
+										>
+											<div className="popular_2i1lm position-relative clearfix">
+												<div className="popular_2i1lm1 clearfix">
+													<div className="grid">
+														<figure className="effect-jazz mb-0">
+															<Link
+																to={`/movies/detail/${item.id}`}
+															>
+																<img
+																	src={`http://localhost:8080/uploads/movies/${item.poster}`}
+																	className="w-100"
+																	alt={
+																		item.title
+																	}
+																/>
+															</Link>
+														</figure>
+													</div>
+												</div>
+												<div className="popular_2i1lm2 position-absolute top-0 w-100 text-center clearfix">
+													<ul>
+														<li className="d-inline-block">
+															<Link
+																href={`/movie/trailer/${item.id}`}
+															>
+																<i
+																	className="fa-brands fa-youtube"
+																	style={{
+																		color: "#ff0000",
+																	}}
+																></i>
+															</Link>
+														</li>
+														<li className="d-inline-block">
+															<a
+																href={`/movie/detail/${item.id}`}
+															>
+																<i className="fa fa-search col_red"></i>
+															</a>
+														</li>
+													</ul>
+												</div>
+												<div className="overlay position-absolute"></div>
+											</div>
+											<div className="popular_2i1lmr position-relative text-center">
+												<h6 className="font_14 text-uppercase mb-2">
+													<a
+														href={`/movie/detail/${item.id}`}
+													>
+														{item.title}
+													</a>
+												</h6>
+												<h6 className="font_12 mb-0">
+													{item.genre}
+												</h6>
+											</div>
+										</div>
+									))}
+							</OwlCarousel>
+						</Tab>
+					</Tabs>
 				</div>
 			</section>
 			{/* End Trending */}

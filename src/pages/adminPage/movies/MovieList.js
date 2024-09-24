@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert } from "react-bootstrap";
+import { Alert, Button, Dropdown, Form } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../../contexts/DataContext";
@@ -7,11 +7,47 @@ import { ColorRing } from "react-loader-spinner";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+// import ModalMovie from "./ModalMovie";
+import { se } from "date-fns/locale";
 
 function MovieList(props) {
 	const [data, setData] = useState([]);
+	const [modalShow, setModalShow] = React.useState(false);
 	const { alert } = useContext(DataContext);
+	const [searchType, setSearchType] = useState("");
 	// const navigate = useNavigate();
+
+	//search
+	const [listsearch, setListSearch] = useState([]);
+	function handelSearch(e) {
+		let { value } = e.target;
+		let res = [];
+		if (value === "" || searchType === "") {
+			setListSearch(data);
+		} else if (value != "") {
+			if (searchType == "title") {
+				for (let i = 0; i < data.length; i++) {
+					if (data[i].title.toLowerCase().includes(value.toLowerCase())) {
+						res.push(data[i]);
+					}
+				}
+			} else if (searchType == "genre") {
+				for (let i = 0; i < data.length; i++) {
+					if (data[i].genre.toLowerCase().includes(value.toLowerCase())) {
+						res.push(data[i]);
+					}
+				}
+			}
+			setListSearch(res.length > 0 ? res : [""]);
+		}
+	}
+	/////////////////////////////////////
+
+	function onChangeTypeForSearch(e) {
+		let { value } = e.target;
+		setSearchType(value);
+	}
+	console.log("serara: ", searchType);
 
 	const fetchData = async () => {
 		try {
@@ -37,14 +73,21 @@ function MovieList(props) {
 	useEffect(() => {
 		// Fetch items from another resources.
 		const endOffset = itemOffset + itemsPerPage;
-		setCurrentItems(data.slice(itemOffset, endOffset));
+		setCurrentItems(
+			listsearch.length > 0
+				? listsearch.slice(itemOffset, endOffset)
+				: data.slice(itemOffset, endOffset)
+		);
 		setPageCount(Math.ceil(data.length / itemsPerPage));
-	}, [itemOffset, itemsPerPage, data]);
+	}, [itemOffset, itemsPerPage, data, listsearch]);
 	const handlePageClick = (event) => {
 		const newOffset = (event.selected * itemsPerPage) % data.length;
 		setItemOffset(newOffset);
 	};
 	//END PAGINATE
+
+	console.log("LISTSEARCH: ", listsearch);
+
 	return (
 		<div className="mt-3">
 			<h2>Movies Table</h2>
@@ -56,6 +99,24 @@ function MovieList(props) {
 			<Link className="btn btn-primary mb-3" to={"./new"}>
 				<b>Insert New Movie</b>
 			</Link>
+			<div class="input-group mt-3 mb-3 float-end w-50">
+				<Form.Select
+					className="btn btn-outline-success"
+					onChange={onChangeTypeForSearch}
+				>
+					<option value="">Select Type For Search</option>
+					<option value="title">Movie Title</option>
+					<option value="genre">Genre</option>
+				</Form.Select>
+				<input
+					className="form-control"
+					id="search"
+					placeholder="Enter Name to Search"
+					disabled={searchType == ""}
+					onChange={handelSearch}
+					// value={searchType == "" ? "" : }
+				/>
+			</div>
 			{data.length == 0 && (
 				<ColorRing
 					visible={true}
@@ -72,77 +133,37 @@ function MovieList(props) {
 					<tr>
 						<th>ID</th>
 						<th>Title</th>
-						<th>Genre</th>
 						<th>Director</th>
-						<th>Casts</th>
 						<th>Release Date</th>
-						<th>Poster</th>
-						<th>Description</th>
 						<th>Status</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{data.length > 0 &&
+						listsearch[0] != "" &&
 						currentItems.map((item, index) => {
 							return (
 								<tr key={index}>
 									<td>{item.id}</td>
 									<td>{item.title}</td>
-									<td>{item.genre}</td>
 									<td>{item.director}</td>
-									<td>
-										<span
-											className="d-inline-block"
-											dangerouslySetInnerHTML={{
-												__html:
-													item.casts?.slice(
-														0,
-														200
-													) || "",
-											}}
-										/>
-										{item.casts?.length > 200 && "..."}
-									</td>
 									<td>{item.release_date}</td>
-									<td>
-										<img
-											src={`http://localhost:8080/uploads/movies/${item.poster}`}
-											onError={(e) => {
-												e.target.src =
-													"path/to/default-image.jpg";
-											}} // Set default image on error
-											alt="img"
-											className="img-thumbnail"
-											width="100"
-										/>
-									</td>
-									<td>
-										<span
-											className="d-inline-block"
-											dangerouslySetInnerHTML={{
-												__html:
-													item.description?.slice(
-														0,
-														200
-													) || "",
-											}}
-										/>
-										{item.description?.length > 200 &&
-											"..."}
-									</td>
 									<td>{item.status}</td>
 									<td>
 										<button
-											type="button"
-											className="btn btn-light mb-1 w-100"
-											data-bs-toggle="modal"
-											data-bs-target="#{{ $item -> movie_id }}"
+											className="btn btn-outline-light"
+											onClick={() => setModalShow(true)}
 										>
-											<b>Detail</b>
+											Detail
 										</button>
+										{/* <ModalMovie
+											movie={item.id}
+											show={modalShow}
+											onHide={() => setModalShow(false)}
+										/> */}
 										<Link
-											className="btn btn-success mb-1 w-100"
+											className="btn btn-outline-success"
 											to={`./new/${item.id}`}
 										>
 											<b>Edit</b>

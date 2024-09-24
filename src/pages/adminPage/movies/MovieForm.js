@@ -32,6 +32,11 @@ const schema = yup
 			.min(2, "Greater than 2 characters")
 			.max(100, "Less than 100 characters")
 			.required(),
+		duration: yup
+			.number()
+			.min(0, "Greater than 0 minutes")
+			.max(360, "Less than 360 minutes")
+			.required(),
 		release_date: yup
 			.date()
 			.required()
@@ -84,6 +89,7 @@ function MovieForm(props) {
 					setValue("director", movie.director);
 					setValue("casts", movie.casts);
 					setValue("genre", movie.genre);
+					setValue("duration", movie.duration);
 					setValue("release_date", movie.release_date); // Assuming backend returns date in appropriate format
 					setValue("description", movie.description);
 					setValue("trailer", movie.trailer);
@@ -111,6 +117,7 @@ function MovieForm(props) {
 		formData.append("casts", data.casts);
 		formData.append("genre", data.genre);
 		formData.append("trailer", data.trailer);
+		formData.append("duration", data.duration);
 		formData.append("description", data.description);
 		formData.append("status", data.status);
 		formData.append("release_date", formattedReleaseDate);
@@ -241,6 +248,19 @@ function MovieForm(props) {
 						<span className="text-danger">
 							{errors.release_date?.message}
 						</span>
+					</div>
+					<div className="mb-3">
+						<label htmlFor="duration">
+							Duration(Minutes)<span className="text-danger">*</span>
+						</label>
+						<input
+							type="text"
+							className="form-control"
+							id="duration"
+							placeholder="Enter Duration"
+							{...register("duration")}
+						/>
+						<span className="text-danger">{errors.duration?.message}</span>
 					</div>
 				</div>
 				<div className="mb-3">

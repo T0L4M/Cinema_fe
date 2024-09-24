@@ -7,7 +7,7 @@ import { DataContext } from "./contexts/DataContext";
 import { useContext } from "react";
 
 function App() {
-	const { auth, showAlert } = useContext(DataContext);
+	const { auth } = useContext(DataContext);
 	return (
 		<div>
 			<Routes>
@@ -48,7 +48,6 @@ function App() {
 							);
 						}
 					} else {
-						// showAlert("warning", "Please Log In to continue!");
 						return (
 							<Route
 								key={index}

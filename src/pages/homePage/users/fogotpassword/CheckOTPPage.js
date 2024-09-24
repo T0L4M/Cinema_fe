@@ -78,6 +78,9 @@ function CheckOTPPage(props) {
 													placeholder="Enter OTP"
 													{...register("code")}
 												/>
+												<span className="text-danger">
+													{errors.code?.message}
+												</span>
 											</div>
 											<button
 												type="submit"

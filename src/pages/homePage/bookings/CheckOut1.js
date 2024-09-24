@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Alert, Button, Modal } from "react-bootstrap";
 import { DataContext } from "../../../contexts/DataContext";
 import AOS from "aos";
@@ -25,7 +25,6 @@ const CheckOut1 = () => {
 		customerId: auth.id,
 		showtimeId: parseInt(idShowtime),
 	});
-	const navigate = useNavigate();
 
 	// Fetch product data
 	const fetchProduct = async () => {
@@ -111,14 +110,12 @@ const CheckOut1 = () => {
 
 	async function handleSubmit(e) {
 		e.preventDefault();
-		console.log("DATA:", booking);
 		if (booking.seatBookingList.length === 0) {
 			showAlert("warning", "Please Choose Your Desired Seats");
 			return;
 		}
 		bookingSaving(booking);
 	}
-
 	useEffect(() => {
 		fetchProduct();
 		fetchData();
@@ -129,9 +126,18 @@ const CheckOut1 = () => {
 	}, [idShowtime]);
 
 	return (
-		<div className="container">
+		<div
+			className="container"
+			style={{ background: "linear-gradient(to bottom, #111111, #480607)" }}
+		>
 			{alert.type != "" && (
-				<Alert variant={alert.type} dismissible transition>
+				<Alert
+					variant={alert.type}
+					dismissible
+					transition
+					className="position-fixed bottom-0 end-0"
+					style={{ width: "fit-content", zIndex: 9999 }}
+				>
 					{alert.message}
 				</Alert>
 			)}

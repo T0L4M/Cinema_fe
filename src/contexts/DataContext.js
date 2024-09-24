@@ -6,6 +6,7 @@ const DataContext = createContext();
 
 function DataProvider({ children }) {
 	const navigate = useNavigate();
+	//ALERT
 	const [alert, setAlert] = useState({ type: "", message: "", show: false });
 	//USER
 	let user = JSON.parse(sessionStorage.getItem("user")) || {};
@@ -29,10 +30,9 @@ function DataProvider({ children }) {
 		const parseUser = jwtDecode(u);
 		sessionStorage.setItem("user", JSON.stringify(parseUser.UserInfo));
 		setAuth(parseUser.UserInfo);
-		if (parseUser.UserInfo.role == "ADMIN") {
-			showAlert("success", "Login Successfully!");
+		if (parseUser.UserInfo.role === "ADMIN") {
 			navigate("/dashboard");
-		} else if (parseUser.UserInfo.role == "USER") {
+		} else if (parseUser.UserInfo.role === "USER") {
 			showAlert("success", "Login Successfully!");
 			navigate("/");
 		}

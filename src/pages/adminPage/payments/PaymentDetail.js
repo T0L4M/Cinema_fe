@@ -11,9 +11,47 @@ import "aos/dist/aos.css";
 function PaymentDetail(props) {
 	const location = useLocation();
 	const [paymentData, setPaymentData] = useState(location.state?.paymentData || {});
-
+	const [convertedSeats, setConvertedSeats] = useState([]);
+	const letters = [
+		"A",
+		"B",
+		"C",
+		"D",
+		"E",
+		"F",
+		"G",
+		"H",
+		"I",
+		"J",
+		"K",
+		"L",
+		"M",
+		"N",
+		"O",
+		"P",
+		"Q",
+		"R",
+		"S",
+		"T",
+		"U",
+		"V",
+		"W",
+		"X",
+		"Y",
+		"Z",
+	];
 	const { id } = useParams();
 	const [product, setProduct] = useState([]);
+
+	const fetchPayment = async () => {
+		try {
+			const response = await axios.get(`http://localhost:8080/payments/detail/${id}`);
+			setPaymentData(response.data.data);
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+		} catch (error) {
+			console.log("ERROR FEYCHING DATA: ", error);
+		}
+	};
 
 	const fetchProduct = async (orderId) => {
 		try {
@@ -26,14 +64,40 @@ function PaymentDetail(props) {
 		}
 	};
 
-	useEffect(() => {
-		console.log("ORDER: ", paymentData.order);
-
-		if (paymentData.order != null) {
-			fetchProduct(paymentData.order.id);
+	const convertSeats = (seats) => {
+		if (typeof seats !== "string" && !Array.isArray(seats)) {
+			console.error("Error: seatBookingList must be a string or an array of strings");
+			return [];
 		}
+
+		const seatList = Array.isArray(seats) ? seats : seats.split(" ");
+		const convertedSeats = [];
+
+		seatList.forEach((seat) => {
+			if (!isNaN(parseInt(seat[0]))) {
+				const letter = letters[parseInt(seat[0]) - 1];
+				const number = seat[2];
+				convertedSeats.push(`${letter}${number}`);
+			}
+		});
+
+		return convertedSeats.join("-");
+	};
+
+	useEffect(() => {
+		fetchPayment();
+		if (Object.keys(paymentData).length > 0) {
+			console.log("PAYMENT:", paymentData);
+			const converted = convertSeats(paymentData?.booking?.seatBooking);
+			setConvertedSeats(converted.length > 0 ? converted.split(" ") : []);
+
+			if (paymentData?.order != null) {
+				fetchProduct(paymentData.order.id);
+			}
+		}
+
 		AOS.init();
-	}, []);
+	});
 	console.log("PRODUCT: ", product);
 
 	return (
@@ -68,7 +132,12 @@ function PaymentDetail(props) {
 							<div className="below">
 								<p>
 									Seat:
-									<span>{paymentData.booking.seatBooking}</span>
+									{convertedSeats.length == 0 && (
+										<p>is Loading</p>
+									)}
+									{convertedSeats.map((seat, index) => (
+										<span key={index}>{seat}</span>
+									))}
 								</p>
 								Order:
 								<ol>

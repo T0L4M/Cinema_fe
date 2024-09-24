@@ -314,7 +314,7 @@ function ShowtimeForm(props) {
 					</div>
 					<span className="text-danger">{errors.status?.message}</span>
 				</div>
-				<button type="submit" className="btn btn-primary" data-aos="zoom-in-right">
+				<button type="submit" className="btn btn-primary">
 					Submit
 				</button>
 			</form>

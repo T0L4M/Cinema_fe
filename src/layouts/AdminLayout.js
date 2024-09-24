@@ -30,12 +30,12 @@ function AdminLayout({ children }) {
 				<div className="sidebar-brand-text mx-3 my-3">
 					<Link className="text-white text-decoration-none" to={"/dashboard"}>
 						<img
-							src="/assets/image/fin_cinema.jpg"
+							src="/assets/image/tgv_logo.png"
 							className="img-thumbnail"
 							width="100"
 							alt=""
 						/>
-						<span className="fs-5">CINEMA</span>
+						<span className="fs-5 ms-2">CINEMA</span>
 					</Link>
 				</div>
 
@@ -53,20 +53,15 @@ function AdminLayout({ children }) {
 				{/*Divider */}
 				<hr className="sidebar-divider" />
 
-				{/*Heading */}
-				<div className="sidebar-heading">Interface</div>
-
-				{/*
-                        Nav Item - Pages Collapse Menu 
-
-                        */}
-
 				<Accordion defaultActiveKey={["0"]} alwaysOpen>
 					<Accordion.Item eventKey="0" className="my-1 nav-item">
 						<Accordion.Header>Components</Accordion.Header>
 						<Accordion.Body>
 							<div className="bg-white py-2 collapse-inner rounded">
-								{/* <h6 className="collapse-header">Custom Tables:</h6> */}
+								<Link className="collapse-item" to={"/admin/blog"}>
+									<i class="fa-solid fa-newspaper me-2"></i>
+									Blogs
+								</Link>
 								<Link className="collapse-item" to={"/admin/movie"}>
 									<i className="fa-solid fa-film me-2"></i>
 									Movies
@@ -115,40 +110,13 @@ function AdminLayout({ children }) {
 									<i className="fa-solid fa-cash-register me-2"></i>
 									Payments
 								</Link>
-								<h6 className="collapse-header">Feedbacks:</h6>
-								<Link
-									className="collapse-item"
-									to={"/feedback.feedBack"}
-								>
-									<i className="fa-solid fa-comment me-2"></i>
-									Feedbacks
-								</Link>
 							</div>
 						</Accordion.Body>
 					</Accordion.Item>
 				</Accordion>
 
 				{/*Divider */}
-				<hr className="sidebar-divider" />
-
-				{/*Nav Item - Charts */}
-				<li className="nav-item">
-					<Link className="nav-link" to={"/admin.dashboard"}>
-						<i className="fas fa-fw fa-chart-area"></i>
-						<span>Charts</span>
-					</Link>
-				</li>
-
-				{/*Divider */}
 				<hr className="sidebar-divider d-none d-md-block" />
-
-				{/*Sidebar Toggler (Sidebar) */}
-				<div className="text-center d-none d-md-inline">
-					<button
-						className="rounded-circle border-0"
-						id="sidebarToggle"
-					></button>
-				</div>
 			</ul>
 			{/*End of Sidebar */}
 

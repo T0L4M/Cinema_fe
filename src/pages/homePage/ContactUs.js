@@ -8,8 +8,59 @@ function ContactUs(props) {
 			duration: 1200,
 		});
 	}, []);
+
+	// Định nghĩa các style
+	const styles = {
+		container: {
+			paddingTop: "80px", // Tăng padding trên để đẩy nội dung xuống sát hơn
+			paddingBottom: "80px", // Thêm padding dưới để tạo khoảng trống cho trang dài ra
+			minHeight: "150vh", // Đảm bảo trang đủ dài để có thể cuộn
+			background: "linear-gradient(to bottom, #111111, #480607)", // Thay đổi màu nền
+			color: "#fff", // Màu chữ trắng
+		},
+		feedbackSection: {
+			color: "red",
+		},
+		formInput: {
+			backgroundColor: "transparent",
+			color: "#fff",
+			border: "1px solid #fff", // Đường viền trắng
+			padding: "10px",
+			borderRadius: "5px",
+			marginBottom: "15px",
+		},
+		formTextArea: {
+			backgroundColor: "transparent",
+			color: "#fff",
+			border: "1px solid #fff",
+			padding: "10px",
+			borderRadius: "5px",
+			resize: "none",
+			width: "100%",
+		},
+		buttonSubmit: {
+			backgroundColor: "#ff0000", // Màu đỏ cho nút
+			border: "none",
+			color: "#fff",
+			padding: "10px 20px",
+			borderRadius: "5px",
+			cursor: "pointer",
+			textTransform: "uppercase",
+			fontWeight: "bold",
+		},
+		mapContainer: {
+			marginTop: "30px",
+		},
+		mapIframe: {
+			border: 0,
+			borderRadius: "10px",
+			width: "100%",
+			height: "450px",
+		},
+	};
+
 	return (
-		<div className="pt-4 pb-4">
+		<div style={styles.container}>
 			<div className="container-xl">
 				<div
 					className="row contact_1 bg_dark pt-5 pb-5 rounded-4"
@@ -20,7 +71,7 @@ function ContactUs(props) {
 							<div className="col-md-2 col-2">
 								<div className="contact_1il">
 									<span className="col_red fs-3">
-										<i class="fa-solid fa-location-dot"></i>
+										<i className="fa-solid fa-location-dot"></i>
 									</span>
 								</div>
 							</div>
@@ -40,7 +91,7 @@ function ContactUs(props) {
 							<div className="col-md-2 col-2">
 								<div className="contact_1il">
 									<span className="col_red fs-3">
-										<i class="fa-solid fa-clock"></i>
+										<i className="fa-solid fa-clock"></i>
 									</span>
 								</div>
 							</div>
@@ -58,7 +109,7 @@ function ContactUs(props) {
 							<div className="col-md-2 col-2">
 								<div className="contact_1il">
 									<span className="col_red fs-3">
-										<i class="fa-solid fa-envelope"></i>
+										<i className="fa-solid fa-envelope"></i>
 									</span>
 								</div>
 							</div>
@@ -75,7 +126,7 @@ function ContactUs(props) {
 							<div className="col-md-2 col-2">
 								<div className="contact_1il">
 									<span className="col_red fs-3">
-										<i class="fa-solid fa-phone"></i>
+										<i className="fa-solid fa-phone"></i>
 									</span>
 								</div>
 							</div>
@@ -92,7 +143,7 @@ function ContactUs(props) {
 				<div className="row contact_2 mt-4">
 					<div className="col-md-12">
 						<div className="contact_2l row">
-							<div className="col-md-12" style={{ color: "red" }}>
+							<div className="col-md-12" style={styles.feedbackSection}>
 								<h4>FEEDBACK</h4>
 							</div>
 						</div>
@@ -101,51 +152,46 @@ function ContactUs(props) {
 								<div className="col-md-4">
 									<div className="contact_2l1i">
 										<input
-											className="form-control"
+											style={styles.formInput}
 											placeholder="Full Name (*)"
 											type="text"
 											name="username"
 										/>
-										{/* Add client-side validation here */}
 									</div>
 								</div>
 								<div className="col-md-4">
 									<div className="contact_2l1i">
 										<input
-											className="form-control"
+											style={styles.formInput}
 											placeholder="Email (*)"
 											type="text"
 											name="email"
 										/>
-										{/* Add client-side validation here */}
 									</div>
 								</div>
 								<div className="col-md-4">
 									<div className="contact_2l1i">
 										<input
-											className="form-control"
+											style={styles.formInput}
 											placeholder="Phone (*)"
 											type="text"
 											name="phone"
 										/>
-										{/* Add client-side validation here */}
 									</div>
 								</div>
 							</div>
 							<div className="col-md-12 my-3">
 								<div className="contact_2l1i">
 									<textarea
+										style={styles.formTextArea}
 										placeholder="Comment"
-										className="form-control form_text"
 										name="comment"
-										style={{ resize: "none" }}
 									></textarea>
-									{/* Add client-side validation here */}
 								</div>
 							</div>
 							<h6 className="mt-3 mb-0">
 								<input
-									className="button"
+									style={styles.buttonSubmit}
 									type="submit"
 									value="Submit"
 								/>
@@ -154,21 +200,16 @@ function ContactUs(props) {
 					</div>
 				</div>
 
-				<div className="row contact_3 mt-4">
+				<div className="row contact_3 mt-4" style={styles.mapContainer}>
 					<div className="col-md-12">
-						<div className="map-container">
-							<iframe
-								src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.267979060374!2d106.67926757480507!3d10.790775789358879!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528d4a8afdb7b%3A0x2e46c4ada94947dd!2zMzkxQSDEkC4gTmFtIEvhu7MgS2jhu59pIE5naMSpYSwgUGjGsOG7nW5nIDE0LCBRdeG6rW4gMywgSOG7kyBDaMOtIE1pbmggNzAwMDAwLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1724763500959!5m2!1svi!2s"
-								width="100%"
-								height="450"
-								style={{ border: 0 }}
-								allowFullScreen
-								loading="lazy"
-								referrerPolicy="no-referrer-when-downgrade"
-								title="Google Maps Location"
-								className="rounded-4"
-							></iframe>
-						</div>
+						<iframe
+							src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.267979060374!2d106.67926757480507!3d10.790775789358879!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x317528d4a8afdb7b%3A0x2e46c4ada94947dd!2zMzkxQSDEkC4gTmFtIEvhu7MgS2jhu59pIE5naMSpYSwgUGjGsOG7nW5nIDE0LCBRdeG6rW4gMywgSOG7kyBDaMOtIE1pbmggNzAwMDAwLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1724763500959!5m2!1svi!2s"
+							style={styles.mapIframe}
+							allowFullScreen
+							loading="lazy"
+							referrerPolicy="no-referrer-when-downgrade"
+							title="Google Maps Location"
+						></iframe>
 					</div>
 				</div>
 			</div>

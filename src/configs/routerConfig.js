@@ -25,6 +25,7 @@ import VNPayResponseHandler from "../pages/homePage/bookings/payments/VNPayRespo
 import MovieDetail from "../pages/homePage/movies/MovieDetail";
 import PaymentList from "../pages/adminPage/payments/PaymentList";
 import PaymentDetail from "../pages/adminPage/payments/PaymentDetail";
+import ShowtimeDetail from "../pages/homePage/showtimes/ShowtimeDetail";
 
 const publicRouter = [
 	{
@@ -34,6 +35,10 @@ const publicRouter = [
 	{
 		path: "/showtimes",
 		element: <ShowtimePage />,
+	},
+	{
+		path: "/showtimes/movie/:idMovie",
+		element: <ShowtimeDetail />,
 	},
 	//MOVIES
 	{
@@ -144,14 +149,14 @@ const privateRouter = [
 		roles: ["ADMIN"],
 	},
 	{
-		path: "/admin/payment/detail/:id?",
+		path: "/admin/payment/detail/:id",
 		element: <PaymentDetail />,
 		roles: ["ADMIN"],
 	},
 
 	//Booking
 	{
-		path: "/booking/:idShowtime?",
+		path: "/booking/:idShowtime",
 		element: <CheckOut1 />,
 		roles: ["USER", "ADMIN"],
 	},

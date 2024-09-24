@@ -62,9 +62,20 @@ const HomepageLayout = ({ children }) => {
 				);
 			default:
 				return (
-					<Navbar.Text style={{ padding: "0" }}>
-						<Link className="nav-link fs-6" to={"/login"}>
-							SIGN IN/ SIGN UP
+					<Navbar.Text
+						className="d-flex align-items-center justify-content-end"
+						style={{ flex: "0 1 auto" }}
+					>
+						<Link
+							className="nav-link d-flex align-items-center"
+							to={"/login"}
+							style={{ fontSize: "0.85rem" }}
+						>
+							<i
+								className="fa fa-user-circle me-2"
+								style={{ fontSize: "0.85rem" }}
+							></i>{" "}
+							SIGN IN
 						</Link>
 					</Navbar.Text>
 				);
@@ -92,113 +103,40 @@ const HomepageLayout = ({ children }) => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 	return (
-		<div className="container-fluid">
-			<section
-				id="top"
-				style={{
-					backgroundImage: "linear-gradient(#213363, #1B6B93)",
-					border: "none",
-				}}
-			>
-				<div className="container">
-					<div className="row top_1">
-						<div className="col-md-3">
-							<div className="top_1l pt-1">
-								<h3 className="mb-0">
-									<Link
-										className="text-white text-decoration-none"
-										to={"/"}
-									>
-										<img
-											src="/assets/image/fin_cinema.jpg"
-											className="img-thumbnail"
-											width="100"
-											alt=""
-										/>
-										CINEMA
-									</Link>
-								</h3>
-							</div>
-						</div>
-
-						<div className="col-md-9">
-							<div className="top_1r text-end mt-3">
-								<ul className="social-network social-circle mb-0">
-									<li>
-										<Link
-											to={"#"}
-											className="icoRss"
-											title="Rss"
-										>
-											<i className="fa-brands fa-instagram"></i>
-										</Link>
-									</li>
-									<li>
-										<Link
-											to={"#"}
-											className="icoFacebook"
-											title="Facebook"
-										>
-											<i className="fa-brands fa-facebook"></i>
-										</Link>
-									</li>
-									<li>
-										<Link
-											to={"#"}
-											className="icoTwitter"
-											title="Twitter"
-										>
-											<i class="fa-brands fa-twitter"></i>
-										</Link>
-									</li>
-									<li>
-										<Link
-											to={"#"}
-											className="icoGoogle"
-											title="Google +"
-										>
-											<i class="fa-brands fa-google"></i>
-										</Link>
-									</li>
-									<li>
-										<Link
-											to={"#"}
-											className="icoLinkedin"
-											title="Linkedin"
-										>
-											<i class="fa-brands fa-linkedin"></i>
-										</Link>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			{/* End Header */}
-
-			{/*START NAVBAR */}
+		<div className="container-fluid" style={{ padding: "0" }}>
 			<section id="header">
 				<Navbar
 					expand="lg"
-					style={{ backgroundImage: "linear-gradient( #1B6B93 , #4FC0D0)" }}
-					sticky="top"
+					style={{
+						backgroundImage: "linear-gradient( #202020 , #101010)",
+						// backgroundColor: "transparent",
+						height: "80px",
+						// alignItems: "center",
+					}}
 				>
-					<Container>
-						<Navbar.Brand>
-							<Link
-								className="navbar-brand text-white fw-bold text-decoration-none"
-								to={"/"}
-							>
+					<Container className="d-flex justify-content-around align-items-center">
+						{/* Logo ở góc trái */}
+						<Navbar.Brand
+							className="d-flex align-items-center"
+							style={{ flex: "0 1 auto" }}
+						>
+							<Link to={"/"}>
 								<img
-									src="/"
+									src="/assets/image/tgv_logo.png"
 									className="img-thumbnail me-2"
-									width="100"
-									alt=""
+									width="150"
+									height="auto"
+									alt="Logo lớn"
+									style={{
+										backgroundColor: "transparent",
+										border: "none",
+										maxWidth: "150px",
+									}}
 								/>
-								CINEMA
 							</Link>
 						</Navbar.Brand>
+
+						{/* <Container> */}
 						<Navbar.Toggle aria-controls="basic-navbar-nav" />
 						<Navbar.Offcanvas
 							id="basic-navbar-nav"
@@ -208,7 +146,7 @@ const HomepageLayout = ({ children }) => {
 							<Offcanvas.Header closeButton>
 								<Offcanvas.Title id="basic-navbar-nav">
 									<img
-										src="/"
+										src="/assets/image/tgv_logo.png"
 										className="img-thumbnail me-2"
 										width="100"
 										alt=""
@@ -217,83 +155,126 @@ const HomepageLayout = ({ children }) => {
 								</Offcanvas.Title>
 							</Offcanvas.Header>
 							<Offcanvas.Body>
-								<Nav className=" flex-grow-1 pe-3">
-									<Navbar.Text style={{ padding: "0" }} k>
-										<Link
-											className="nav-link"
-											saria-current="page"
-											to={"/"}
-										>
-											<i className="fa-solid fa-house"></i>
-										</Link>
-									</Navbar.Text>
+								<Nav
+									className="d-flex align-items-center justify-content-center mx-auto"
+									style={{ flex: "1" }}
+								>
+									<Link
+										className="nav-link d-flex align-items-center"
+										to={"/"}
+										style={{ fontSize: "0.85rem" }}
+									>
+										<i
+											className="fa-solid fa-house"
+											style={{
+												fontSize: "1.2rem",
+												marginRight: "5px",
+											}}
+										></i>
+									</Link>
 
 									<NavDropdown
-										id="navbarDropdown"
-										title="MOVIES"
-										//   menuVariant="dark"
-										className="nav-item dropdown"
+										title={
+											<span
+												style={{
+													fontSize: "0.85rem",
+												}}
+											>
+												MOVIES
+											</span>
+										}
+										className="d-flex align-items-center"
+										style={{ fontSize: "0.85rem" }}
 									>
-										<NavDropdown.Item
-											style={{ padding: "0" }}
+										<Link
+											className="dropdown-item"
+											to={"/movies/showing"}
 										>
-											<Link
-												className="dropdown-item"
-												to={"/movies/showing"}
-											>
-												<i className="fa-solid fa-video me-2"></i>
-												NOW SHOWING
-											</Link>
-										</NavDropdown.Item>
+											<i
+												className="fa-solid fa-video me-2"
+												style={{
+													fontSize: "0.85rem",
+												}}
+											></i>{" "}
+											NOW SHOWING
+										</Link>
 										<NavDropdown.Divider />
-										<NavDropdown.Item
-											style={{ padding: "0" }}
+										<Link
+											className="dropdown-item"
+											to={"/movies/coming"}
 										>
-											<Link
-												className="dropdown-item"
-												to={"/movies/coming"}
-											>
-												<i className="fa-solid fa-clapperboard me-2"></i>
-												COMING SOON
-											</Link>
-										</NavDropdown.Item>
+											<i
+												className="fa-solid fa-clapperboard me-2"
+												style={{
+													fontSize: "0.85rem",
+												}}
+											></i>{" "}
+											COMING SOON
+										</Link>
 									</NavDropdown>
-									<Navbar.Text style={{ padding: "0" }} k>
-										<Link
-											className="nav-link fs-6"
-											to={"/showtimes"}
-										>
-											SHOWTIME
-										</Link>
-									</Navbar.Text>
-									<Navbar.Text style={{ padding: "0" }} k>
-										<Link
-											className="nav-link fs-6"
-											to={"/information"}
-										>
-											ABOUT US
-										</Link>
-									</Navbar.Text>
-									<Navbar.Text style={{ padding: "0" }} k>
-										<Link
-											className="nav-link fs-6"
-											to={"/contact"}
-										>
-											CONTACT US
-										</Link>
-									</Navbar.Text>
-									{switchLink()}
+
+									<Link
+										className="nav-link"
+										to={"/showtimes"}
+										style={{ fontSize: "0.85rem" }}
+									>
+										SHOWTIME
+									</Link>
+									<Link
+										className="nav-link"
+										to={"/information"}
+										style={{ fontSize: "0.85rem" }}
+									>
+										ABOUT US
+									</Link>
+									<Link
+										className="nav-link"
+										to={"/contact"}
+										style={{ fontSize: "0.85rem" }}
+									>
+										CONTACT US
+									</Link>
 								</Nav>
+								{switchLink()}
 							</Offcanvas.Body>
 						</Navbar.Offcanvas>
 					</Container>
 				</Navbar>
+				{/* </div>
+						</div>
+					</div>
+				</div> */}
 			</section>
+			{/* End Header */}
+
+			{/*START NAVBAR */}
+			{/* <section id="header">
+				<Navbar
+					expand="lg"
+					style={{ backgroundImage: "linear-gradient( #1B6B93 , #4FC0D0)" }}
+					sticky="top"
+				>
+					<Navbar.Brand>
+						<Link
+							className="navbar-brand text-white fw-bold text-decoration-none"
+							to={"/"}
+						>
+							<img
+								src="/assets/image/fin_cinema.jpg"
+								className="img-thumbnail"
+								width="100"
+								alt=""
+							/>
+							CINEMA
+						</Link>
+					</Navbar.Brand>
+				</Navbar>
+			</section> */}
 
 			{/*START CONTENTING*/}
 			<main
 				className="content"
-				style={{ backgroundImage: "linear-gradient(#4FC0D0, #FF9EAA)" }}
+				style={{ backgroundImage: "linear-gradient(#480607 #111)" }}
 			>
 				{children}
 			</main>
@@ -301,8 +282,8 @@ const HomepageLayout = ({ children }) => {
 
 			{/*START FOOTER */}
 			<div
-				className="container-fluid  footer py-5 fadeIn"
-				style={{ backgroundImage: "linear-gradient(#FF9EAA,#73BBC9 )" }}
+				className="container-fluid footer py-5 fadeIn"
+				style={{ backgroundImage: "linear-gradient( #202020 , #101010)" }}
 			>
 				<div className="container py-5">
 					<div className="row ">
@@ -310,7 +291,7 @@ const HomepageLayout = ({ children }) => {
 							<h4 className="title-footer mb-4">Our Cinema</h4>
 							<p className="mb-2">
 								<i
-									className="fa fa-map-marker-alt  me-3"
+									className="fa fa-map-marker-alt me-3"
 									style={{ color: "#1B9C85" }}
 								></i>
 								391A Nam Kỳ Khởi Nghĩa, Ward 7, District 3, HCMC
@@ -342,7 +323,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoTwitter"
 											title="Twitter"
 										>
-											<i class="fa-brands fa-twitter"></i>
+											<i className="fa-brands fa-twitter"></i>
 										</Link>
 									</li>
 									<li>
@@ -351,7 +332,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoGoogle"
 											title="Google +"
 										>
-											<i class="fa-brands fa-google"></i>
+											<i className="fa-brands fa-google"></i>
 										</Link>
 									</li>
 									<li>
@@ -360,7 +341,7 @@ const HomepageLayout = ({ children }) => {
 											className="icoLinkedin"
 											title="Linkedin"
 										>
-											<i class="fa-brands fa-linkedin"></i>
+											<i className="fa-brands fa-linkedin"></i>
 										</Link>
 									</li>
 								</ul>
@@ -394,7 +375,7 @@ const HomepageLayout = ({ children }) => {
 									}}
 								>
 									<i
-										className="fa fa-phone-alt  me-3"
+										className="fa fa-phone-alt me-3"
 										style={{ color: "#1B9C85" }}
 									></i>
 									Hotline
@@ -407,7 +388,7 @@ const HomepageLayout = ({ children }) => {
 									}}
 								>
 									<i
-										className="fa fa-envelope  me-3"
+										className="fa fa-envelope me-3"
 										style={{ color: "#1B9C85" }}
 									></i>
 									Email

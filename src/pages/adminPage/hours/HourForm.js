@@ -25,18 +25,6 @@ const schema = yup
 			.string()
 			.matches(timeRegex, "Invalid time format (HH:mm:ss)")
 			.required("Time from is required"),
-
-		time_to: yup
-			.string()
-			.matches(timeRegex, "Invalid time format (HH:mm:ss)")
-			.required("Time to is required")
-			.test("time-range", "Time from must be before time to", function (value) {
-				const { time_from, time_to } = this.parent;
-				// Convert time strings to Date objects for comparison
-				const timeFromObj = new Date(`1970-01-01 ${time_from}`);
-				const timeToObj = new Date(`1970-01-01 ${time_to}`);
-				return timeFromObj < timeToObj;
-			}),
 	})
 	.required();
 
@@ -110,22 +98,6 @@ function HourForm(props) {
 					/>
 					<span className="text-danger">{errors.time_from?.message}</span>
 				</div>
-
-				<div className="mb-3">
-					<label for="time_to">
-						Time To<red>*</red>
-					</label>
-					<input
-						type="time"
-						step={1}
-						className="form-control"
-						id="time_to"
-						placeholder="Enter Time To"
-						{...register("time_to")}
-					/>
-					<span className="text-danger">{errors.time_to?.message}</span>
-				</div>
-
 				<div className="mb-3">
 					<label for="price">
 						Price<red>*</red>

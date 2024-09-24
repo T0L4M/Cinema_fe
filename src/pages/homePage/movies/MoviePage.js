@@ -78,7 +78,7 @@ function MoviePage(props) {
 										<h4 class="mt-2">{item.title}</h4>
 										<p>{item.description}</p>
 										<Link
-											to={""}
+											to={`/showtimes/movie/${item.id}`}
 											class="btn btn-outline-light py-2 text-dark"
 											style={{ borderRadius: "10px" }}
 										>

@@ -6,9 +6,13 @@ Author URI: https://www.templateonweb.com/
 Licence: <a href="https://www.templateonweb.com/license">Website Template Licence</a>
 */
 body {
+  background: linear-gradient(to bottom, #111111, #480607);
   font-family: 'Rajdhani', sans-serif;
   color: #ffffff;
-  background-color: #010102;
+  /* background-color: #010102; */
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 ul {

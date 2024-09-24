@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Mitr&display=swap');
+/* Điều chỉnh cho màn hình nhỏ */
+
 
 * {
       font-family: "Mitr";
@@ -17,18 +19,33 @@
       bottom: 20px;
       right: 30px;
       z-index: 99;
+      background-color: white;
+      /* Màu nền ban đầu */
+      color: red;
+      /* Màu mũi tên ban đầu */
       border: none;
       outline: none;
-      color: #FF6E31;
-      cursor: pointer;
-      padding: 15px;
-      border-radius: 10px;
-      font-size: 2em;
+      width: 40px;
+      /* Giảm kích thước nút */
+      height: 40px;
+      /* Giảm kích thước nút */
+      text-align: center;
+      border-radius: 50%;
+      font-size: 16px;
+      /* Giảm kích thước font của mũi tên */
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #myBtn:hover {
-      background-color: #555;
+      background-color: red;
+      /* Màu nền khi hover */
+      color: white;
+      /* Màu mũi tên khi hover */
+      cursor: pointer;
 }
+
+
 
 /*********************center_home****************/
 .carousel-caption {
@@ -81,40 +98,119 @@
 /*********************trend_end****************/
 
 /*********************popular****************/
-.popular_1 .nav-tabs .nav-link {
-      color: #fff;
-      border: none;
-      display: block;
-      margin-left: 8px;
-      margin-right: 8px;
-      padding: 0;
+.navbar {
+      background-color: rgba(0, 0, 0, 0.1);
+      /* Màu nền mờ */
+      transition: background-color 0.3s ease;
+      /* Thêm chuyển đổi mượt */
+      /* position: fixed; */
+      /* Đảm bảo navbar dính trên cùng */
+      top: 0;
+      /* Cố định ở đầu trang */
+      left: 0;
+      z-index: 999;
+      /* Đảm bảo nó luôn hiển thị phía trên */
+      /* background-color: #000609; Màu nền của navbar */
+      height: 80px;
+      /* Đảm bảo chiều cao của navbar */
+      display: flex;
+      align-items: center;
+      box-shadow: 0 4px 2px -2px gray;
+      /* Thêm hiệu ứng đổ bóng */
+      width: 100vw;
+}
+
+/* Đổi nền khi người dùng lướt xuống */
+.navbar.scrolled {
+      background-color: rgba(0, 0, 0, 9);
+      /* Tăng độ đậm khi lướt xuống */
+}
+
+/* Điều chỉnh kích thước logo để phù hợp với việc giữ navbar */
+.navbar-brand img {
+      max-width: 150px;
+      /* Điều chỉnh kích thước logo */
+      height: auto;
+      /* Giữ tỷ lệ logo */
+}
+
+/* Điều chỉnh menu điều hướng */
+.nav-link {
+      padding: 0.5rem 1rem;
+      color: white;
+      font-weight: bold;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      transition: color 0.3s ease;
+}
+
+.nav-link i {
+      font-size: 1.2rem;
+      /* Điều chỉnh kích thước biểu tượng */
+      margin-right: 5px;
+      /* Khoảng cách giữa biểu tượng và text */
+      transition: color 0.3s ease;
+}
+
+/* Đổi màu khi hover vào Sign In */
+.nav-link:hover {
+      color: red;
+}
+
+.nav-link:hover i {
+      color: red;
+}
+
+/* Giữ Sign In ở bên phải */
+.navbar-text {
+      display: flex;
+      justify-content: flex-end;
+}
+
+.showing-menu {
+      display: flex;
+      justify-content: space-between;
+      background-color: #1c1c1c;
+      /* Nền đen */
+      padding: 10px 50px;
+}
+
+.menu-item {
+      color: #999;
+      /* Màu xám nhạt */
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
       text-transform: uppercase;
-      border-radius: 0;
-      background: none;
-      border-bottom: 2px solid transparent;
-      padding-bottom: 8px;
-
+      font-size: 1.2rem;
+      position: relative;
+      cursor: pointer;
+      margin-right: 30px;
 }
 
-.popular_1 .nav-tabs .nav-link:hover {
-      color: #fff;
-      border-bottom: 2px solid #de1002;
+.menu-item.active {
+      color: #ffffff;
+      /* Màu trắng cho mục active */
 }
 
-.popular_1 .nav-tabs .nav-link.active {
-      color: #fff;
-      border-bottom: 2px solid #de1002;
+.menu-item.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 100%;
+      height: 3px;
+      background-color: red;
+      /* Đường kẻ màu đỏ dưới mục active */
 }
 
-#choice .trend_2im2 {
-      padding: 130px 15px 0px 15px !important;
-      background-color: rgba(0, 0, 0, 0.7);
-      height: 100%;
+.menu-item:hover {
+      color: #ffffff;
+      /* Màu trắng khi hover */
 }
 
-#choice .carousel-indicators {
-      bottom: -50px;
-}
+
+
 
 /*********************popular_end****************/
 
@@ -158,6 +254,20 @@
 
 
 /********************** footer ************************/
+.footer {
+      background-color: #000;
+      /* Đặt màu nền cho footer */
+      width: 100vw;
+      /* Đảm bảo footer phủ hết chiều rộng */
+      padding: 20px 0;
+      /* Tạo khoảng cách trên dưới cho nội dung */
+}
+
+.footer .container {
+      height: auto;
+      /* Đảm bảo chiều cao tự động phù hợp với nội dung */
+}
+
 .footer .btn.btn-link {
       display: block;
       margin-bottom: 5px;
@@ -483,6 +593,17 @@
 @media (min-width:1201px) and (max-width:1255px) {}
 
 /* LOGIN */
+/* .text-center .small {
+      display: block; 
+      margin-top: 10px; 
+      color: #ea4141; 
+  }
+  
+  .text-center .small:hover {
+      text-decoration: underline; 
+      color: #ea4141; 
+  }
+  
 form.user .form-control-user {
       font-size: 1rem;
       border-radius: 10rem;
@@ -496,7 +617,7 @@ form.user .btn-user {
       padding: 0.75rem 1rem;
       display: block;
       width: 100%;
-}
+} */
 
 /* ABOUT US */
 .team-4 {
