@@ -9,6 +9,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 // import ModalMovie from "./ModalMovie";
 import { se } from "date-fns/locale";
+import ModalMovie from "./ModalMovie";
 
 function MovieList(props) {
 	const [data, setData] = useState([]);
@@ -157,11 +158,11 @@ function MovieList(props) {
 										>
 											Detail
 										</button>
-										{/* <ModalMovie
+										<ModalMovie
 											movie={item.id}
 											show={modalShow}
 											onHide={() => setModalShow(false)}
-										/> */}
+										/>
 										<Link
 											className="btn btn-outline-success"
 											to={`./new/${item.id}`}

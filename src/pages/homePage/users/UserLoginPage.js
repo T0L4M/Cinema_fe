@@ -52,30 +52,28 @@ function UserLoginPage(props) {
 	}
 
 	useEffect(() => {
+		document.title = "TGV CINEMA || Sign In Page";
 		AOS.init({
 			duration: 1200,
 		});
 		if (Object.keys(auth).length > 0) {
-			showAlert("warning", "Login Alredy!");
+			showAlert("warning", "Sign In Alredy!");
 			navigate("/");
 		}
 	}, []);
 	return (
 		<div className="login-container">
-			<div className="login-left">
+			<div className="login-left" data-aos="fade-left">
 				<img src="/assets/image/signup.jpg" alt="Popcorn" className="full-image" />
 				<div className="signup-message"></div>
 			</div>
 			<div className="login-right">
-				<div className="close-btn">
-					<span>&times;</span>
-				</div>
 				{alert.type !== "" && (
 					<Alert variant={alert.type} dismissible transition>
 						{alert.message}
 					</Alert>
 				)}
-				<div className="login-form">
+				<div className="login-form" data-aos="zoom-out">
 					<h1 className="text-center">SIGN IN</h1>
 					<p className="text-center">
 						Access your MovieClub benefits and rewards

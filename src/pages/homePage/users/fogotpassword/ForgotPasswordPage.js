@@ -52,6 +52,7 @@ function ForgotPasswordPage(props) {
 	}
 
 	useEffect(() => {
+		document.title = "TGV CINEMA || Forgot Password Page";
 		AOS.init({
 			duration: 1200,
 		});
@@ -63,12 +64,12 @@ function ForgotPasswordPage(props) {
 			justifyContent: "center",
 			alignItems: "center",
 			minHeight: "100vh",
-			background: "linear-gradient(to bottom, #111111, #480607)",
+			background: "linear-gradient(to bottom, #111111, #480607, #202020)",
 		},
 		card: {
 			backgroundColor: "transparent",
 			border: "none",
-			boxShadow: "0 0 15px rgba(0, 0, 0, 0.3)",
+			// boxShadow: "0 0 15px rgba(0, 0, 0, 0.3)",
 		},
 		formControl: {
 			backgroundColor: "transparent",
@@ -118,7 +119,7 @@ function ForgotPasswordPage(props) {
 	};
 
 	return (
-		<div style={styles.container} data-aos="slide-right">
+		<div style={styles.container} data-aos="slide-down">
 			<div style={styles.card} className="card o-hidden border-0">
 				<div className="card-body p-0">
 					<div className="row justify-content-center align-items-center h-100">

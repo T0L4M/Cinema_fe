@@ -111,7 +111,7 @@ function MovieDetail(props) {
 								</button>
 
 								<Link
-									to={`/booking/${data.id}`}
+									to={`/showtimes/movie/${data.id}`}
 									className="btn btn-outline-light py-2"
 									style={{ borderRadius: "10px" }}
 								>
@@ -137,7 +137,7 @@ function MovieDetail(props) {
 
 const styles = {
 	container: {
-		background: " #111111", // Gradient cho nền ngoài
+		// background: " #111111", // Gradient cho nền ngoài
 		minHeight: "100vh", // Đảm bảo chiều cao 100% của viewport
 		padding: "20px",
 	},

@@ -5,6 +5,8 @@ import axios from "axios";
 import { DataContext } from "../../../../contexts/DataContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Badge } from "react-bootstrap";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function VNPayResponseHandler(props) {
 	const queryParams = queryString.parse(window.location.search);
@@ -77,6 +79,11 @@ function VNPayResponseHandler(props) {
 	}, []);
 
 	useEffect(() => {
+		document.title = "TGV CINEMA || Payment Response Page";
+		AOS.init({
+			duration: 1200,
+		});
+
 		// Calculate secure hash
 		const calculatedHash = calculateSecureHash(queryParams, vnp_HashSecret);
 		if (
@@ -118,7 +125,7 @@ function VNPayResponseHandler(props) {
 
 	return (
 		<div style={styles.container}>
-			<div style={styles.content}>
+			<div style={styles.content} data-aos="slide-down">
 				<h4 style={styles.header}>Transaction Report</h4>
 
 				<div style={styles.resultMessage}>
@@ -166,7 +173,7 @@ const styles = {
 		color: "white", // Chữ trắng
 		padding: "40px", // Tăng padding cho phần nội dung
 		borderRadius: "12px", // Bo góc
-		boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)", // Hiệu ứng đổ bóng
+		// boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)", // Hiệu ứng đổ bóng
 		textAlign: "center",
 		maxWidth: "600px", // Kích thước tối đa của hộp nội dung
 		width: "100%", // Đảm bảo căn giữa nội dung

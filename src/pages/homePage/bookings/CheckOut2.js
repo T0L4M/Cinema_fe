@@ -208,6 +208,8 @@ function CheckOut2(props) {
 	}, [quantity]);
 
 	useEffect(() => {
+		document.title = "TGV CINEMA || Reservation Page";
+
 		AOS.init({
 			duration: 1200,
 		});
@@ -225,10 +227,7 @@ function CheckOut2(props) {
 			<header data-aos="fade-right" style={styles.header}>
 				<h2 style={styles.movieTitle}>{showtime?.movie?.title}</h2>
 				<div className="d-flex align-items-center justify-content-between">
-					<span style={styles.locationGray}>AMPANG POINT - CINEMA 1</span>
-					<span style={styles.time}>
-						{showtime?.hour.time_from} - {showtime?.hour.date}
-					</span>
+					<span style={styles.locationGray}>{showtime?.auditoria.name}</span>
 				</div>
 			</header>
 
@@ -261,8 +260,11 @@ function CheckOut2(props) {
 								<div style={styles.sectionHeader}>
 									<span>Showtime</span>
 									<span>
-										{showtime?.hour.time_from},{" "}
-										{showtime?.hour.date}
+										{showtime?.hour.time_from.slice(0, 5)},{" "}
+										{format(
+											showtime?.showtime_date,
+											"dd-MM-yyyy"
+										)}
 									</span>
 								</div>
 							</div>
@@ -283,9 +285,10 @@ function CheckOut2(props) {
 								<div style={styles.sectionHeader}>
 									<span>Ticket Price</span>
 									<span>
-										RM{" "}
 										{showtime?.hour.price *
-											bookAuth?.seatBookingList.length}
+											bookAuth?.seatBookingList
+												.length}{" "}
+										VND
 									</span>
 								</div>
 							</div>
@@ -308,7 +311,14 @@ function CheckOut2(props) {
 														width: "0.5%",
 													}}
 												>
-													Price
+													Price{" "}
+													<span
+														style={{
+															fontSize: "0.7em",
+														}}
+													>
+														(VND)
+													</span>
 												</th>
 											</tr>
 										</thead>
@@ -374,7 +384,7 @@ function CheckOut2(props) {
 								<div style={styles.sectionHeader}>
 									<span>Total Amount</span>
 
-									<span>{calculateTotalAmount()}</span>
+									<span>{calculateTotalAmount()} VND</span>
 								</div>
 							</div>
 							<div className="action-buttons">

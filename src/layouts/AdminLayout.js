@@ -62,6 +62,10 @@ function AdminLayout({ children }) {
 									<i class="fa-solid fa-newspaper me-2"></i>
 									Blogs
 								</Link>
+								<Link className="collapse-item" to={"/admin/"}>
+									<i class="fa-solid fa-user-group me-2"></i>
+									Members
+								</Link>
 								<Link className="collapse-item" to={"/admin/movie"}>
 									<i className="fa-solid fa-film me-2"></i>
 									Movies
@@ -83,9 +87,6 @@ function AdminLayout({ children }) {
 								>
 									<i className="fa-solid fa-clapperboard me-2"></i>
 									Showtimes
-								</Link>
-								<Link className="collapse-item" to={"/admin.users"}>
-									<i className="fa-solid fa-user me-2"></i>Users
 								</Link>
 								<Link
 									className="collapse-item"

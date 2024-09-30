@@ -12,6 +12,8 @@ function ShowtimePage(props) {
 
 	// Fetch data khi component được render
 	useEffect(() => {
+		document.title = "TGV CINEMA || Showtime Page";
+
 		async function fetchShowtimes() {
 			const response = await axios.get("http://localhost:8080/showtimes/show");
 			setShowtimes(response.data.data);
@@ -34,11 +36,10 @@ function ShowtimePage(props) {
 	const handleDateClick = (day) => {
 		setSelectedDate(day);
 	};
-
 	return (
 		<div className="container showtime-container">
 			{/* Phần chọn ngày */}
-			<div className="date-selector d-flex justify-content-around">
+			<div className="date-selector d-flex justify-content-around" data-aos="fade-down">
 				{[...Array(7)].map((_, index) => {
 					const day = new Date(currentDate);
 					day.setDate(currentDate.getDate() + index); // Cộng thêm ngày dựa vào index
@@ -51,7 +52,7 @@ function ShowtimePage(props) {
 									? "active"
 									: ""
 							}`}
-							onClick={() => handleDateClick(day)} // Xử lý click để chọn ngày
+							onClick={() => handleDateClick(day)}
 						>
 							<span className="date-day">{format(day, "EEE")}</span>{" "}
 							<span className="date-number">{format(day, "dd")}</span>
@@ -69,8 +70,22 @@ function ShowtimePage(props) {
 							format(selectedDate, "yyyy-MM-dd")
 					); // Lọc suất chiếu theo ngày đã chọn
 
+					if (filteredShowtimes.length == 0) {
+						return (
+							<div key={movieId} className="col-md-12 movie-container">
+								<p className="ms-5 mt-3">
+									No showtimes available yet.
+								</p>
+							</div>
+						);
+					}
 					return (
-						<div key={movieId} className="col-md-12 movie-container">
+						<div
+							key={movieId}
+							className="col-md-12 movie-container"
+							data-aos-delay="200"
+							data-aos="fade-up"
+						>
 							<div className="movie-img-wrapper">
 								<Link to={`/moviedetail/`}>
 									<img
@@ -85,25 +100,16 @@ function ShowtimePage(props) {
 								<h4 className="movie-title">
 									{movieShowtimes[0].movie.title}
 								</h4>
-								{filteredShowtimes.map((showtime) => (
+								<div className="showtime-info">
 									<div
-										className="showtime-info"
-										key={showtime.id}
+										className="time-buttons"
+										data-aos="fade-right"
 									>
-										{/* <p className="showtime-date">
-											{format(
-												new Date(
-													showtime.showtime_date
-												),
-												"dd-MM-yyyy"
-											)}
-										</p> */}
-										<div className="time-buttons">
+										{filteredShowtimes.map((showtime) => (
 											<Link
 												key={showtime.id}
 												className="btn btn-showtime"
 												to={`/booking/${showtime.id}`}
-												data-aos="fade-right"
 											>
 												{format(
 													new Date(
@@ -112,21 +118,20 @@ function ShowtimePage(props) {
 													"HH:mm"
 												)}
 											</Link>
-										</div>
+										))}
 									</div>
-								))}
+								</div>
 							</div>
 						</div>
 					);
 				})}
 			</div>
-
 			{/* CSS nội tuyến */}
 			<style>{`
         .showtime-container {
           background-color: #121212;
           color: #fff;
-          padding: 20px;
+          padding: 0 20px;
           border-radius: 10px;
         }
 
@@ -143,6 +148,7 @@ function ShowtimePage(props) {
         .movie-info {
           font-size: 16px;
           color: #999;
+	    
         }
 
         .date-selector {
@@ -201,18 +207,23 @@ function ShowtimePage(props) {
 
         .showtime-info {
           margin-top: 15px;
-        }
-
-        .time-buttons {
-          display: flex;
-          flex-wrap: wrap;
+	    display: flex; 
+	    width: fit-content;
+	    height: 15em
+	    }
+	    
+	    .time-buttons {
+		display: flex;
+		flex-flow: column wrap;
           margin-top: 10px;
+	     gap: 10px;
+	     width: 80%
         }
 
         .btn-showtime {
           background-color: #e50914;
           color: white;
-          margin: 5px;
+          margin: 10px 5px;
           padding: 10px 20px;
           border-radius: 5px;
           text-transform: uppercase;

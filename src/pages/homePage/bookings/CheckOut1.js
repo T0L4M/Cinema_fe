@@ -117,6 +117,8 @@ const CheckOut1 = () => {
 		bookingSaving(booking);
 	}
 	useEffect(() => {
+		document.title = "TGV CINEMA || Reservation Page";
+
 		fetchProduct();
 		fetchData();
 		fetchBookedSeat();
@@ -127,8 +129,8 @@ const CheckOut1 = () => {
 
 	return (
 		<div
-			className="container"
-			style={{ background: "linear-gradient(to bottom, #111111, #480607)" }}
+			className="container py-5"
+			// style={{ background: "linear-gradient(to bottom, #111111, #480607)" }}
 		>
 			{alert.type != "" && (
 				<Alert
@@ -141,7 +143,7 @@ const CheckOut1 = () => {
 					{alert.message}
 				</Alert>
 			)}
-			<div className="map rounded-4" data-aos="fade-up">
+			<div className="map rounded-4 pt-3" data-aos="fade-up">
 				<div className="screen"></div>
 				<form onSubmit={handleSubmit}>
 					<div className="row">
@@ -264,7 +266,7 @@ const CheckOut1 = () => {
 						<input
 							type="submit"
 							className="btn btn-info d-inline-block my-5 ms-3"
-							value="Confirm"
+							value="Buy Ticket"
 						/>
 					</div>
 					<Modal show={show} onHide={handleShow} animation size="xl" scrollable>

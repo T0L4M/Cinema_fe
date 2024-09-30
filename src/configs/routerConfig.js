@@ -26,6 +26,10 @@ import MovieDetail from "../pages/homePage/movies/MovieDetail";
 import PaymentList from "../pages/adminPage/payments/PaymentList";
 import PaymentDetail from "../pages/adminPage/payments/PaymentDetail";
 import ShowtimeDetail from "../pages/homePage/showtimes/ShowtimeDetail";
+import BlogList from "../pages/adminPage/blogs/BlogList";
+import BlogCreate from "../pages/adminPage/blogs/BlogCreate";
+import BlogsPost from "../pages/homePage/BlogsPost";
+import BlogDetail from "../pages/homePage/BlogDetail";
 
 const publicRouter = [
 	{
@@ -72,6 +76,15 @@ const publicRouter = [
 	{
 		path: "/forgotpassword",
 		element: <ForgotPasswordPage />,
+	},
+	//Blogs
+	{
+		path: "/blogs",
+		element: <BlogsPost />,
+	},
+	{
+		path: "/blogs/:id",
+		element: <BlogDetail />,
 	},
 ];
 
@@ -169,6 +182,17 @@ const privateRouter = [
 		path: "/vnpayResponse",
 		element: <VNPayResponseHandler />,
 		roles: ["USER", "ADMIN"],
+	},
+	//Blogs
+	{
+		path: "/admin/blog",
+		element: <BlogList />,
+		roles: ["ADMIN"],
+	},
+	{
+		path: "/admin/blog/new/:id?",
+		element: <BlogCreate />,
+		roles: ["ADMIN"],
 	},
 ];
 

@@ -2,19 +2,34 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../../../contexts/DataContext";
 import axios from "axios";
-import { Alert } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import { ColorRing } from "react-loader-spinner";
 import ReactPaginate from "react-paginate";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import ModalAuditoria from "./ModalAuditoria";
 
 function AuditoriaList(props) {
 	//Nhan Auditoria_tb
 	const [data, setData] = useState([]);
+	//auditoria
+	// const [auditoria, setAuditoria] = useState([]);
 	//Lay Alert
 	const { alert } = useContext(DataContext);
 	//Nhay trang
 	// const navigate = useNavigate();
+
+	//search
+	const [search, setSearch] = useState("");
+	const [listsearch, setListSearch] = useState([]);
+	function handelSearch(e) {
+		let { value } = e.target;
+		if (value != "") {
+			let res = data.filter((i) => i.name.toLowerCase().includes(value.toLowerCase()));
+			setSearch(value);
+			setListSearch(res);
+		} else {
+			setSearch(value);
+		}
+	}
 
 	const fetchData = async () => {
 		try {
@@ -25,8 +40,18 @@ function AuditoriaList(props) {
 		}
 	};
 
+	//fetchAuditoria
+	// const  fetchAuditoria = async () => {
+	//   try {
+	//      const res = await axios.get("http://localhost:8080/auditorias");
+	//      setAuditoria(res.data.data);
+	//   } catch (error) {
+	//     console.log("Error FETCHING AUDITORIA: ", error);
+
+	//   }
+	// }
+
 	useEffect(() => {
-		AOS.init();
 		fetchData();
 	}, []);
 
@@ -40,7 +65,11 @@ function AuditoriaList(props) {
 	useEffect(() => {
 		// Fetch items from another resources.
 		const endOffset = itemOffset + itemsPerPage;
-		setCurrentItems(data.slice(itemOffset, endOffset));
+		setCurrentItems(
+			listsearch.length > 0
+				? listsearch.slice(itemOffset, endOffset)
+				: data.slice(itemOffset, endOffset)
+		);
 		setPageCount(Math.ceil(data.length / itemsPerPage));
 	}, [itemOffset, itemsPerPage, data]);
 	const handlePageClick = (event) => {
@@ -48,7 +77,7 @@ function AuditoriaList(props) {
 		setItemOffset(newOffset);
 	};
 	//END PAGINATE
-
+	const [modalShow, setModalShow] = useState(false);
 	return (
 		<div className="mt-3">
 			<h2>Auditorium Table</h2>
@@ -70,13 +99,19 @@ function AuditoriaList(props) {
 					ariaLabel="blocks-loading"
 					wrapperStyle={{ display: "block", margin: "auto" }}
 					wrapperClass="blocks-wrapper"
-					colors={["#213363", "#1B6B93", "#4FC0D0", "#FF9EAA"]}
+					colors={["#F5F5F5", "#313236", "#7CD6EA", "#172765", "#F5F5F5"]}
 				/>
 			)}
 			{/* END LOADER SPINNER */}
 
-			<table className="table table-striped table-dark" data-aos="fade">
+			<table className="table table-striped table-dark">
 				<thead>
+					<input
+						className="form-control mt-2 mb-2"
+						id="search"
+						placeholder="Enter Name to Search"
+						onChange={handelSearch}
+					/>
 					<tr>
 						<th>ID</th>
 						<th>Name</th>
@@ -87,34 +122,47 @@ function AuditoriaList(props) {
 				</thead>
 				<tbody>
 					{data.length > 0 &&
-						currentItems.map((item, index) => {
-							return (
-								<tr key={index}>
-									<td>{item.id}</td>
-									<td>{item.name}</td>
-									<td>{item.rowNum}</td>
-									<td>{item.colNum}</td>
-									<td>
-										<Link
-											to={`/admin/auditoria/new/${item.id}`}
-											state={{ auditoriaData: item }}
-										>
-											<button className="btn btn-outline-warning">
-												Edit
-											</button>
-										</Link>
-										<Link
-											to={`/admin/auditoria/detail/${item.id}`}
-											// state={{ auditoriaData: item }}
-										>
-											<button className="btn btn-outline-success">
+						(search != "" ? listsearch : currentItems).map(
+							(item, index) => {
+								return (
+									<tr key={index}>
+										<td>{item.id}</td>
+										<td>{item.name}</td>
+										<td>{item.rowNum}</td>
+										<td>{item.colNum}</td>
+										<td>
+											<Link
+												to={`/admin/auditoria/new/${item.id}`}
+												state={{
+													auditoriaData: item,
+												}}
+											>
+												<button className="btn btn-outline-warning">
+													Edit
+												</button>
+											</Link>
+
+											<button
+												className="btn btn-outline-success"
+												onClick={() =>
+													setModalShow(true)
+												}
+											>
 												Detail
 											</button>
-										</Link>
-									</td>
-								</tr>
-							);
-						})}
+
+											<ModalAuditoria
+												room={item.id}
+												show={modalShow}
+												onHide={() =>
+													setModalShow(false)
+												}
+											/>
+										</td>
+									</tr>
+								);
+							}
+						)}
 				</tbody>
 			</table>
 			<ReactPaginate

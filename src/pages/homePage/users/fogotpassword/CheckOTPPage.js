@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -44,7 +44,9 @@ function CheckOTPPage(props) {
 			})
 			.catch((error) => console.log("Error API ", method, ": ", error));
 	}
-
+	useEffect(() => {
+		document.title = "TGV CINEMA || Check OTP Page";
+	}, []);
 	return (
 		<div class="container">
 			<div class="row justify-content-center">

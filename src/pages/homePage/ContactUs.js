@@ -4,6 +4,7 @@ import "aos/dist/aos.css";
 
 function ContactUs(props) {
 	useEffect(() => {
+		document.title = "TGV CINEMA || Contact Us";
 		AOS.init({
 			duration: 1200,
 		});
@@ -15,7 +16,7 @@ function ContactUs(props) {
 			paddingTop: "80px", // Tăng padding trên để đẩy nội dung xuống sát hơn
 			paddingBottom: "80px", // Thêm padding dưới để tạo khoảng trống cho trang dài ra
 			minHeight: "150vh", // Đảm bảo trang đủ dài để có thể cuộn
-			background: "linear-gradient(to bottom, #111111, #480607)", // Thay đổi màu nền
+			background: "linear-gradient(to bottom, #111111, #480607,#202020)", // Thay đổi màu nền
 			color: "#fff", // Màu chữ trắng
 		},
 		feedbackSection: {
@@ -140,66 +141,6 @@ function ContactUs(props) {
 					</div>
 				</div>
 
-				<div className="row contact_2 mt-4">
-					<div className="col-md-12">
-						<div className="contact_2l row">
-							<div className="col-md-12" style={styles.feedbackSection}>
-								<h4>FEEDBACK</h4>
-							</div>
-						</div>
-						<form action="/feedback/store" method="post">
-							<div className="contact_2l1 mt-3 row">
-								<div className="col-md-4">
-									<div className="contact_2l1i">
-										<input
-											style={styles.formInput}
-											placeholder="Full Name (*)"
-											type="text"
-											name="username"
-										/>
-									</div>
-								</div>
-								<div className="col-md-4">
-									<div className="contact_2l1i">
-										<input
-											style={styles.formInput}
-											placeholder="Email (*)"
-											type="text"
-											name="email"
-										/>
-									</div>
-								</div>
-								<div className="col-md-4">
-									<div className="contact_2l1i">
-										<input
-											style={styles.formInput}
-											placeholder="Phone (*)"
-											type="text"
-											name="phone"
-										/>
-									</div>
-								</div>
-							</div>
-							<div className="col-md-12 my-3">
-								<div className="contact_2l1i">
-									<textarea
-										style={styles.formTextArea}
-										placeholder="Comment"
-										name="comment"
-									></textarea>
-								</div>
-							</div>
-							<h6 className="mt-3 mb-0">
-								<input
-									style={styles.buttonSubmit}
-									type="submit"
-									value="Submit"
-								/>
-							</h6>
-						</form>
-					</div>
-				</div>
-
 				<div className="row contact_3 mt-4" style={styles.mapContainer}>
 					<div className="col-md-12">
 						<iframe
@@ -212,6 +153,7 @@ function ContactUs(props) {
 						></iframe>
 					</div>
 				</div>
+				<p>DE QUANG CAO CUA MY</p>
 			</div>
 		</div>
 	);

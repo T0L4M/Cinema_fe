@@ -9,8 +9,89 @@ import OwlCarousel from "react-owl-carousel";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 
+const style = {
+	reviewSection: {
+		padding: "20px 0",
+		backgroundColor: "linear-gradient(to bottom, #111111, #480607, #202020)",
+		color: "#fff",
+	},
+	container: {
+		display: "flex",
+		maxWidth: "1200px",
+		margin: "0 auto",
+		gap: "20px",
+	},
+	leftImage: {
+		flex: 2,
+		borderRadius: "10px",
+		overflow: "hidden",
+		height: "400px", // Set a fixed height
+	},
+	rightReviews: {
+		flex: 1,
+		display: "flex",
+		flexDirection: "column",
+		gap: "10px", // Add gap between review items
+	},
+	largeImage: {
+		width: "100%",
+		height: "100%",
+		objectFit: "cover",
+	},
+	reviewRow: {
+		display: "flex",
+		backgroundColor: "rgba(255, 255, 255, 0.1)",
+		borderRadius: "10px",
+		overflow: "hidden",
+		height: "120px", // Set a fixed height for each review item
+	},
+	smallImage: {
+		width: "40%",
+		height: "100%",
+		objectFit: "cover",
+	},
+	reviewContent: {
+		flex: 1,
+		padding: "10px",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+	},
+	reviewTitle: {
+		fontSize: "14px",
+		fontWeight: "bold",
+		margin: "0",
+		lineHeight: "1.2",
+	},
+	reviewLink: {
+		color: "#fff",
+		textDecoration: "none",
+		"&:hover": {
+			textDecoration: "underline",
+		},
+	},
+	reviewMeta: {
+		fontSize: "12px",
+		color: "#ccc",
+	},
+	likeView: {
+		display: "flex",
+		alignItems: "center",
+		gap: "10px",
+	},
+	likeButton: {
+		backgroundColor: "#4267B2",
+		color: "white",
+		border: "none",
+		padding: "2px 8px",
+		borderRadius: "3px",
+		fontSize: "12px",
+	},
+};
+
 function HomePage(props) {
 	const [data, setData] = useState([]);
+	const [review, setReview] = useState([]);
 	const { auth, alert, hideAlert } = useContext(DataContext);
 	const fetchData = async () => {
 		try {
@@ -21,15 +102,41 @@ function HomePage(props) {
 		}
 	};
 
+	const fetchBlogs = async () => {
+		try {
+			const response = await axios.get("http://localhost:8080/blogs/status");
+			setReview(response.data.data);
+		} catch (error) {
+			console.log("Error FETCHING DATA: ", error);
+		}
+	};
+
+	const updateShowtimeStatus = async () => {
+		try {
+			const response = await axios.put("http://localhost:8080/showtimes/modify_status");
+			console.log(`There are ${response.data.data.length} showtime updated!`);
+		} catch (error) {
+			console.log("Error Update Showtime Status: ", error);
+		}
+	};
+
 	useEffect(() => {
+		document.title = "TGV CINEMA || Homepage";
 		AOS.init({
 			duration: 1200,
 		});
 		fetchData();
+		updateShowtimeStatus();
+		fetchBlogs();
 	}, []);
 
 	return (
-		<div>
+		<div
+			style={{
+				background:
+					"linear-gradient(to bottom, #111111, #111111, #480607, #480607, #480607,#480607, #111111)",
+			}}
+		>
 			{alert.type != "" && (
 				<Alert
 					variant={alert.type}
@@ -338,6 +445,82 @@ function HomePage(props) {
 				</div>
 			</section>
 			{/* End Trending */}
+
+			{/* Section NEW with Poster and horizontal lines */}
+			<div className="new-section mt-5 text-center">
+				<div className="d-flex align-items-center justify-content-center mb-4">
+					<hr style={{ flex: 1, height: "2px", backgroundColor: "white" }} />
+					<h1
+						style={{
+							fontSize: "40px",
+							fontWeight: "bold",
+							margin: "0 20px",
+						}}
+					>
+						NEW
+					</h1>
+					<hr style={{ flex: 1, height: "2px", backgroundColor: "white" }} />
+				</div>
+				<img
+					src="/assets/image/qc.jpg"
+					alt="New Movie Poster"
+					style={{
+						width: "100%",
+						height: "auto",
+						maxWidth: "1300px", // Stretch image width
+						margin: "0 auto",
+						borderRadius: "15px",
+					}}
+				/>
+			</div>
+
+			{/* Review Section */}
+
+			<section className="reviews-section mt-5" style={style.reviewSection}>
+				{review.length > 0 && (
+					<div style={style.container}>
+						{/* Left large image */}
+						<div style={style.leftImage}>
+							<Link to={`/blog/${review[0]?.id}`}>
+								<img
+									src={`http://localhost:8080/uploads/blogs/${review[0]?.thumbnail}`}
+									alt={review[0]?.title}
+									style={style.largeImage}
+								/>
+							</Link>
+						</div>
+						{/* Right reviews list */}
+						<div style={style.rightReviews}>
+							{review.slice(1, 4).map((item, index) => (
+								<Link
+									key={item.id}
+									to={`/blog/${item.id}`}
+									style={style.reviewLink}
+								>
+									<div style={style.reviewRow}>
+										<img
+											src={`http://localhost:8080/uploads/blogs/${item.thumbnail}`}
+											alt={item.title}
+											style={style.smallImage}
+										/>
+										<div style={style.reviewContent}>
+											<h6 style={style.reviewTitle}>
+												{item.title}
+											</h6>
+											<div style={style.reviewMeta}>
+												<div style={style.likeView}>
+													{/* You can add additional meta information here if needed */}
+												</div>
+											</div>
+										</div>
+									</div>
+								</Link>
+							))}
+						</div>
+					</div>
+				)}
+			</section>
+			{/* End Review Section */}
 		</div>
 	);
 }

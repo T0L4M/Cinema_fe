@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, Button } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../../contexts/DataContext";
@@ -23,6 +23,41 @@ function PaymentList(props) {
 		}
 	};
 
+	//search
+	const [listsearch, setListSearch] = useState([]);
+	const [searchType, setSearchType] = useState("");
+	function handelSearch(e) {
+		let { value } = e.target;
+		let res = [];
+		if (value === "" || searchType === "") {
+			setListSearch(data);
+		} else if (value != "") {
+			if (searchType == "userName") {
+				for (let i = 0; i < data.length; i++) {
+					if (
+						data[i].booking.customer.userName
+							.toLowerCase()
+							.includes(value.toLowerCase())
+					) {
+						res.push(data[i]);
+					}
+				}
+			} else if (searchType == "date") {
+				for (let i = 0; i < data.length; i++) {
+					if (data[i].created_at.toLowerCase().includes(value.toLowerCase())) {
+						res.push(data[i]);
+					}
+				}
+			}
+			setListSearch(res.length > 0 ? res : [""]);
+		}
+	}
+	/////////////////////////////////////
+	function onChangeTypeForSearch(e) {
+		let { value } = e.target;
+		setSearchType(value);
+	}
+
 	useEffect(() => {
 		fetchData();
 		AOS.init();
@@ -38,9 +73,13 @@ function PaymentList(props) {
 	useEffect(() => {
 		// Fetch items from another resources.
 		const endOffset = itemOffset + itemsPerPage;
-		setCurrentItems(data.slice(itemOffset, endOffset));
+		setCurrentItems(
+			listsearch.length > 0
+				? listsearch.slice(itemOffset, endOffset)
+				: data.slice(itemOffset, endOffset)
+		);
 		setPageCount(Math.ceil(data.length / itemsPerPage));
-	}, [itemOffset, itemsPerPage, data]);
+	}, [itemOffset, itemsPerPage, data, listsearch]);
 	const handlePageClick = (event) => {
 		const newOffset = (event.selected * itemsPerPage) % data.length;
 		setItemOffset(newOffset);
@@ -55,6 +94,24 @@ function PaymentList(props) {
 					{alert.message}
 				</Alert>
 			)}
+			<div class="input-group mt-3 mb-3 float-end w-50">
+				<Form.Select
+					className="btn btn-outline-success"
+					onChange={onChangeTypeForSearch}
+				>
+					<option value="">Select Type For Search</option>
+					<option value="userName">User Name</option>
+					<option value="date">Transaction Date</option>
+				</Form.Select>
+				<input
+					className="form-control"
+					id="search"
+					placeholder="Enter Name to Search"
+					disabled={searchType == ""}
+					onChange={handelSearch}
+					// value={searchType == "" ? "" : }
+				/>
+			</div>
 			{data.length == 0 && (
 				<ColorRing
 					visible={true}
@@ -77,6 +134,7 @@ function PaymentList(props) {
 				</thead>
 				<tbody>
 					{data.length > 0 &&
+						listsearch[0] != "" &&
 						currentItems.map((item, index) => {
 							return (
 								<tr key={index}>

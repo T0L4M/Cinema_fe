@@ -234,47 +234,26 @@ const HomepageLayout = ({ children }) => {
 									>
 										CONTACT US
 									</Link>
+									<Link
+										className="nav-link"
+										to={"/blogs"}
+										style={{ fontSize: "0.85rem" }}
+									>
+										BLOGS
+									</Link>
 								</Nav>
 								{switchLink()}
 							</Offcanvas.Body>
 						</Navbar.Offcanvas>
 					</Container>
 				</Navbar>
-				{/* </div>
-						</div>
-					</div>
-				</div> */}
 			</section>
 			{/* End Header */}
-
-			{/*START NAVBAR */}
-			{/* <section id="header">
-				<Navbar
-					expand="lg"
-					style={{ backgroundImage: "linear-gradient( #1B6B93 , #4FC0D0)" }}
-					sticky="top"
-				>
-					<Navbar.Brand>
-						<Link
-							className="navbar-brand text-white fw-bold text-decoration-none"
-							to={"/"}
-						>
-							<img
-								src="/assets/image/fin_cinema.jpg"
-								className="img-thumbnail"
-								width="100"
-								alt=""
-							/>
-							CINEMA
-						</Link>
-					</Navbar.Brand>
-				</Navbar>
-			</section> */}
 
 			{/*START CONTENTING*/}
 			<main
 				className="content"
-				style={{ backgroundImage: "linear-gradient(#480607 #111)" }}
+				style={{ backgroundImage: "linear-gradient(#480607,#202020 )" }}
 			>
 				{children}
 			</main>
@@ -350,16 +329,16 @@ const HomepageLayout = ({ children }) => {
 
 						<div className="col-lg-4 col-md-4 col-sm-12">
 							<h4 className="title-footer mb-4">Quick Links</h4>
-							<Link className="btn btn-link" to={"/movie/showing"}>
+							<Link className="btn btn-link" to={"/movies/showing"}>
 								Now showing
 							</Link>
-							<Link className="btn btn-link" to={"/movie/coming"}>
+							<Link className="btn btn-link" to={"/movies/coming"}>
 								Coming soon
 							</Link>
-							<Link className="btn btn-link" to={"/aboutUs"}>
+							<Link className="btn btn-link" to={"/infomation"}>
 								About us
 							</Link>
-							<Link className="btn btn-link" to={"/contactUs"}>
+							<Link className="btn btn-link" to={"/contact"}>
 								Contact us
 							</Link>
 						</div>

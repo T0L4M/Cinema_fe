@@ -26,51 +26,58 @@ function ShowtimeList(props) {
 		if (value === "" || searchType === "") {
 			setListSearch(data);
 		} else if (value != "") {
-			if (searchType == "title") {
-				console.log("HELLO");
+			switch (searchType) {
+				case "title":
+					for (let i = 0; i < data.length; i++) {
+						if (
+							data[i].movie.title
+								.toLowerCase()
+								.includes(value.toLowerCase())
+						) {
+							res.push(data[i]);
+						}
+					}
+					break;
+				case "showtime_date":
+					for (let i = 0; i < data.length; i++) {
+						if (
+							data[i].showtime_date
+								.toLowerCase()
+								.includes(value.toLowerCase())
+						) {
+							res.push(data[i]);
+						}
+					}
+					break;
+				case "hour":
+					for (let i = 0; i < data.length; i++) {
+						if (
+							data[i].hour.time_from
+								.toLowerCase()
+								.includes(value.toLowerCase())
+						) {
+							res.push(data[i]);
+						}
+					}
+					break;
+				case "auditoria":
+					for (let i = 0; i < data.length; i++) {
+						if (
+							data[i].auditoria.name
+								.toLowerCase()
+								.includes(value.toLowerCase())
+						) {
+							res.push(data[i]);
+						}
+					}
+					break;
 
-				for (let i = 0; i < data.length; i++) {
-					console.log("xcxzcz" + data[i]);
-
-					if (data[i].movie.title.toLowerCase().includes(value.toLowerCase())) {
-						res.push(data[i]);
-					}
-				}
-			} else if (searchType == "showtime_date") {
-				for (let i = 0; i < data.length; i++) {
-					if (
-						data[i].showtime_date
-							.toLowerCase()
-							.includes(value.toLowerCase())
-					) {
-						res.push(data[i]);
-					}
-				}
-			} else if (searchType == "hour") {
-				for (let i = 0; i < data.length; i++) {
-					if (
-						data[i].hour.time_from
-							.toLowerCase()
-							.includes(value.toLowerCase())
-					) {
-						res.push(data[i]);
-					}
-				}
-			} else if (searchType == "auditoria") {
-				for (let i = 0; i < data.length; i++) {
-					if (
-						data[i].auditoria.name
-							.toLowerCase()
-							.includes(value.toLowerCase())
-					) {
-						res.push(data[i]);
-					}
-				}
+				default:
+					break;
 			}
 			setListSearch(res.length > 0 ? res : [""]);
 		}
 	}
-	/////////////////////////////////////
 
 	function onChangeTypeForSearch(e) {
 		let { value } = e.target;

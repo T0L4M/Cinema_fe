@@ -12,6 +12,8 @@ function ShowtimeDetail(props) {
 		setDetails(response.data.data);
 	};
 	useEffect(() => {
+		document.title = "TGV CINEMA || Showtime Page";
+
 		fetchDetails();
 	}, []);
 	const groupedByMovie = details.reduce((acc, cur) => {
@@ -23,7 +25,7 @@ function ShowtimeDetail(props) {
 	const isAfterToday = (date) => !isBefore(date, new Date());
 	const isToday = (date) => format(date, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
 	return (
-		<div class="container">
+		<div class="container py-4">
 			{Object.entries(groupedByMovie).map(([movieId, movieShowtimes]) => {
 				return (
 					<div class="row">

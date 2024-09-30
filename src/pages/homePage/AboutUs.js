@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 function AboutUs(props) {
 	useEffect(() => {
+		document.title = "TGV CINEMA || About Us";
 		AOS.init({
 			duration: 1200,
 		});
@@ -15,7 +16,7 @@ function AboutUs(props) {
 		bannerContainer: {
 			position: "relative",
 			textAlign: "center",
-			marginBottom: "30px",
+			// marginBottom: "30px",
 		},
 		bannerImage: {
 			width: "100%",
@@ -48,7 +49,7 @@ function AboutUs(props) {
 		aboutSection: {
 			paddingTop: "50px",
 			paddingBottom: "50px",
-			background: "linear-gradient(to bottom, #111111, #480607)",
+			background: "linear-gradient(to bottom, #111111, #480607,#202020)",
 			color: "white",
 		},
 		meetTeamSection: {
@@ -119,7 +120,7 @@ function AboutUs(props) {
 					alt="Cinema Poster"
 					style={styles.bannerImage}
 				/>
-				<div style={styles.overlayText}>
+				<div style={styles.overlayText} data-aos="fade-up">
 					<h1 style={styles.welcomeText}>WELCOME TO TGV</h1>
 					<p style={styles.descriptionText}>
 						At TGV Cinemas, it is not just about movies but a total

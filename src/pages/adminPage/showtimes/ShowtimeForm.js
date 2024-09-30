@@ -72,6 +72,7 @@ function ShowtimeForm(props) {
 
 	//onSubmit
 	async function onSubmit(data) {
+		data.showtime_date = selectedDate.toISOString();
 		const url = id
 			? `http://localhost:8080/showtimes/edit/${id}`
 			: "http://localhost:8080/showtimes";
@@ -154,7 +155,6 @@ function ShowtimeForm(props) {
 		return filteredHours;
 	}, [selectedDate, filteredHours, hours]);
 
-	// ... rest of your ShowtimeForm component code
 	const fetchHour = async () => {
 		try {
 			const response = await axios.get("http://localhost:8080/hours");

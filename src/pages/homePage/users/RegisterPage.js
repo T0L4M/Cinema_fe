@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { DataContext } from "../../../contexts/DataContext";
-import { format, startOfDay } from "date-fns";
+import { format, startOfDay, subYears } from "date-fns";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -18,8 +18,13 @@ const schema = yup
 		dob: yup
 			.date()
 			.typeError("Invalid Date Format")
-			.max(startOfDay(new Date()), "Register date cannot be earlier than today")
-			.required("Register Date cannot be blank!"),
+			.required("Register Date cannot be blank!")
+			.test("minAge", "You must be at least 14 years old to register", (value) => {
+				if (!value) return true; // No value, no error
+				const currentDate = new Date();
+				const birthDate = new Date(value);
+				return currentDate.getFullYear() - birthDate.getFullYear() >= 14;
+			}),
 		userName: yup.string().required("UserName is required"),
 		phone: yup
 			.string()
@@ -54,7 +59,7 @@ function RegisterPage(props) {
 
 	// Submit handler
 	async function onSubmit(data) {
-		data.dob = formattedShowtimeDate;
+		// data.dob = formattedShowtimeDate;
 
 		try {
 			const res = await axios.post("http://localhost:8080/accounts/register", data);
@@ -67,13 +72,14 @@ function RegisterPage(props) {
 		}
 	}
 
-	function handleDateChange(e) {
-		const selectedDate = new Date(e.target.value);
-		const formattedDate = format(selectedDate, "yyyy-MM-dd");
-		setFormattedShowtimeDate(formattedDate);
-	}
+	// function handleDateChange(e) {
+	// 	const selectedDate = new Date(e.target.value);
+	// 	const formattedDate = format(selectedDate, "yyyy-MM-dd");
+	// 	setFormattedShowtimeDate(formattedDate);
+	// }
 
 	useEffect(() => {
+		document.title = "TGV CINEMA || Sign Up Page";
 		AOS.init({
 			duration: 1200,
 		});
@@ -92,7 +98,6 @@ function RegisterPage(props) {
 			justifyContent: "center",
 			alignItems: "center",
 			flexGrow: 1,
-			padding: "80px 0", // Thêm khoảng cách ở trên để xích form xuống
 		},
 		card: {
 			backgroundColor: "transparent",
@@ -171,6 +176,7 @@ function RegisterPage(props) {
 			marginTop: "15px", // Tạo khoảng cách trên Sign In
 		},
 		footerImageContainer: {
+			// zIndex: "0",
 			width: "100%",
 			height: "auto",
 			overflow: "hidden",
@@ -204,10 +210,10 @@ function RegisterPage(props) {
 		<div style={styles.container}>
 			<div style={styles.contentWrapper}>
 				<div style={styles.card}>
-					<div style={styles.formSection}>
+					<div style={styles.formSection} data-aos="fade-down">
 						<h1 style={styles.h1}>SIGN UP</h1>
-						<p style={styles.p}>
-							Enjoy exclusive benefits and rewards with MovieClub
+						<p style={styles.p} className="text-center">
+							Enjoy exclusive benefits and rewards with TGV Cinema
 						</p>
 						<form onSubmit={handleSubmit(onSubmit)}>
 							<input
@@ -219,7 +225,7 @@ function RegisterPage(props) {
 								<input
 									type="text"
 									style={styles.inputHalf}
-									placeholder="Username"
+									placeholder="Username*"
 									{...register("userName")}
 								/>
 								<span className="text-danger">
@@ -228,7 +234,7 @@ function RegisterPage(props) {
 								<input
 									type="text"
 									style={styles.inputHalf}
-									placeholder="Phone"
+									placeholder="Phone*"
 									{...register("phone")}
 								/>
 								<span className="text-danger">
@@ -241,7 +247,7 @@ function RegisterPage(props) {
 								<input
 									type="email"
 									style={styles.inputHalf}
-									placeholder="Email"
+									placeholder="Email*"
 									{...register("email")}
 								/>
 								<span className="text-danger">
@@ -251,6 +257,21 @@ function RegisterPage(props) {
 									type="date"
 									style={styles.inputHalf}
 									{...register("dob")}
+									// onChange={(e) => {
+									// 	const selectedDate = new Date(
+									// 		e.target.value
+									// 	);
+									// 	if (
+									// 		selectedDate <
+									// 		subYears(new Date(), 10)
+									// 	) {
+									// 		errors.dob = {
+									// 			message: "You must be at least 10 years old to register",
+									// 		};
+									// 	} else {
+									// 		errors.dob = undefined;
+									// 	}
+									// }}
 								/>
 								<span className="text-danger">
 									{errors.dob?.message}
@@ -258,11 +279,11 @@ function RegisterPage(props) {
 							</div>
 
 							{/* Address */}
-							<div className="form-group">
+							<div className="form-group mb-0">
 								<input
 									type="text"
 									style={styles.input}
-									placeholder="Address"
+									placeholder="Address*"
 									{...register("address")}
 								/>
 								<span className="text-danger">
@@ -275,7 +296,7 @@ function RegisterPage(props) {
 								<input
 									type="password"
 									style={styles.input}
-									placeholder="Password"
+									placeholder="Password*"
 									{...register("password")}
 								/>
 								<span className="text-danger">
@@ -285,7 +306,7 @@ function RegisterPage(props) {
 
 							{/* Gender */}
 							<div style={styles.genderContainer}>
-								<label style={styles.genderLabel}>Gender:</label>
+								<label style={styles.genderLabel}>Gender*</label>
 								<label style={styles.genderLabel}>
 									<input
 										type="radio"

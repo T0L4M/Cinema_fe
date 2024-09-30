@@ -1,49 +1,34 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { DataContext } from "../../../contexts/DataContext";
-import axios from "axios";
-import { Alert } from "react-bootstrap";
-import { ColorRing } from "react-loader-spinner";
+
+import { Alert, Button, Dropdown, Form } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
+import { Link } from "react-router-dom";
+import { DataContext } from "../../../contexts/DataContext";
+import { ColorRing } from "react-loader-spinner";
+import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+// import ModalMovie from "./ModalMovie";
+import { se } from "date-fns/locale";
 
-function ProductList(props) {
-	//Nhan Product nhé
+function MovieList(props) {
 	const [data, setData] = useState([]);
-	//Lấy alert nè :3
+	const [modalShow, setModalShow] = React.useState(false);
 	const { alert } = useContext(DataContext);
-	//Nhay trang nà 0_0
-	// const navigate = useNavigate();\
+	const [searchType, setSearchType] = useState("");
+	// const navigate = useNavigate();
 
 	//search
-	const [search, setSearch] = useState("");
 	const [listsearch, setListSearch] = useState([]);
-	function handelSearch(e) {
-		let { value } = e.target;
-		if (value != "") {
-			let res = data.filter((i) => i.name.toLowerCase().includes(value.toLowerCase()));
-			setSearch(value);
-			setListSearch(res);
-		} else {
-			setSearch(value);
-		}
-	}
-	//sort by price
-	function handeSortPrice(num) {
-		let result = data.sort(function (a, b) {
-			if (num == 1) {
-				return a.price - b.price;
-			} else if (num == 0) {
-				return b.price - a.price;
-			}
-		});
-		setData([...result]);
-	}
+	
+	/////////////////////////////////////
+
+
+	
 
 	const fetchData = async () => {
 		try {
-			const response = await axios.get("http://localhost:8080/products");
+			const response = await axios.get("http://localhost:8080/blogs");
 			setData(response.data.data);
 		} catch (error) {
 			console.log("Error FETCHING DATA: ", error);
@@ -54,6 +39,7 @@ function ProductList(props) {
 		fetchData();
 		AOS.init();
 	}, []);
+
 	//PAGINATE
 	const [currentItems, setCurrentItems] = useState([]);
 	const [pageCount, setPageCount] = useState(0);
@@ -70,38 +56,34 @@ function ProductList(props) {
 				: data.slice(itemOffset, endOffset)
 		);
 		setPageCount(Math.ceil(data.length / itemsPerPage));
-	}, [itemOffset, itemsPerPage, data]);
+	}, [itemOffset, itemsPerPage, data, listsearch]);
 	const handlePageClick = (event) => {
 		const newOffset = (event.selected * itemsPerPage) % data.length;
 		setItemOffset(newOffset);
 	};
 	//END PAGINATE
-	return (
-		<div className="container mt-3">
-			<h2>Products Table</h2>
 
+	
+
+	return (
+		<div className="mt-3">
+			<h2>Blogs Table</h2>
 			{alert.type != "" && (
 				<Alert variant={alert.type} dismissible transition>
 					{alert.message}
 				</Alert>
 			)}
-
 			<Link className="btn btn-primary mb-3" to={"./new"}>
-				<b>Insert New Product</b>
+				<b>Insert New Blogs</b>
 			</Link>
 			<div class="input-group mt-3 mb-3 float-end w-50">
-				<input
-					className="form-control"
-					id="search"
-					placeholder="Enter Name to Search"
-					onChange={handelSearch}
-				/>
-				<a onClick={() => handeSortPrice(1)} className="btn btn-outline-info">
-					Price ASC
-				</a>
-				<a onClick={() => handeSortPrice(0)} className="btn btn-outline-success">
-					Price DESC
-				</a>
+				<Form.Select
+					className="btn btn-outline-success"
+					
+				>
+				
+				</Form.Select>
+			
 			</div>
 			{data.length == 0 && (
 				<ColorRing
@@ -118,54 +100,62 @@ function ProductList(props) {
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Name</th>
-						<th>Image</th>
-						<th>Type</th>
-						<th>Price</th>
+						<th>Title</th>
+						<th>Content</th>
 						<th>Status</th>
+						<th>Thumbnail</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{data.length > 0 &&
-						(search != "" ? listsearch : currentItems).map(
-							(item, index) => {
-								return (
-									<tr key={index}>
-										<td>{item.id}</td>
-										<td>{item.name}</td>
-										<td>
-											<img
-												src={`http://localhost:8080/uploads/products/${item.image}`}
-												onError={(e) => {
-													e.target.src =
-														"path/to/default-image.jpg";
-												}} // Set default image on error
-												alt="img"
-												className="img-thumbnail"
-												width="100"
-											/>
-										</td>
-										<td>{item.type}</td>
-										<td>{item.price}</td>
-										<td>
-											{item.status
-												? "Selling"
-												: "Stop Selling"}
-										</td>
-										<td>
-											<Link className="btn btn-success me-2">
-												<b>Edit</b>
-											</Link>
-
-											<Link className="btn btn-danger">
-												<b>Delete</b>
-											</Link>
-										</td>
-									</tr>
-								);
-							}
-						)}
+						listsearch[0] != "" &&
+						currentItems.map((item, index) => {
+							return (
+								<tr key={index}>
+									<td>{item.id}</td>
+									<td>{item.title}</td>
+									<td>
+									<span
+										className="d-inline-block"
+										dangerouslySetInnerHTML={{
+											__html:
+												item.content?.slice(
+													0,
+													200
+												) || "",
+										}}
+									/>
+									{item.content?.length > 200 && "..."}
+								</td>
+									<td>{item.status ? "Active" : "Inactive"}</td>
+									<td><img
+													src={`http://localhost:8080/uploads/blogs/${item.thumbnail}`}
+													className="img-thumbnail w-100"
+													alt={item.title}
+												/></td>
+									<td>
+										<button
+											className="btn btn-outline-light"
+											onClick={() => setModalShow(true)}
+										>
+											Detail
+										</button>
+										{/* <ModalMovie
+											movie={item.id}
+											show={modalShow}
+											onHide={() => setModalShow(false)}
+										/> */}
+										<Link
+											className="btn btn-outline-success"
+											to={`./new/${item.id}`}
+										>
+											<b>Edit</b>
+										</Link>
+									</td>
+								</tr>
+							);
+						})}
 				</tbody>
 			</table>
 			<ReactPaginate
@@ -192,4 +182,4 @@ function ProductList(props) {
 	);
 }
 
-export default ProductList;
+export default MovieList;
