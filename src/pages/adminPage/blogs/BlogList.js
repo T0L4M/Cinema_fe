@@ -5,9 +5,11 @@ import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../../contexts/DataContext";
 import { ColorRing } from "react-loader-spinner";
+import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import ModalBlog from "./ModalBlog";
 
 function BlogList(props) {
 	const [data, setData] = useState([]);
@@ -63,9 +65,9 @@ function BlogList(props) {
 			<Link className="btn btn-primary mb-3" to={"./new"}>
 				<b>Insert New Blogs</b>
 			</Link>
-			<div class="input-group mt-3 mb-3 float-end w-50">
+			{/* <div class="input-group mt-3 mb-3 float-end w-50">
 				<Form.Select className="btn btn-outline-success"></Form.Select>
-			</div>
+			</div> */}
 			{data.length == 0 && (
 				<ColorRing
 					visible={true}
@@ -91,54 +93,66 @@ function BlogList(props) {
 				<tbody>
 					{data.length > 0 &&
 						listsearch[0] != "" &&
-						currentItems.map((item, index) => {
-							return (
-								<tr key={index}>
-									<td>{item.id}</td>
-									<td>{item.title}</td>
-									<td>
-										<span
-											className="d-inline-block"
-											dangerouslySetInnerHTML={{
-												__html:
-													item.content?.slice(
-														0,
-														200
-													) || "",
-											}}
-										/>
-										{item.content?.length > 200 && "..."}
-									</td>
-									<td>{item.status ? "Active" : "Inactive"}</td>
-									<td>
-										<img
-											src={`http://localhost:8080/uploads/blogs/${item.thumbnail}`}
-											className="img-thumbnail w-100"
-											alt={item.title}
-										/>
-									</td>
-									<td>
-										<button
-											className="btn btn-outline-light"
-											onClick={() => setModalShow(true)}
-										>
-											Detail
-										</button>
-										{/* <ModalMovie
-											movie={item.id}
-											show={modalShow}
-											onHide={() => setModalShow(false)}
-										/> */}
-										<Link
-											className="btn btn-outline-success"
-											to={`./new/${item.id}`}
-										>
-											<b>Edit</b>
-										</Link>
-									</td>
-								</tr>
-							);
-						})}
+						currentItems
+							.slice()
+							.sort((a, b) => b.id - a.id)
+							.map((item, index) => {
+								return (
+									<tr key={index}>
+										<td>{item.id}</td>
+										<td>{item.title}</td>
+										<td>
+											<span
+												className="d-inline-block"
+												dangerouslySetInnerHTML={{
+													__html:
+														item.content?.slice(
+															0,
+															200
+														) || "",
+												}}
+											/>
+											{item.content?.length > 200 &&
+												"..."}
+										</td>
+										<td>
+											{item.status
+												? "Active"
+												: "Inactive"}
+										</td>
+										<td>
+											<img
+												src={`http://localhost:8080/uploads/blogs/${item.thumbnail}`}
+												className="img-thumbnail w-100"
+												alt={item.title}
+											/>
+										</td>
+										<td>
+											<button
+												className="btn btn-outline-light"
+												onClick={() =>
+													setModalShow(true)
+												}
+											>
+												Detail
+											</button>
+											<ModalBlog
+												blog={item.id}
+												show={modalShow}
+												onHide={() =>
+													setModalShow(false)
+												}
+											/>
+											<Link
+												className="btn btn-outline-success"
+												to={`./new/${item.id}`}
+											>
+												<b>Edit</b>
+											</Link>
+										</td>
+									</tr>
+								);
+							})}
 				</tbody>
 			</table>
 			<ReactPaginate

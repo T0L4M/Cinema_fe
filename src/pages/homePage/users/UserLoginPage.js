@@ -28,13 +28,13 @@ function UserLoginPage(props) {
 	const { auth, login, showAlert, alert, hideAlert } = useContext(DataContext);
 	const navigate = useNavigate();
 	async function onSubmit(data) {
-		showAlert("hide");
+		data.userName = data.userName.trim();
+		data.password = data.password.trim();
+		// showAlert("hide");
 		await axios
 			.post("http://localhost:8080/accounts/login", data)
 			.then((res) => {
 				if (res.status == 200) {
-					// console.log("DATA: ", jwtDecode(res.data.message));
-
 					login(res.data.message);
 				}
 			})
@@ -80,7 +80,6 @@ function UserLoginPage(props) {
 					</p>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="form-group">
-							<label></label>
 							<input
 								type="text"
 								className="form-control form-control-user"

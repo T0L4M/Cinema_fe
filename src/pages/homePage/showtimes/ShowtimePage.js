@@ -68,179 +68,216 @@ function ShowtimePage(props) {
 						(showtime) =>
 							format(new Date(showtime.showtime_date), "yyyy-MM-dd") ===
 							format(selectedDate, "yyyy-MM-dd")
-					); // Lọc suất chiếu theo ngày đã chọn
+					);
 
-					if (filteredShowtimes.length == 0) {
+					if (filteredShowtimes.length > 0) {
 						return (
-							<div key={movieId} className="col-md-12 movie-container">
-								<p className="ms-5 mt-3">
-									No showtimes available yet.
-								</p>
-							</div>
-						);
-					}
-					return (
-						<div
-							key={movieId}
-							className="col-md-12 movie-container"
-							data-aos-delay="200"
-							data-aos="fade-up"
-						>
-							<div className="movie-img-wrapper">
-								<Link to={`/moviedetail/`}>
-									<img
-										src={`http://localhost:8080/uploads/movies/${movieShowtimes[0].movie.poster}`}
-										alt="movie-poster"
-										className="movie-poster"
-									/>
-								</Link>
-							</div>
+							<div
+								key={movieId}
+								className="col-md-12 movie-container"
+								data-aos-delay="200"
+								data-aos="fade-up"
+							>
+								<div className="movie-img-wrapper">
+									<Link to={`/moviedetail/`}>
+										<img
+											src={`http://localhost:8080/uploads/movies/${movieShowtimes[0].movie.poster}`}
+											alt="movie-poster"
+											className="movie-poster"
+										/>
+									</Link>
+								</div>
 
-							<div className="movie-info">
-								<h4 className="movie-title">
-									{movieShowtimes[0].movie.title}
-								</h4>
-								<div className="showtime-info">
-									<div
-										className="time-buttons"
-										data-aos="fade-right"
-									>
-										{filteredShowtimes.map((showtime) => (
-											<Link
-												key={showtime.id}
-												className="btn btn-showtime"
-												to={`/booking/${showtime.id}`}
-											>
-												{format(
-													new Date(
-														`${showtime.showtime_date} ${showtime.hour.time_from}`
-													),
-													"HH:mm"
-												)}
-											</Link>
-										))}
+								<div className="movie-info">
+									<h4 className="movie-title">
+										{movieShowtimes[0].movie.title}
+									</h4>
+									<div className="showtime-info">
+										<div
+											className="time-buttons"
+											data-aos="fade-right"
+										>
+											{/* {filteredShowtimes.filter(
+												(showtime) => {
+													const showtimeDate =
+														new Date(
+															`${showtime.showtime_date} ${showtime.hour.time_from}`
+														);
+													const currentDate =
+														new Date();
+	
+													return showtimeDate.toDateString() ===
+														currentDate.toDateString()
+														? showtimeDate >
+																currentDate
+														: true;
+												}
+											).length === 0 && (
+												<div
+													key={movieId}
+													className="col-md-12"
+												>
+													<p className="ms-5 mt-3">
+														No showtimes available
+														yet.
+													</p>
+												</div>
+											)} */}
+											{filteredShowtimes
+												.filter((showtime) => {
+													const showtimeDate =
+														new Date(
+															`${showtime.showtime_date} ${showtime.hour.time_from}`
+														);
+													const currentDate =
+														new Date();
+
+													return showtimeDate.toDateString() ===
+														currentDate.toDateString()
+														? showtimeDate >
+																currentDate
+														: true; // include all showtimes for future dates
+												})
+												.map((showtime) => (
+													<Link
+														key={
+															showtime.id
+														}
+														className="btn btn-showtime"
+														to={`/booking/${showtime.id}`}
+													>
+														{format(
+															new Date(
+																`${showtime.showtime_date} ${showtime.hour.time_from}`
+															),
+															"HH:mm"
+														)}
+													</Link>
+												))}
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					);
+						);
+					}
+					// If there are showtimes, display the movie row
 				})}
 			</div>
 			{/* CSS nội tuyến */}
 			<style>{`
-        .showtime-container {
-          background-color: #121212;
-          color: #fff;
-          padding: 0 20px;
-          border-radius: 10px;
-        }
+		.showtime-container {
+		background-color: #121212;
+		color: #fff;
+		padding: 0 20px;
+		border-radius: 10px;
+		}
 
-        .movie-header {
-          text-align: center;
-          margin-bottom: 20px;
-        }
+		.movie-header {
+		text-align: center;
+		margin-bottom: 20px;
+		}
 
-        .movie-title {
-          font-size: 30px;
-          font-weight: bold;
-        }
+		.movie-title {
+		font-size: 30px;
+		font-weight: bold;
+		}
 
-        .movie-info {
-          font-size: 16px;
-          color: #999;
-	    
-        }
+		.movie-info {
+		font-size: 16px;
+		color: #999;
+		
+		}
 
-        .date-selector {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 50px;
-          padding-top: 60px;  
-        }
-
-        .date-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          color: #fff;
-          padding: 10px;
-          cursor: pointer; /* Thêm con trỏ khi hover vào ngày */
-        }
-
-        .date-item.active {
-          border-bottom: 2px solid red;
-        }
-
-        .date-day {
-          font-size: 14px;
-        }
-
-        .date-number {
-          font-size: 24px;
-          font-weight: bold;
-        }
-
-       
-
-        .movie-container {
-          display: flex;
-          align-items: flex-start;
-          margin-bottom: 30px;
-          padding: 10px;
-          background-color: #222;
-          border-radius: 10px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .movie-img-wrapper {
-          width: 150px;
-          height: auto;
-          margin-right: 20px;
-        }
-
-        .movie-poster {
-          width: 100%;
-          height: 300px;
-          object-fit: cover;
-          border-radius: 10px;
-        }
-
-        .showtime-info {
-          margin-top: 15px;
-	    display: flex; 
-	    width: fit-content;
-	    height: 15em
-	    }
-	    
-	    .time-buttons {
+		.date-selector {
 		display: flex;
-		flex-flow: column wrap;
-          margin-top: 10px;
-	     gap: 10px;
-	     width: 80%
-        }
+		justify-content: space-between;
+		margin-bottom: 50px;
+		padding-top: 60px;  
+		}
 
-        .btn-showtime {
-          background-color: #e50914;
-          color: white;
-          margin: 10px 5px;
-          padding: 10px 20px;
-          border-radius: 5px;
-          text-transform: uppercase;
-          cursor: pointer;
-          text-decoration: none;
-        }
+		.date-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		color: #fff;
+		padding: 10px;
+		cursor: pointer; /* Thêm con trỏ khi hover vào ngày */
+		}
 
-        .btn-showtime:hover {
-          background-color: #b20710;
-        }
+		.date-item.active {
+		border-bottom: 2px solid red;
+		}
 
-        @media (min-width: 768px) {
-          .movie-container {
-            width: 100%;
-          }
-        }
-      `}</style>
+		.date-day {
+		font-size: 14px;
+		}
+
+		.date-number {
+		font-size: 24px;
+		font-weight: bold;
+		}
+
+		
+
+		.movie-container {
+		display: flex;
+		align-items: flex-start;
+		margin-bottom: 30px;
+		padding: 10px;
+		background-color: #222;
+		border-radius: 10px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.movie-img-wrapper {
+		width: 150px;
+		height: auto;
+		margin-right: 20px;
+		}
+
+		.movie-poster {
+		width: 100%;
+		height: 300px;
+		object-fit: cover;
+		border-radius: 10px;
+		}
+
+		.showtime-info {
+		margin-top: 15px;
+		display: flex; 
+		width: fit-content;
+		height: 15em
+		}
+		
+		.time-buttons {
+			display: flex;
+			flex-flow: column wrap;
+		margin-top: 10px;
+		gap: 10px;
+		width: 80%
+		}
+
+		.btn-showtime {
+		background-color: #e50914;
+		color: white;
+		margin: 10px 5px;
+		padding: 10px 20px;
+		border-radius: 5px;
+		text-transform: uppercase;
+		cursor: pointer;
+		text-decoration: none;
+		}
+
+		.btn-showtime:hover {
+		background-color: #b20710;
+		}
+
+		@media (min-width: 768px) {
+		.movie-container {
+			width: 100%;
+		}
+		}
+		`}</style>
 		</div>
 	);
 }

@@ -122,8 +122,10 @@ function AuditoriaList(props) {
 				</thead>
 				<tbody>
 					{data.length > 0 &&
-						(search != "" ? listsearch : currentItems).map(
-							(item, index) => {
+						(search != "" ? listsearch : currentItems)
+							.slice()
+							.sort((a, b) => b.id - a.id)
+							.map((item, index) => {
 								return (
 									<tr key={index}>
 										<td>{item.id}</td>
@@ -161,8 +163,7 @@ function AuditoriaList(props) {
 										</td>
 									</tr>
 								);
-							}
-						)}
+							})}
 				</tbody>
 			</table>
 			<ReactPaginate

@@ -184,49 +184,61 @@ function ShowtimeList(props) {
 				<tbody>
 					{data.length > 0 &&
 						listsearch[0] != "" &&
-						currentItems.map((item, index) => {
-							return (
-								<tr key={index}>
-									<td>{item.id}</td>
-									<td>{item.showtime_date}</td>
-									<td>{item.movie.title}</td>
-									<td>{item.auditoria.name}</td>
-									<td>
-										{item.hour.time_from} - {item.time_to}
-									</td>
+						currentItems
+							.slice()
+							.sort((a, b) => b.id - a.id)
+							.map((item, index) => {
+								return (
+									<tr key={index}>
+										<td>{item.id}</td>
+										<td>{item.showtime_date}</td>
+										<td>{item.movie.title}</td>
+										<td>{item.auditoria.name}</td>
+										<td>
+											{item.hour.time_from} -{" "}
+											{item.time_to}
+										</td>
 
-									<td>
-										{item.status ? (
-											<i
-												className="fa-solid fa-circle-check"
-												style={{ color: "#63E6BE" }}
-											></i>
-										) : (
-											<i
-												className="fa-solid fa-xmark"
-												style={{ color: "#fb0909" }}
-											></i>
-										)}
-									</td>
-									<td>
-										<Link
-											type="button"
-											className="btn btn-outline-light"
-											to={``}
-										>
-											<b>Detail</b>
-										</Link>
-										<Link
-											className="btn btn-outline-success"
-											to={`./new/${item.id}`}
-											state={{ showtimeData: item }}
-										>
-											<b>Edit</b>
-										</Link>
-									</td>
-								</tr>
-							);
-						})}
+										<td>
+											{item.status ? (
+												<i
+													className="fa-solid fa-circle-check"
+													style={{
+														color: "#63E6BE",
+														fontSize: "1.5em",
+													}}
+												></i>
+											) : (
+												<i
+													class="fa-solid fa-circle-xmark"
+													style={{
+														color: "#fa0000",
+														fontSize: "1.5em",
+													}}
+												></i>
+											)}
+										</td>
+										<td>
+											<Link
+												type="button"
+												className="btn btn-outline-light"
+												to={``}
+											>
+												<b>Detail</b>
+											</Link>
+											<Link
+												className="btn btn-outline-success"
+												to={`./new/${item.id}`}
+												state={{
+													showtimeData: item,
+												}}
+											>
+												<b>Edit</b>
+											</Link>
+										</td>
+									</tr>
+								);
+							})}
 				</tbody>
 			</table>
 

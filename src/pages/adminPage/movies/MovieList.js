@@ -143,36 +143,43 @@ function MovieList(props) {
 				<tbody>
 					{data.length > 0 &&
 						listsearch[0] != "" &&
-						currentItems.map((item, index) => {
-							return (
-								<tr key={index}>
-									<td>{item.id}</td>
-									<td>{item.title}</td>
-									<td>{item.director}</td>
-									<td>{item.release_date}</td>
-									<td>{item.status}</td>
-									<td>
-										<button
-											className="btn btn-outline-light"
-											onClick={() => setModalShow(true)}
-										>
-											Detail
-										</button>
-										<ModalMovie
-											movie={item.id}
-											show={modalShow}
-											onHide={() => setModalShow(false)}
-										/>
-										<Link
-											className="btn btn-outline-success"
-											to={`./new/${item.id}`}
-										>
-											<b>Edit</b>
-										</Link>
-									</td>
-								</tr>
-							);
-						})}
+						currentItems
+							.slice()
+							.sort((a, b) => b.id - a.id)
+							.map((item, index) => {
+								return (
+									<tr key={index}>
+										<td>{item.id}</td>
+										<td>{item.title}</td>
+										<td>{item.director}</td>
+										<td>{item.release_date}</td>
+										<td>{item.status}</td>
+										<td>
+											<button
+												className="btn btn-outline-light"
+												onClick={() =>
+													setModalShow(true)
+												}
+											>
+												Detail
+											</button>
+											<ModalMovie
+												movie={item.id}
+												show={modalShow}
+												onHide={() =>
+													setModalShow(false)
+												}
+											/>
+											<Link
+												className="btn btn-outline-success"
+												to={`./new/${item.id}`}
+											>
+												<b>Edit</b>
+											</Link>
+										</td>
+									</tr>
+								);
+							})}
 				</tbody>
 			</table>
 			<ReactPaginate

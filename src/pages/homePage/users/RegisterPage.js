@@ -8,6 +8,7 @@ import { DataContext } from "../../../contexts/DataContext";
 import { format, startOfDay, subYears } from "date-fns";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Alert } from "react-bootstrap";
 
 const phoneF = /^\+?[0-9]\d{1,10}$/;
 
@@ -30,7 +31,7 @@ const schema = yup
 			.string()
 			.required("Phone cannot be blank!")
 			.matches(phoneF, "Phone number is not valid"),
-		email: yup.string().email().required("Email cannot be blank!"),
+		email: yup.string().email("Invalid email").required("Please fill in email field!"),
 		address: yup.string().required("Address cannot be blank!"),
 		role: yup.string().oneOf(["USER", "ADMIN"]).required(),
 		password: yup
@@ -45,7 +46,7 @@ const schema = yup
 	.required();
 
 function RegisterPage(props) {
-	const { showAlert } = useContext(DataContext);
+	const { showAlert, alert, hideAlert } = useContext(DataContext);
 	const [formattedShowtimeDate, setFormattedShowtimeDate] = useState("");
 	const {
 		register,
@@ -60,16 +61,25 @@ function RegisterPage(props) {
 	// Submit handler
 	async function onSubmit(data) {
 		// data.dob = formattedShowtimeDate;
-
-		try {
-			const res = await axios.post("http://localhost:8080/accounts/register", data);
-			if (res.status === 200) {
-				showAlert("success", "REGISTER SUCCESSFULLY!");
-				navigate(-1);
-			}
-		} catch (error) {
-			console.error("Error API ", error);
-		}
+		await axios
+			.post("http://localhost:8080/accounts/register", data)
+			.then((res) => {
+				if (res.status == 200) {
+					showAlert("success", "REGISTER SUCCESSFULLY!");
+					navigate(-1);
+				}
+			})
+			.catch((error) => {
+				if (error.response.status == 400) {
+					showAlert("warning", "Duplicated Username OR Email");
+				} else {
+					console.log("Something went wrong", error);
+					showAlert(
+						"danger",
+						"An unexpected error occurred. Please try again later."
+					);
+				}
+			});
 	}
 
 	// function handleDateChange(e) {
@@ -103,7 +113,7 @@ function RegisterPage(props) {
 			backgroundColor: "transparent",
 			borderRadius: "10px",
 			padding: "1.5rem",
-			maxWidth: "480px", // Chiều rộng lớn hơn cho form
+			maxWidth: "40em", // Chiều rộng lớn hơn cho form
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
@@ -133,7 +143,16 @@ function RegisterPage(props) {
 			borderBottom: "2px solid red", // Dòng gạch màu đỏ khi được chọn
 		},
 		inputHalf: {
-			width: "48%", // Chiếm một nửa chiều rộng cho email và dob
+			// width: "48%", // Chiếm một nửa chiều rộng cho email và dob
+			backgroundColor: "transparent",
+			border: "none",
+			borderBottom: "2px solid white",
+			color: "white",
+			padding: "8px",
+			marginBottom: "1rem",
+		},
+		inputHalfdate: {
+			width: "85%", // Chiếm một nửa chiều rộng cho email và dob
 			backgroundColor: "transparent",
 			border: "none",
 			borderBottom: "2px solid white",
@@ -208,6 +227,18 @@ function RegisterPage(props) {
 	};
 	return (
 		<div style={styles.container}>
+			{alert.type !== "" && (
+				<Alert
+					variant={alert.type}
+					dismissible
+					transition
+					onClose={hideAlert}
+					className="position-fixed bottom-0 end-0"
+					style={{ width: "fit-content", zIndex: 9999 }}
+				>
+					{alert.message}
+				</Alert>
+			)}
 			<div style={styles.contentWrapper}>
 				<div style={styles.card}>
 					<div style={styles.formSection} data-aos="fade-down">
@@ -222,60 +253,53 @@ function RegisterPage(props) {
 								{...register("role")}
 							></input>
 							<div style={styles.inputGroup}>
-								<input
-									type="text"
-									style={styles.inputHalf}
-									placeholder="Username*"
-									{...register("userName")}
-								/>
-								<span className="text-danger">
-									{errors.userName?.message}
-								</span>
-								<input
-									type="text"
-									style={styles.inputHalf}
-									placeholder="Phone*"
-									{...register("phone")}
-								/>
-								<span className="text-danger">
-									{errors.phone?.message}
-								</span>
+								<div style={{ width: "49%" }}>
+									<input
+										type="text"
+										style={styles.inputHalf}
+										placeholder="Username*"
+										{...register("userName")}
+									/>
+									<span className="text-danger">
+										{errors.userName?.message}
+									</span>
+								</div>
+								<div style={{ width: "49%" }}>
+									<input
+										type="text"
+										style={styles.inputHalf}
+										placeholder="Phone*"
+										{...register("phone")}
+									/>
+									<span className="text-danger">
+										{errors.phone?.message}
+									</span>
+								</div>
 							</div>
 
 							{/* Email and DOB */}
 							<div style={styles.inputGroup}>
-								<input
-									type="email"
-									style={styles.inputHalf}
-									placeholder="Email*"
-									{...register("email")}
-								/>
-								<span className="text-danger">
-									{errors.email?.message}
-								</span>
-								<input
-									type="date"
-									style={styles.inputHalf}
-									{...register("dob")}
-									// onChange={(e) => {
-									// 	const selectedDate = new Date(
-									// 		e.target.value
-									// 	);
-									// 	if (
-									// 		selectedDate <
-									// 		subYears(new Date(), 10)
-									// 	) {
-									// 		errors.dob = {
-									// 			message: "You must be at least 10 years old to register",
-									// 		};
-									// 	} else {
-									// 		errors.dob = undefined;
-									// 	}
-									// }}
-								/>
-								<span className="text-danger">
-									{errors.dob?.message}
-								</span>
+								<div style={{ width: "49%" }}>
+									<input
+										type="email"
+										style={styles.inputHalf}
+										placeholder="Email*"
+										{...register("email")}
+									/>
+									<span className="text-danger">
+										{errors.email?.message}
+									</span>
+								</div>
+								<div style={{ width: "49%" }}>
+									<input
+										type="date"
+										style={styles.inputHalfdate}
+										{...register("dob")}
+									/>
+									<span className="text-danger">
+										{errors.dob?.message}
+									</span>
+								</div>
 							</div>
 
 							{/* Address */}

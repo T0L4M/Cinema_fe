@@ -1,3 +1,104 @@
+// import React from "react";
+// import { useLocation } from "react-router-dom";
+// import { format } from "date-fns";
+// import { QRCodeSVG } from "qrcode.react";
+
+// function HistoryDetailPage() {
+//   const location = useLocation();
+//   const { paymentData } = location.state;
+
+//   // Generate a string for the QR Code, e.g., booking ID or a URL to verify the ticket
+//   const qrCodeValue = `Booking ID: ${paymentData.id} - Movie: ${paymentData.booking.movie.title}`;
+
+//   return (
+//     <div className="container mt-5">
+//       <div className="ticket-detail">
+//         <h2 className="text-center mb-4">Chi tiết vé</h2>
+
+//         <div className="ticket-info p-4 shadow-sm rounded bg-light">
+//           <div className="row mb-3">
+//             <div className="col text-center">
+//               {/* Add the movie image */}
+//               <img 
+//                 src={paymentData.booking.movie.image} // Assuming the image URL is here
+//                 alt={paymentData.booking.movie.title}
+//                 className="img-fluid mb-3" // Optional: Add Bootstrap class for responsiveness
+//                 style={{ maxHeight: "300px", objectFit: "cover" }} // Optional styling
+//               />
+//             </div>
+//           </div>
+
+//           <div className="row mb-3">
+//             <div className="col">
+//               <h4>Tên phim:</h4>
+//               <p>{paymentData.booking.movie.title}</p>
+//             </div>
+//             <div className="col">
+//               <h4>Ngày chiếu:</h4>
+//               <p>{format(new Date(paymentData.created_at), "dd/MM/yyyy")}</p>
+//             </div>
+//           </div>
+
+//           <div className="row mb-3">
+//             <div className="col">
+//               <h4>Giờ chiếu:</h4>
+//               <p>{paymentData.booking.time}</p>
+//             </div>
+//             <div className="col">
+//               <h4>Rạp:</h4>
+//               <p>{paymentData.booking.cinema}</p>
+//             </div>
+//           </div>
+
+//           <div className="row mb-3">
+//             <div className="col">
+//               <h4>Ghế:</h4>
+//               <p>{paymentData.booking.seatNumbers.join(", ")}</p>
+//             </div>
+//             <div className="col">
+//               <h4>Định dạng:</h4>
+//               <p>{paymentData.booking.format}</p>
+//             </div>
+//           </div>
+
+//           <div className="row mb-3">
+//             <div className="col">
+//               <h4>Combo bắp & nước:</h4>
+//               <p>{paymentData.booking.combo}</p>
+//             </div>
+//             <div className="col">
+//               <h4>Số tiền:</h4>
+//               <p>{paymentData.amount.toLocaleString()} VND</p>
+//             </div>
+//           </div>
+
+//           {/* QR Code Section */}
+//           <div className="row mb-3 justify-content-center">
+//             <div className="col text-center">
+//               <h4>Mã QR:</h4>
+//               <QRCodeSVG
+//                 value={qrCodeValue}
+//                 size={150}
+//                 level={"H"}
+//                 includeMargin={true}
+//               />
+//               <p className="mt-3">Sử dụng mã QR này để quét vé tại rạp.</p>
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className="mt-5 text-center">
+//           <button className="btn btn-primary" onClick={() => window.print()}>
+//             In vé
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default HistoryDetailPage;
+
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { ColorRing } from "react-loader-spinner";
@@ -14,7 +115,7 @@ import {
 	faClock,
 } from "@fortawesome/free-solid-svg-icons";
 
-function PaymentDetail() {
+function HistoryDetailPage() {
 	const location = useLocation();
 	const [paymentData, setPaymentData] = useState(location.state?.paymentData || {});
 	const [convertedSeats, setConvertedSeats] = useState([]);
@@ -241,59 +342,40 @@ function PaymentDetail() {
 										))
 									)}
 								</p>
-								{product.length > 0 && (
-									<p style={styles.paragraph}>
-										<strong style={styles.strongText}>
-											<FontAwesomeIcon
-												icon={faShoppingBag}
-												style={styles.icon}
-											/>
-											Order:
-										</strong>
-										<div
-											className="list-group-item"
-											style={styles.listGroupItem}
-										>
-											<p style={styles.productInfo}>
-												<strong
-													style={
-														styles.strongText
-													}
-												>
-													Tên sản phẩm:
-												</strong>{" "}
-												<span
-													style={
-														styles.boldGrayText
-													}
-												>
-													{product.length > 0 &&
-														product[0]
-															.product
-															.name}
-												</span>
-											</p>
-											<p style={styles.productInfo}>
-												<strong
-													style={
-														styles.strongText
-													}
-												>
-													Số lượng:
-												</strong>{" "}
-												<span
-													style={
-														styles.boldGrayText
-													}
-												>
-													{product.length > 0 &&
-														product[0]
-															.product_quantity}
-												</span>
-											</p>
-										</div>
-									</p>
-								)}
+								<p style={styles.paragraph}>
+									<strong style={styles.strongText}>
+										<FontAwesomeIcon
+											icon={faShoppingBag}
+											style={styles.icon}
+										/>
+										Order:
+									</strong>
+									<div
+										className="list-group-item"
+										style={styles.listGroupItem}
+									>
+										<p style={styles.productInfo}>
+											<strong style={styles.strongText}>
+												Tên sản phẩm:
+											</strong>{" "}
+											<span style={styles.boldGrayText}>
+												{product.length > 0 &&
+													product[0].product
+														.name}
+											</span>
+										</p>
+										<p style={styles.productInfo}>
+											<strong style={styles.strongText}>
+												Số lượng:
+											</strong>{" "}
+											<span style={styles.boldGrayText}>
+												{product.length > 0 &&
+													product[0]
+														.product_quantity}
+											</span>
+										</p>
+									</div>
+								</p>
 								<p style={styles.paragraph}>
 									<strong style={styles.strongText}>
 										<FontAwesomeIcon
@@ -363,4 +445,5 @@ function PaymentDetail() {
 	);
 }
 
-export default PaymentDetail;
+export default HistoryDetailPage;
+

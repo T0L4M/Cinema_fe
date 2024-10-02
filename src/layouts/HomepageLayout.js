@@ -23,19 +23,27 @@ const HomepageLayout = ({ children }) => {
 				return (
 					<NavDropdown
 						id="navbarDropdown"
-						title={auth?.userName}
+						title={
+							<i
+								class="fa-solid fa-circle-user"
+								style={{ marginTop: "0.3em" }}
+							></i>
+						}
 						// menuVariant="dark"
 						className="nav-item dropdown"
 					>
 						<NavDropdown.Item style={{ padding: "0" }}>
-							<Link className="dropdown-item" to={"/personal"}>
+							<Link className="dropdown-item" to={`/${auth?.userName}`}>
 								<i className="fas fa-user me-2"></i>
 								PROFILE
 							</Link>
 						</NavDropdown.Item>
 						<NavDropdown.Divider />
 						<NavDropdown.Item style={{ padding: "0" }}>
-							<Link className="dropdown-item" to={"/personal/history"}>
+							<Link
+								className="dropdown-item"
+								to={`/${auth?.userName}/transaction`}
+							>
 								<i className="fa-solid fa-clock-rotate-left me-2"></i>
 								TRANSACTION
 							</Link>

@@ -117,7 +117,7 @@ function ContactUs(props) {
 							<div className="col-md-10 col-10">
 								<div className="contact_1ir">
 									<h5 className="col_red">E-mail</h5>
-									<p className="mb-0">fin_cinema@gmail.com</p>
+									<p className="mb-0">tgvcinema@gmail.com</p>
 								</div>
 							</div>
 						</div>

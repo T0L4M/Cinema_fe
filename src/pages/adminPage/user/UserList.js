@@ -1,66 +1,48 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, Button, Form } from "react-bootstrap";
-import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { DataContext } from "../../../contexts/DataContext";
-import { ColorRing } from "react-loader-spinner";
 import axios from "axios";
-import AOS from "aos";
-import "aos/dist/aos.css";
-import { format } from "date-fns";
+import { Alert, Button } from "react-bootstrap";
+import { ColorRing } from "react-loader-spinner";
+import ReactPaginate from "react-paginate";
+// import ModalAuditoria from "./ModalAuditoria";
 
-function PaymentList(props) {
+function UserList(props) {
+	//Nhan User_tb
 	const [data, setData] = useState([]);
+	//auditoria
+	// const [auditoria, setAuditoria] = useState([]);
+	//Lay Alert
 	const { alert } = useContext(DataContext);
+	//Nhay trang
 	// const navigate = useNavigate();
+
+	//search
+	const [search, setSearch] = useState("");
+	const [listsearch, setListSearch] = useState([]);
+	function handelSearch(e) {
+		let { value } = e.target;
+		if (value != "") {
+			let res = data.filter((i) =>
+				i.userName.toLowerCase().includes(value.toLowerCase())
+			);
+			setSearch(value);
+			setListSearch(res);
+		} else {
+			setSearch(value);
+		}
+	}
 
 	const fetchData = async () => {
 		try {
-			const response = await axios.get("http://localhost:8080/payments");
+			const response = await axios.get("http://localhost:8080/accounts");
 			setData(response.data.data);
 		} catch (error) {
 			console.log("Error FETCHING DATA: ", error);
 		}
 	};
-
-	//search
-	const [listsearch, setListSearch] = useState([]);
-	const [searchType, setSearchType] = useState("");
-	function handelSearch(e) {
-		let { value } = e.target;
-		let res = [];
-		if (value === "" || searchType === "") {
-			setListSearch(data);
-		} else if (value != "") {
-			if (searchType == "userName") {
-				for (let i = 0; i < data.length; i++) {
-					if (
-						data[i].booking.customer.userName
-							.toLowerCase()
-							.includes(value.toLowerCase())
-					) {
-						res.push(data[i]);
-					}
-				}
-			} else if (searchType == "date") {
-				for (let i = 0; i < data.length; i++) {
-					if (data[i].created_at.toLowerCase().includes(value.toLowerCase())) {
-						res.push(data[i]);
-					}
-				}
-			}
-			setListSearch(res.length > 0 ? res : [""]);
-		}
-	}
-	/////////////////////////////////////
-	function onChangeTypeForSearch(e) {
-		let { value } = e.target;
-		setSearchType(value);
-	}
-
 	useEffect(() => {
 		fetchData();
-		AOS.init();
 	}, []);
 
 	//PAGINATE
@@ -79,39 +61,22 @@ function PaymentList(props) {
 				: data.slice(itemOffset, endOffset)
 		);
 		setPageCount(Math.ceil(data.length / itemsPerPage));
-	}, [itemOffset, itemsPerPage, data, listsearch]);
+	}, [itemOffset, itemsPerPage, data]);
 	const handlePageClick = (event) => {
 		const newOffset = (event.selected * itemsPerPage) % data.length;
 		setItemOffset(newOffset);
 	};
 	//END PAGINATE
-
+	const [modalShow, setModalShow] = useState(false);
 	return (
 		<div className="mt-3">
-			<h2>Payment List</h2>
+			<h2>Users Table</h2>
 			{alert.type != "" && (
 				<Alert variant={alert.type} dismissible transition>
 					{alert.message}
 				</Alert>
 			)}
-			<div class="input-group mt-3 mb-3 float-end w-50">
-				<Form.Select
-					className="btn btn-outline-success"
-					onChange={onChangeTypeForSearch}
-				>
-					<option value="">Select Type For Search</option>
-					<option value="userName">User Name</option>
-					<option value="date">Transaction Date</option>
-				</Form.Select>
-				<input
-					className="form-control"
-					id="search"
-					placeholder="Enter Name to Search"
-					disabled={searchType == ""}
-					onChange={handelSearch}
-					// value={searchType == "" ? "" : }
-				/>
-			</div>
+			{/* LOADER SPINNER */}
 			{data.length == 0 && (
 				<ColorRing
 					visible={true}
@@ -120,37 +85,45 @@ function PaymentList(props) {
 					ariaLabel="blocks-loading"
 					wrapperStyle={{ display: "block", margin: "auto" }}
 					wrapperClass="blocks-wrapper"
-					colors={["#213363", "#1B6B93", "#4FC0D0", "#FF9EAA"]}
+					colors={["#F5F5F5", "#313236", "#7CD6EA", "#172765", "#F5F5F5"]}
 				/>
 			)}
-			<table className="table table-striped table-dark" data-aos="fade">
+			{/* END LOADER SPINNER */}
+
+			<table className="table table-striped table-dark">
 				<thead>
+					<input
+						className="form-control mt-2 mb-2"
+						id="search"
+						placeholder="Enter Name to Search"
+						onChange={handelSearch}
+					/>
 					<tr>
+						<th>ID</th>
 						<th>UserName</th>
-						<th>Amount</th>
-						<th>Date</th>
+						<th>Email</th>
+						<th>Gender</th>
+						<th>Phone</th>
+						<th>DoB</th>
+						<th>Address</th>
 						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{data.length > 0 &&
-						listsearch[0] != "" &&
-						currentItems
+						(search != "" ? listsearch : currentItems)
 							.slice()
 							.sort((a, b) => b.id - a.id)
 							.map((item, index) => {
 								return (
 									<tr key={index}>
-										<td>
-											{item.booking.customer.userName}
-										</td>
-										<td>{item.amount}</td>
-										<td>
-											{format(
-												item.created_at,
-												"dd-MM-yyyy"
-											)}
-										</td>
+										<td>{item.id}</td>
+										<td>{item.userName}</td>
+										<td>{item.email}</td>
+										<td>{item.gender}</td>
+										<td>{item.phone}</td>
+										<td>{item.dob}</td>
+										<td>{item.address}</td>
 										<td>
 											<Link
 												className="btn btn-success mb-1 w-100"
@@ -191,4 +164,4 @@ function PaymentList(props) {
 	);
 }
 
-export default PaymentList;
+export default UserList;

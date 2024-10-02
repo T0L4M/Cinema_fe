@@ -62,7 +62,7 @@ function AdminLayout({ children }) {
 									<i class="fa-solid fa-newspaper me-2"></i>
 									Blogs
 								</Link>
-								<Link className="collapse-item" to={"/admin/"}>
+								<Link className="collapse-item" to={"/admin/user"}>
 									<i class="fa-solid fa-user-group me-2"></i>
 									Members
 								</Link>

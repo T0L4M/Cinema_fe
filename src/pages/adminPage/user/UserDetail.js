@@ -1,28 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { DataContext } from "../../../contexts/DataContext";
 import { ColorRing } from "react-loader-spinner";
 import axios from "axios";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { format } from "date-fns";
+import ModalUser from "./ModelUser";
 
-function PaymentList(props) {
+function UserDetail(props) {
+	const { id } = useParams();
 	const [data, setData] = useState([]);
 	const { alert } = useContext(DataContext);
-	// const navigate = useNavigate();
+	const [modalShow, setModalShow] = React.useState(false);
 
 	const fetchData = async () => {
 		try {
-			const response = await axios.get("http://localhost:8080/payments");
+			const response = await axios.get(
+				`http://localhost:8080/payments/byCustomer/${id}`
+			);
 			setData(response.data.data);
 		} catch (error) {
 			console.log("Error FETCHING DATA: ", error);
 		}
 	};
-
 	//search
 	const [listsearch, setListSearch] = useState([]);
 	const [searchType, setSearchType] = useState("");
@@ -32,10 +35,10 @@ function PaymentList(props) {
 		if (value === "" || searchType === "") {
 			setListSearch(data);
 		} else if (value != "") {
-			if (searchType == "userName") {
+			if (searchType == "movie") {
 				for (let i = 0; i < data.length; i++) {
 					if (
-						data[i].booking.customer.userName
+						data[i].booking.showtime.movie.title
 							.toLowerCase()
 							.includes(value.toLowerCase())
 					) {
@@ -52,7 +55,7 @@ function PaymentList(props) {
 			setListSearch(res.length > 0 ? res : [""]);
 		}
 	}
-	/////////////////////////////////////
+
 	function onChangeTypeForSearch(e) {
 		let { value } = e.target;
 		setSearchType(value);
@@ -100,7 +103,7 @@ function PaymentList(props) {
 					onChange={onChangeTypeForSearch}
 				>
 					<option value="">Select Type For Search</option>
-					<option value="userName">User Name</option>
+					<option value="movie">Movie</option>
 					<option value="date">Transaction Date</option>
 				</Form.Select>
 				<input
@@ -126,45 +129,39 @@ function PaymentList(props) {
 			<table className="table table-striped table-dark" data-aos="fade">
 				<thead>
 					<tr>
-						<th>UserName</th>
+						<th>Mooie</th>
 						<th>Amount</th>
 						<th>Date</th>
-						<th>Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					{data.length > 0 &&
 						listsearch[0] != "" &&
-						currentItems
-							.slice()
-							.sort((a, b) => b.id - a.id)
-							.map((item, index) => {
-								return (
-									<tr key={index}>
-										<td>
-											{item.booking.customer.userName}
-										</td>
-										<td>{item.amount}</td>
-										<td>
-											{format(
-												item.created_at,
-												"dd-MM-yyyy"
-											)}
-										</td>
-										<td>
-											<Link
-												className="btn btn-success mb-1 w-100"
-												to={`./detail/${item.id}`}
-												state={{
-													paymentData: item,
-												}}
-											>
-												<b>Detail</b>
-											</Link>
-										</td>
-									</tr>
-								);
-							})}
+						currentItems.map((item, index) => {
+							return (
+								<tr key={index}>
+									<td>{item.booking.showtime.movie.title}</td>
+									<td>{item.amount}</td>
+									<td>
+										{format(item.created_at, "dd-MM-yyyy")}
+									</td>
+									<td>
+										<button
+											className="btn btn-outline-light"
+											onClick={() => setModalShow(true)}
+										>
+											Detail
+										</button>
+										<ModalUser
+											user={item.id}
+											show={modalShow}
+											state={{ paymentData: item }}
+											onHide={() => setModalShow(false)}
+										/>
+									</td>
+								</tr>
+							);
+						})}
 				</tbody>
 			</table>
 			<ReactPaginate
@@ -191,4 +188,4 @@ function PaymentList(props) {
 	);
 }
 
-export default PaymentList;
+export default UserDetail;

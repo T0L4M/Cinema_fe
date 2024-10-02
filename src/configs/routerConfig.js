@@ -30,6 +30,10 @@ import BlogList from "../pages/adminPage/blogs/BlogList";
 import BlogCreate from "../pages/adminPage/blogs/BlogCreate";
 import BlogsPost from "../pages/homePage/BlogsPost";
 import BlogDetail from "../pages/homePage/BlogDetail";
+import UserList from "../pages/adminPage/user/UserList";
+import UserDetail from "../pages/adminPage/user/UserDetail";
+import RegisterDetailPage from "../pages/homePage/users/RegisterDetailPage";
+import HistoryPage from "../pages/homePage/users/history/HistoryPage";
 
 const publicRouter = [
 	{
@@ -43,6 +47,17 @@ const publicRouter = [
 	{
 		path: "/showtimes/movie/:idMovie",
 		element: <ShowtimeDetail />,
+	},
+	//PROFILE
+	{
+		path: "/:username",
+		element: <RegisterDetailPage />,
+		roles: ["USER"],
+	},
+	{
+		path: "/:username/transaction",
+		element: <HistoryPage />,
+		roles: ["USER"],
 	},
 	//MOVIES
 	{
@@ -192,6 +207,17 @@ const privateRouter = [
 	{
 		path: "/admin/blog/new/:id?",
 		element: <BlogCreate />,
+		roles: ["ADMIN"],
+	},
+	//User
+	{
+		path: "/admin/user",
+		element: <UserList />,
+		roles: ["ADMIN"],
+	},
+	{
+		path: "/admin/user/detail/:id",
+		element: <UserDetail />,
 		roles: ["ADMIN"],
 	},
 ];
